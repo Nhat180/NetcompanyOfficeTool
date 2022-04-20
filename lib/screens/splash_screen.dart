@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => InitState();
 }
@@ -15,8 +17,8 @@ class InitState extends  State<SplashScreen>{
   }
   
   startTimer() async {
-    var duration = Duration(seconds: 1);
-        return new Timer(duration, loginRoute);
+    var duration = const Duration(seconds: 4);
+        return Timer(duration, loginRoute);
   }
   
   loginRoute(){
@@ -35,10 +37,10 @@ class InitState extends  State<SplashScreen>{
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
-              color: new Color(0xff0f2147),
+            decoration: const BoxDecoration(
+              color: Color(0xff0f2147),
               gradient: LinearGradient(
-                colors: [(new Color(0xff0f2147)), (new Color(0xff0f2147))],
+                colors: [(Color(0xff0f2147)), (Color(0xff0f2147))],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter
               )
@@ -46,14 +48,13 @@ class InitState extends  State<SplashScreen>{
           ),
 
           Center(
-            child: Container(
-                margin: EdgeInsets.all(10),
+            child: Container(margin: const EdgeInsets.all(10),
               width: 500,
               height: 300,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: NetworkImage('https://haymora.com/upload/images/cong_nghe_thong_tin/software/netcompany/netcompany-logo.jpg'),
+                  image: AssetImage("images/logo.jpg"),
                   fit: BoxFit.fill)
               )
             ),
