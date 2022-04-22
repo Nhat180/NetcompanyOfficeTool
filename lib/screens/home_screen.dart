@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show TargetPlatform;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -10,6 +11,14 @@ class HomeScreen extends StatefulWidget {
 class InitState extends  State<HomeScreen>{
   int _currentIndex = 0;
 
+  final _currentScreen = [
+    Center(child: Text("Home")),
+    Center(child: Text("Report")),
+    Center(child: Text("Suggestion")),
+    Center(child: Text("Survey")),
+    Center(child: Text("Profile")),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return initWidget();
@@ -17,7 +26,7 @@ class InitState extends  State<HomeScreen>{
 
   Widget initWidget(){
     return Scaffold(
-      body: Container(),
+      body: _currentScreen[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         items: const [
