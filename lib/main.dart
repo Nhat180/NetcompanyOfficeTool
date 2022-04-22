@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:netcompany_office_tool/screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/splash_screen.dart';
 
 void main() {
