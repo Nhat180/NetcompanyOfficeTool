@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'navigation_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -179,7 +179,7 @@ class InitState extends State<LoginScreen> {
               onTap: () {
                 if (_formKey.currentState!.validate()) {
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()));
+                      MaterialPageRoute(builder: (context) => NavigationScreen()));
                 } else {
                   setState(() {
                     _autoValidateMode = AutovalidateMode.always;
