@@ -13,8 +13,23 @@ class NavigationScreen extends StatefulWidget {
   State<StatefulWidget> createState() => InitState();
 }
 
+class Choice {
+  final String title;
+  final IconData icon;
+  const Choice({required this.title, required this.icon});
+}
+
+const List<Choice> choices = <Choice>[
+  Choice(title: 'Home', icon: Icons.home),
+  Choice(title: 'Report', icon: Icons.campaign),
+  Choice(title: 'Suggest', icon: Icons.chat),
+  Choice(title: 'Survey', icon: Icons.content_paste_rounded),
+  Choice(title: 'Profile', icon: Icons.account_circle),
+];
+
 class InitState extends  State<NavigationScreen>{
   int _currentIndex = 0;
+
 
   final _currentScreen = [
     HomeScreen(),
@@ -23,18 +38,57 @@ class InitState extends  State<NavigationScreen>{
     SurveyListScreen()
   ];
 
-  // var platform;
+
 
   @override
   Widget build(BuildContext context) {
-    // platform = Theme.of(context).platform;
-    return initWidget();
+    var _platform = Theme.of(context).platform;
+    // return _platform == TargetPlatform.iOS ? iOSNav() : androidNav();
+    return androidNav();
   }
 
-  Widget initWidget(){
+
+  Widget androidNav() {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DefaultTabController(
+        length: choices.length,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Netcompany Office Tool"),
+            backgroundColor: const Color(0xff0f2147),
+            bottom: TabBar(
+              isScrollable: true,
+              tabs: choices.map<Widget>((Choice choice) {
+                return Tab(
+                  text: choice.title,
+                  icon: Icon(choice.icon),
+                );
+              }).toList(),
+              onTap: (index) {
+                setState(() {
+                  if (index == 4) {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                  } else {
+                    _currentIndex = index;
+                  }
+                });
+              },
+            ),
+          ),
+          body: _currentScreen[_currentIndex],
+        ),
+      ),
+    );
+  }
+
+
+  Widget iOSNav(){
     return Scaffold(
       appBar: AppBar(
         title: const Text("Netcompany Office Tool"),
+        backgroundColor: const Color(0xff0f2147),
       ),
       body: _currentScreen[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
