@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "221750454980",
+    "project_id": "netcompany-office-tool-db",
+    "storage_bucket": "netcompany-office-tool-db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221750454980:android:de5d20be5b6a710b5d7791",
+        "android_client_info": {
+          "package_name": "com.example.netcompany_office_tool"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "221750454980-kctu2v9t0ppp94fghifctm3e3pjjmlkk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMLSriDowBvBnhzuV4zSWhTr8IkVQBSbk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "221750454980-kctu2v9t0ppp94fghifctm3e3pjjmlkk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

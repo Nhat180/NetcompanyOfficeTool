@@ -11,7 +11,7 @@ class _State extends State<SurveyListScreen> {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("Suggestion"),
+      child: Text("Survey List"),
     );
   }
 }
