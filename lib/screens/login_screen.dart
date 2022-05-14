@@ -24,7 +24,7 @@ class InitState extends State<LoginScreen> {
           child: Column(
             children: [
             Container(
-              height: 350,
+              // height: 350,
               decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(25),
@@ -42,7 +42,7 @@ class InitState extends State<LoginScreen> {
                     Container(
                       margin: const EdgeInsets.only(top: 20),
                       child: Image.asset("images/logo_login.png"),
-                      height: 330,
+                      height: 300,
                   ),
                 ],
               ))),
