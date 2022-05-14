@@ -43,8 +43,7 @@ class InitState extends  State<NavigationScreen>{
   @override
   Widget build(BuildContext context) {
     var _platform = Theme.of(context).platform;
-    // return _platform == TargetPlatform.iOS ? iOSNav() : androidNav();
-    return androidNav();
+    return _platform == TargetPlatform.iOS ? iOSNav() : androidNav();
   }
 
 
