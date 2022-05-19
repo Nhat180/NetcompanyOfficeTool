@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'navigation_screen.dart';
 
@@ -12,6 +13,13 @@ class InitState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
   bool _isPassVisible = true;
+  
+  bool isUsernameEmpty = true;
+  bool isPassEmpty = true;
+
+  var fSnackBar = const SnackBar(content: Text("The username and password must fill"));
+  var uSnackBar = const SnackBar(content: Text("The username must fill"));
+  var pSnackBar = const SnackBar(content: Text("The password must fill"));
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +89,7 @@ class InitState extends State<LoginScreen> {
                         decoration: InputDecoration(
                             isDense: true,
                             hintText: "Your Netcompany Name",
+                            errorStyle: const TextStyle(height: 0),
                             contentPadding: const EdgeInsets.symmetric(
                                 vertical: 20, horizontal: 20),
                             border: OutlineInputBorder(
@@ -97,8 +106,10 @@ class InitState extends State<LoginScreen> {
                             )),
                         validator: (text) {
                           if (text == null || text.isEmpty) {
-                            return "Required";
+                            isUsernameEmpty = true;
+                            return '';
                           } else {
+                            isUsernameEmpty = false;
                             return null;
                           }
                         },
@@ -137,6 +148,7 @@ class InitState extends State<LoginScreen> {
                         decoration: InputDecoration(
                             isDense: true,
                             hintText: "Password",
+                            errorStyle: const TextStyle(height: 0),
                             contentPadding: const EdgeInsets.symmetric(
                                 vertical: 20, horizontal: 22),
                             border: OutlineInputBorder(
@@ -163,8 +175,10 @@ class InitState extends State<LoginScreen> {
                             )),
                         validator: (text) {
                           if (text == null || text.isEmpty) {
-                            return "Required";
+                            isPassEmpty = true;
+                            return '';
                           } else {
+                            isPassEmpty = false;
                             return null;
                           }
                         },
@@ -181,6 +195,13 @@ class InitState extends State<LoginScreen> {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => NavigationScreen()));
                 } else {
+                  if (isUsernameEmpty && isPassEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(fSnackBar);
+                  } else if (isPassEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(pSnackBar);
+                  } else if (isUsernameEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(uSnackBar);
+                  }
                   setState(() {
                     _autoValidateMode = AutovalidateMode.always;
                   });
