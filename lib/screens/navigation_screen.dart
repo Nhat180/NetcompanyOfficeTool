@@ -5,6 +5,7 @@ import 'package:netcompany_office_tool/screens/login_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screen.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screen.dart';
 import 'package:netcompany_office_tool/screens/surveylist_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({Key? key}) : super(key: key);
@@ -29,6 +30,7 @@ const List<Choice> choices = <Choice>[
 
 class InitState extends  State<NavigationScreen>{
   int _currentIndex = 0;
+  final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
 
   final _currentScreen = [
@@ -54,7 +56,7 @@ class InitState extends  State<NavigationScreen>{
         length: choices.length,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("Netcompany Office Tool"),
+            title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
             backgroundColor: const Color(0xff0f2147),
             bottom: TabBar(
               isScrollable: true,
@@ -86,7 +88,7 @@ class InitState extends  State<NavigationScreen>{
   Widget iOSNav(){
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Netcompany Office Tool"),
+        title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
         backgroundColor: const Color(0xff0f2147),
       ),
       body: _currentScreen[_currentIndex],
