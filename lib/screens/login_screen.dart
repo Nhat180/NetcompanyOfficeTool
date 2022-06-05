@@ -1,12 +1,35 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'landscape_mode.dart';
 import 'navigation_screen.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => InitState();
+}
+
+Future<bool> login (String name, String password) async {
+  const String api = "http://10.0.2.2:8080/auth";
+  // const String api = "http://localhost:8080/menu";
+  final response = await http.post(Uri.parse(api),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+      'username': name,
+      'password': password
+    })
+  );
+
+  if (response.statusCode == 200) {
+    return true;
+  } else {
+    return false;
+  }
+
 }
 
 class InitState extends State<LoginScreen> {
@@ -16,14 +39,23 @@ class InitState extends State<LoginScreen> {
   
   bool isUsernameEmpty = true;
   bool isPassEmpty = true;
+  bool buttonLoading = false;
 
   var fSnackBar = const SnackBar(content: Text("The username and password must fill"));
   var uSnackBar = const SnackBar(content: Text("The username must fill"));
   var pSnackBar = const SnackBar(content: Text("The password must fill"));
+  var alertSnackBar = const SnackBar(content: Text("Wrong username or password"));
+
+  final TextEditingController usernameController  = TextEditingController();
+  final TextEditingController passwordController  = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return initWidget();
+    if (MediaQuery.of(context).orientation == Orientation.portrait) {
+      return initWidget();
+    } else {
+     return const LandScape();
+    }
   }
 
   Widget initWidget() {
@@ -85,6 +117,7 @@ class InitState extends State<LoginScreen> {
                           const EdgeInsets.only(left: 20, right: 20, top: 68),
                       padding: const EdgeInsets.only(left: 5, right: 5),
                       child: TextFormField(
+                        controller: usernameController,
                         cursorColor: const Color(0xff0f2147),
                         decoration: InputDecoration(
                             isDense: true,
@@ -143,6 +176,7 @@ class InitState extends State<LoginScreen> {
                           const EdgeInsets.only(left: 20, right: 20, top: 38),
                       padding: const EdgeInsets.only(left: 5, right: 5),
                       child: TextFormField(
+                        controller: passwordController,
                         cursorColor: const Color(0xff0f2147),
                         obscureText: _isPassVisible,
                         decoration: InputDecoration(
@@ -190,10 +224,29 @@ class InitState extends State<LoginScreen> {
             ),
           ),
             GestureDetector(
-              onTap: () {
+              onTap: () async{
                 if (_formKey.currentState!.validate()) {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => NavigationScreen()));
+                  // Navigator.pushReplacement(context,
+                  //     MaterialPageRoute(builder: (context) => NavigationScreen()));
+                  final String name = usernameController.text;
+                  final String password = passwordController.text;
+
+                  setState(() {
+                    buttonLoading = true;
+                  });
+
+                  final bool isAuthenticate = await login(name, password);
+
+                  setState(() {
+                    buttonLoading = false;
+                  });
+
+                  if(isAuthenticate) {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => NavigationScreen()));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(alertSnackBar);
+                  }
                 } else {
                   if (isUsernameEmpty && isPassEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(fSnackBar);
@@ -226,7 +279,15 @@ class InitState extends State<LoginScreen> {
                       color: Color(0xffEEEEEE)),
                   ],
                 ),
-                child: const Text(
+                child: (buttonLoading)
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 1.5,
+                      ))
+                : const Text(
                   "LOGIN",
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
