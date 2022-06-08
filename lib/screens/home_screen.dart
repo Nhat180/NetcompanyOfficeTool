@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:netcompany_office_tool/screens/weeklylunch_screen.dart';
 
 import 'login_screen.dart';
 
@@ -161,7 +162,7 @@ class _State extends State<HomeScreen> {
                               GestureDetector(
                                 onTap: () {
                                   Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                                      MaterialPageRoute(builder: (context) => const WeeklyLunchScreen()));
                                 },
                                 child: const Text("Check ", style: TextStyle(fontSize: 18,
                                     fontWeight: FontWeight.bold,
