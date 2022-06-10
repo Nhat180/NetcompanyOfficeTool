@@ -44,7 +44,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget> [
               Padding(
-                padding: const EdgeInsets.all(32.0),
+                padding: const EdgeInsets.all(32),
                 child: Text("Daily Lunch Menu", style: GoogleFonts.ubuntu(textStyle: const TextStyle(
                   fontSize: 35,
                   color: Color(0xff0f2147),
@@ -85,7 +85,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                                 ),
                                 color: const Color(0xff0f2147),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 50),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
@@ -108,7 +108,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                                           )),
                                           textAlign: TextAlign.left,
                                       ),
-                                      const SizedBox(height: 150),
+                                      const SizedBox(height: 140),
                                       Row(
                                         children: <Widget>[
                                           Text(
@@ -132,10 +132,13 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                               )
                             ],
                           ),
-                          // Hero(tag: weekdays[index].position, child: Image.asset('images/img_chef.jpg')),
+                          Hero(tag: weekdays[index].position, child: Image.asset(weekdays[index].iconImage,
+                              height: 180,
+                              width: MediaQuery.of(context).size.width
+                          )),
                           Positioned(
                               right: 24,
-                              bottom: 90,
+                              bottom: 50,
                               child: Text(weekdays[index].position.toString(),
                                 style: GoogleFonts.ubuntu(textStyle: TextStyle(
                                   fontSize: 200,
