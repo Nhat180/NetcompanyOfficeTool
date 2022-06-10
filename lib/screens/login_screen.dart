@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'landscape_mode.dart';
@@ -14,8 +16,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 Future<bool> login (String name, String password) async {
-  const String api = "http://10.0.2.2:8080/auth";
   // const String api = "http://localhost:8080/menu";
+  const String api = "http://10.0.2.2:8080/auth";
   final response = await http.post(Uri.parse(api),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
@@ -23,13 +25,57 @@ Future<bool> login (String name, String password) async {
       'password': password
     })
   );
-
   if (response.statusCode == 200) {
     return true;
   } else {
     return false;
   }
 
+}
+
+// Save user info to Firestore
+Future<void> setUser (String name) async {
+  final firestoreDB = FirebaseFirestore.instance;
+  await firestoreDB.collection("users").doc(name).set({
+    "username": name,
+    "isAdmin": false
+  });
+}
+
+// Register current user to Firebase auth
+Future<void> register (String name, String password) async {
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: name+"@gmail.com",
+        password: password
+    );
+    setUser(name);
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'email-already-in-use') {
+      loginFirebase(name, password);
+    }
+  } catch (e) {
+    // ignore: avoid_print
+    print(e);
+  }
+}
+
+// Sign in current user to Firebase auth
+Future<void> loginFirebase (String name, String password) async {
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: name+"@gmail.com",
+        password: password
+    );
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      // ignore: avoid_print
+      print('No user found for that email.');
+    } else if (e.code == "wrong-password") {
+      // ignore: avoid_print
+      print('Wrong password');
+    }
+  }
 }
 
 class InitState extends State<LoginScreen> {
@@ -237,13 +283,16 @@ class InitState extends State<LoginScreen> {
 
                   final bool isAuthenticate = await login(name, password);
 
-                  setState(() {
-                    buttonLoading = false;
-                  });
 
                   if(isAuthenticate) {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => NavigationScreen()));
+                    register(name, password);
+                    setState(() {
+                      buttonLoading = false;
+                    });
+                    if (!buttonLoading) {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => NavigationScreen()));
+                    }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(alertSnackBar);
                   }
