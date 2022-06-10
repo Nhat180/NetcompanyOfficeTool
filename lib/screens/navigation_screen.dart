@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform;
 import 'package:netcompany_office_tool/screens/home_screen.dart';
@@ -26,7 +27,7 @@ const List<Choice> choices = <Choice>[
   Choice(title: 'Report', icon: Icons.campaign),
   Choice(title: 'Suggest', icon: Icons.chat),
   Choice(title: 'Survey', icon: Icons.content_paste_rounded),
-  Choice(title: 'Profile', icon: Icons.account_circle),
+  Choice(title: 'Logout', icon: Icons.logout),
 ];
 
 class InitState extends  State<NavigationScreen>{
@@ -125,14 +126,15 @@ class InitState extends  State<NavigationScreen>{
           ),
 
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              label: 'Profile',
+              icon: Icon(Icons.logout),
+              label: 'Logout',
               backgroundColor: Color(0xff0f2147)
           ),
         ],
         onTap: (index) {
-          setState(() {
+          setState(() async {
             if (index == 4) {
+              await FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => LoginScreen()));
             } else {
