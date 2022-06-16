@@ -16,8 +16,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 Future<bool> login (String name, String password) async {
-  // const String api = "http://localhost:8080/menu";
-  const String api = "http://10.0.2.2:8080/auth";
+  const String api = "https://netcompany-crawl-server.herokuapp.com/auth";
+  // const String api = "http://10.0.2.2:8080/auth";
   final response = await http.post(Uri.parse(api),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
@@ -295,6 +295,9 @@ class InitState extends State<LoginScreen> {
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(alertSnackBar);
+                    setState(() {
+                      buttonLoading = false;
+                    });
                   }
                 } else {
                   if (isUsernameEmpty && isPassEmpty) {
