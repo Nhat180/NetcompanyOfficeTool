@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart' show TargetPlatform;
 import 'package:netcompany_office_tool/screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
 import 'package:netcompany_office_tool/screens/login_screen.dart';
-import 'package:netcompany_office_tool/screens/report_screen.dart';
+import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screen.dart';
 import 'package:netcompany_office_tool/screens/surveylist_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
