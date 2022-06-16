@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/screens/weeklylunch_screen.dart';
+import 'package:intl/intl.dart';
 
 import 'login_screen.dart';
 
@@ -27,29 +28,40 @@ class HomeScreen  extends StatefulWidget {
 
 
 class _State extends State<HomeScreen> {
+  String docDate = '';
   List<String> mainDish = [];
   List<String> sideDish = [];
   List<String> soup = [];
   List<String> dessert = [];
-  /// Initialize the Future method
-  // String main = '';
-  // @override
-  // void initState()  {
-  //   super.initState();
-  //   getData();
-  // }
 
-  /// Call the Future method
-  // void getData() async {
-  //   main = await getLunchMenu();
-  //   Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
-  // }
+
+  void convertDateToAbbrev(String dateFormat) {
+    if (dateFormat == 'Monday') {
+      docDate = 'mon';
+    } else if (dateFormat == 'Tuesday') {
+      docDate = 'tue';
+    } else if (dateFormat == 'Wednesday') {
+      docDate = 'wed';
+    } else if (dateFormat == 'Thursday') {
+      docDate = 'thu';
+    } else {
+      docDate = 'fri';
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    DateTime dateTime = DateTime.now();
+    String dateFormat = DateFormat('EEEE').format(dateTime);
+    convertDateToAbbrev(dateFormat);
+  }
 
 
   @override
   Widget build(BuildContext context) {
       return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-        future: FirebaseFirestore.instance.collection('lunch').doc('mon').get(),
+        future: FirebaseFirestore.instance.collection('lunch').doc(docDate).get(),
         builder: (_,snapshot) {
           if (snapshot.hasError) return const Text("Error");
 
