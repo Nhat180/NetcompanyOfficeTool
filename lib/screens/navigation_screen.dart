@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform;
 import 'package:netcompany_office_tool/screens/home_screen.dart';
@@ -8,6 +9,7 @@ import 'package:netcompany_office_tool/screens/report_screen.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screen.dart';
 import 'package:netcompany_office_tool/screens/surveylist_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({Key? key}) : super(key: key);
@@ -31,6 +33,7 @@ const List<Choice> choices = <Choice>[
 ];
 
 class InitState extends  State<NavigationScreen>{
+  String docDate = '';
   int _currentIndex = 0;
   final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
@@ -42,6 +45,15 @@ class InitState extends  State<NavigationScreen>{
     SurveyListScreen()
   ];
 
+
+  @override
+  void initState()  {
+    super.initState();
+    DateTime dateTime = DateTime.now();
+    String dateFormat = DateFormat('EEEE').format(dateTime);
+    // ignore: avoid_print
+    print(dateFormat);
+  }
 
 
   @override
@@ -75,6 +87,7 @@ class InitState extends  State<NavigationScreen>{
               onTap: (index) {
                 setState(() {
                   if (index == 4) {
+                    FirebaseAuth.instance.signOut();
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => LoginScreen()));
                   } else {
@@ -132,9 +145,9 @@ class InitState extends  State<NavigationScreen>{
           ),
         ],
         onTap: (index) {
-          setState(() async {
+          setState(() {
             if (index == 4) {
-              await FirebaseAuth.instance.signOut();
+              FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => LoginScreen()));
             } else {
