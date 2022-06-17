@@ -37,7 +37,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const NavigationScreen()));
+                    MaterialPageRoute(builder: (context) => const NavigationScreen(index: 0,)));
               },
             ),
           ),
@@ -67,9 +67,9 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                         itemCount: weekdays.length,
                         itemWidth: MediaQuery.of(context).size.width - 2 * 64,
                         layout: SwiperLayout.STACK,
-                        pagination: const SwiperPagination(
-                          builder: DotSwiperPaginationBuilder(activeSize: 20, space: 5, color: Colors.black),
-                        ),
+                        // pagination: const SwiperPagination(
+                        //   builder: DotSwiperPaginationBuilder(activeSize: 20, space: 5, color: Colors.black),
+                        // ),
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
@@ -96,7 +96,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            const SizedBox(height: 80),
+                                            SizedBox(height: 10.h),
                                             Text(
                                               weekdays[index].name,
                                               style: GoogleFonts.ubuntu(textStyle: const TextStyle(
@@ -106,7 +106,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                                               )),
                                               textAlign: TextAlign.left,
                                             ),
-                                            const SizedBox(height: 5),
+                                            SizedBox(height: 1.h),
                                             Text("Lunch Menu",
                                               style: GoogleFonts.ubuntu(textStyle: const TextStyle(
                                                 fontSize: 20,
@@ -115,7 +115,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                                               )),
                                               textAlign: TextAlign.left,
                                             ),
-                                            const SizedBox(height: 140),
+                                            SizedBox(height: 20.h),
                                             Row(
                                               children: <Widget>[
                                                 Text(
@@ -145,7 +145,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                                 )),
                                 Positioned(
                                   right: 24,
-                                  bottom: 50,
+                                  top: 220,
                                   child: Text(weekdays[index].position.toString(),
                                     style: GoogleFonts.ubuntu(textStyle: TextStyle(
                                       fontSize: 200,

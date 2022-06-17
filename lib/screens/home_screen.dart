@@ -103,6 +103,7 @@ class _State extends State<HomeScreen> {
                                 ListView.builder(
                                     itemCount: mainDish.length,
                                     shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
                                     itemBuilder: (BuildContext context, int index) {
                                       return Text(mainDish[index],
                                           textAlign: TextAlign.center, style: const TextStyle(fontSize: 15));
@@ -121,6 +122,7 @@ class _State extends State<HomeScreen> {
                                 ListView.builder(
                                     itemCount: sideDish.length,
                                     shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
                                     itemBuilder: (BuildContext context, int index) {
                                       return Text(sideDish[index],
                                           textAlign: TextAlign.center, style: const TextStyle(fontSize: 15));
@@ -139,6 +141,7 @@ class _State extends State<HomeScreen> {
                                 ListView.builder(
                                     itemCount: soup.length,
                                     shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
                                     itemBuilder: (BuildContext context, int index) {
                                       return Text(soup[index],
                                           textAlign: TextAlign.center, style: const TextStyle(fontSize: 15));
@@ -157,6 +160,7 @@ class _State extends State<HomeScreen> {
                                 ListView.builder(
                                     itemCount: dessert.length,
                                     shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
                                     itemBuilder: (BuildContext context, int index) {
                                       return Text(dessert[index],
                                           textAlign: TextAlign.center, style: const TextStyle(fontSize: 15));
