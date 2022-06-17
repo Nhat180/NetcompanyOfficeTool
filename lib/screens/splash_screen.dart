@@ -28,7 +28,7 @@ class InitState extends  State<SplashScreen>{
     final User? user = auth.currentUser;
     if (user != null) {
       Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => const NavigationScreen()
+          builder: (context) => const NavigationScreen(index: 0,)
       ));
     } else {
       Navigator.pushReplacement(context, MaterialPageRoute(

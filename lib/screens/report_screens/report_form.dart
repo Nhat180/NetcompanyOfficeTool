@@ -48,7 +48,7 @@ class InitState extends  State<ReportForm>{
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const NavigationScreen()));
+                MaterialPageRoute(builder: (context) => const NavigationScreen(index: 1,)));
           },
         ),
       ),

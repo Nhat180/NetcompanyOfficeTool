@@ -291,7 +291,7 @@ class InitState extends State<LoginScreen> {
                     });
                     if (!buttonLoading) {
                       Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => NavigationScreen()));
+                          MaterialPageRoute(builder: (context) => NavigationScreen(index: 0)));
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(alertSnackBar);

@@ -12,7 +12,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class NavigationScreen extends StatefulWidget {
-  const NavigationScreen({Key? key}) : super(key: key);
+  final int index;
+
+  const NavigationScreen({Key? key, required this.index}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => InitState();
@@ -35,6 +37,7 @@ const List<Choice> choices = <Choice>[
 class InitState extends  State<NavigationScreen>{
   String docDate = '';
   int _currentIndex = 0;
+  bool check = false;
   final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
 
@@ -71,6 +74,7 @@ class InitState extends  State<NavigationScreen>{
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
+        initialIndex: widget.index,
         length: choices.length,
         child: Scaffold(
           appBar: AppBar(
@@ -92,12 +96,15 @@ class InitState extends  State<NavigationScreen>{
                         MaterialPageRoute(builder: (context) => LoginScreen()));
                   } else {
                     _currentIndex = index;
+                    setState(() {
+                      check = true;
+                    });
                   }
                 });
               },
             ),
           ),
-          body: _currentScreen[_currentIndex],
+          body: (!check) ? _currentScreen[widget.index] : _currentScreen[_currentIndex],
         ),
       ),
     );
@@ -110,9 +117,9 @@ class InitState extends  State<NavigationScreen>{
         title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
         backgroundColor: const Color(0xff0f2147),
       ),
-      body: _currentScreen[_currentIndex],
+      body: (!check) ? _currentScreen[widget.index] : _currentScreen[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+        currentIndex: widget.index,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -152,6 +159,9 @@ class InitState extends  State<NavigationScreen>{
                   MaterialPageRoute(builder: (context) => LoginScreen()));
             } else {
               _currentIndex = index;
+              setState(() {
+                check = true;
+              });
             }
           });
         },
