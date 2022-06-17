@@ -128,7 +128,7 @@ class MenuDialog extends StatelessWidget {
                       },
                       child: Container(
                         alignment: Alignment.center,
-                        margin: const EdgeInsets.only(top: 30),
+                        margin: const EdgeInsets.only(top: 30, bottom: 15),
                         height: 50,
                         decoration: const BoxDecoration(
                             color: Color(0xff0f2147)
