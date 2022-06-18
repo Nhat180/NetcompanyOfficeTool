@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_form.dart';
 
-import '../../data/reports.dart';
+import '../../model/reports.dart';
 
 
 class ReportScreen extends StatefulWidget {

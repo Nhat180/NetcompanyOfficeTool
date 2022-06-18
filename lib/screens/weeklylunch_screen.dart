@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:netcompany_office_tool/data/weekdays_info.dart';
+import 'package:netcompany_office_tool/model/weekdays_info.dart';
 import 'package:netcompany_office_tool/dialog/menu_dialog.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
@@ -59,10 +59,6 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                   Container(
                     height: 68.h,
                     padding:const EdgeInsets.only(left: 32),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
                     child: Swiper(
                         itemCount: weekdays.length,
                         itemWidth: MediaQuery.of(context).size.width - 2 * 64,
