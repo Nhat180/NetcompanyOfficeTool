@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:netcompany_office_tool/model/storage_item.dart';
+import '../services/storage_service.dart';
 import 'landscape_mode.dart';
 import 'navigation_screen.dart';
 import 'package:http/http.dart' as http;
@@ -79,6 +81,7 @@ Future<void> loginFirebase (String name, String password) async {
 }
 
 class InitState extends State<LoginScreen> {
+  final StorageService storageService = StorageService();
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
   bool _isPassVisible = true;
@@ -285,6 +288,10 @@ class InitState extends State<LoginScreen> {
 
 
                   if(isAuthenticate) {
+                    StorageItem usernameItem = StorageItem("name", name);
+                    StorageItem passwordItem = StorageItem("password", password);
+                    storageService.writeSecureData(usernameItem);
+                    storageService.writeSecureData(passwordItem);
                     register(name, password);
                     setState(() {
                       buttonLoading = false;
