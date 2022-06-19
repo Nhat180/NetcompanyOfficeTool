@@ -10,6 +10,7 @@ import 'package:netcompany_office_tool/screens/suggestion_screen.dart';
 import 'package:netcompany_office_tool/screens/surveylist_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:netcompany_office_tool/services/storage_service.dart';
 
 class NavigationScreen extends StatefulWidget {
   final int index;
@@ -37,8 +38,10 @@ const List<Choice> choices = <Choice>[
 class InitState extends  State<NavigationScreen>{
   String docDate = '';
   int _currentIndex = 0;
+  String? name;
   bool check = false;
   final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  final StorageService storageService = StorageService();
 
 
   final _currentScreen = [
@@ -56,6 +59,13 @@ class InitState extends  State<NavigationScreen>{
     String dateFormat = DateFormat('EEEE').format(dateTime);
     // ignore: avoid_print
     print(dateFormat);
+    getName();
+  }
+
+  void getName() async {
+    name = await storageService.readSecureData("name");
+    // ignore: avoid_print
+    print(name);
   }
 
 
