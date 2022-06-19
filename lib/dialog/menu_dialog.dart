@@ -57,71 +57,72 @@ class MenuDialog extends StatelessWidget {
                         margin: const EdgeInsets.only(top: 20),
                         child: Column(
                           children: <Widget>[
-                            const Text("Main Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                            const Text("Main Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                             ListView.builder(
                                 itemCount: mainDish.length,
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Text(mainDish[index],
-                                      textAlign: TextAlign.center, style: TextStyle(fontSize: 15.sp));
+                                      textAlign: TextAlign.center, style: TextStyle(fontSize: 12.sp));
                                 }
                             ),
                           ],
                         ),
                       ),
 
+                      SizedBox(height: 5.h),
                       Container(
                         alignment: Alignment.center,
-                        margin: const EdgeInsets.only(top: 30),
+                        // margin: const EdgeInsets.only(top: 30),
                         child: Column(
                           children: <Widget>[
-                            const Text("Side Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                            const Text("Side Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                             ListView.builder(
                                 itemCount: sideDish.length,
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Text(sideDish[index],
-                                      textAlign: TextAlign.center, style: TextStyle(fontSize: 15.sp));
+                                      textAlign: TextAlign.center, style: TextStyle(fontSize: 12.sp));
                                 }
                             ),
                           ],
                         ),
                       ),
 
+                      SizedBox(height: 5.h),
                       Container(
                         alignment: Alignment.center,
-                        margin: const EdgeInsets.only(top: 30),
                         child: Column(
                           children: <Widget>[
-                            const Text("Soup", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                            const Text("Soup", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                             ListView.builder(
                                 itemCount: soup.length,
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Text(soup[index],
-                                      textAlign: TextAlign.center, style: TextStyle(fontSize: 15.sp));
+                                      textAlign: TextAlign.center, style: TextStyle(fontSize: 12.sp));
                                 }
                             ),
                           ],
                         ),
                       ),
 
+                      SizedBox(height: 5.h),
                       Container(
                         alignment: Alignment.center,
-                        margin: const EdgeInsets.only(top: 30),
                         child: Column(
                           children: <Widget>[
-                            const Text("Dessert", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                            const Text("Dessert", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                             ListView.builder(
                                 itemCount: dessert.length,
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Text(dessert[index],
-                                      textAlign: TextAlign.center, style: TextStyle(fontSize: 15.sp));
+                                      textAlign: TextAlign.center, style: TextStyle(fontSize: 12.sp));
                                 }
                             ),
                           ],
