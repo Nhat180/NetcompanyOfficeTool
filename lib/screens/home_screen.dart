@@ -99,7 +99,7 @@ class _State extends State<HomeScreen> {
                               margin: const EdgeInsets.only(top: 20),
                               child: Column(
                                 children: [
-                                  const Text("Main Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                  Text("Main Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
                                   // Text("Collet Heo Chien Fried pork cutlet", style: TextStyle(fontSize: 15)),
                                   // Text("Thit kho heo tom Poached meat and shrimp", textAlign: TextAlign.center,style: TextStyle(fontSize: 20)),
                                   ListView.builder(
@@ -108,7 +108,7 @@ class _State extends State<HomeScreen> {
                                       physics: const NeverScrollableScrollPhysics(),
                                       itemBuilder: (BuildContext context, int index) {
                                         return Text(mainDish[index],
-                                            textAlign: TextAlign.center, style: TextStyle(fontSize: 15.sp));
+                                            textAlign: TextAlign.center, style: TextStyle(fontSize: 12.sp));
                                       }
                                   )
                                 ],
@@ -120,14 +120,14 @@ class _State extends State<HomeScreen> {
                               margin: const EdgeInsets.only(top: 30),
                               child: Column(
                                 children: [
-                                  const Text("Side Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                  Text("Side Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
                                   ListView.builder(
                                       itemCount: sideDish.length,
                                       shrinkWrap: true,
                                       physics: const NeverScrollableScrollPhysics(),
                                       itemBuilder: (BuildContext context, int index) {
                                         return Text(sideDish[index],
-                                            textAlign: TextAlign.center, style: TextStyle(fontSize: 15.sp));
+                                            textAlign: TextAlign.center, style: TextStyle(fontSize: 12.sp));
                                       }
                                   )
                                 ],
@@ -139,14 +139,14 @@ class _State extends State<HomeScreen> {
                               margin: const EdgeInsets.only(top: 30),
                               child: Column(
                                 children: [
-                                  const Text("Soup", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                  Text("Soup", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
                                   ListView.builder(
                                       itemCount: soup.length,
                                       shrinkWrap: true,
                                       physics: const NeverScrollableScrollPhysics(),
                                       itemBuilder: (BuildContext context, int index) {
                                         return Text(soup[index],
-                                            textAlign: TextAlign.center, style: TextStyle(fontSize: 15.sp));
+                                            textAlign: TextAlign.center, style: TextStyle(fontSize: 12.sp));
                                       }
                                   )
                                 ],
@@ -158,14 +158,14 @@ class _State extends State<HomeScreen> {
                               margin: const EdgeInsets.only(top: 30),
                               child: Column(
                                 children: [
-                                  const Text("Dessert", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                  Text("Dessert", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
                                   ListView.builder(
                                       itemCount: dessert.length,
                                       shrinkWrap: true,
                                       physics: const NeverScrollableScrollPhysics(),
                                       itemBuilder: (BuildContext context, int index) {
                                         return Text(dessert[index],
-                                            textAlign: TextAlign.center, style: TextStyle(fontSize: 15.sp));
+                                            textAlign: TextAlign.center, style: TextStyle(fontSize: 12.sp));
                                       }
                                   )
                                 ],
@@ -182,11 +182,11 @@ class _State extends State<HomeScreen> {
                                       Navigator.pushReplacement(context,
                                           MaterialPageRoute(builder: (context) => const WeeklyLunchScreen()));
                                     },
-                                    child: Text("Check ", style: TextStyle(fontSize: 18.sp,
+                                    child: Text("Check ", style: TextStyle(fontSize: 15.sp,
                                         fontWeight: FontWeight.bold,
                                         decoration: TextDecoration.underline)),
                                   ),
-                                  Text("this week's lunch menu", style: TextStyle(fontSize: 18.sp))
+                                  Text("this week's lunch menu", style: TextStyle(fontSize: 15.sp))
                                 ],
                               )
                           )
