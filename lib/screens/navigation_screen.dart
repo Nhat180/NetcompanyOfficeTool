@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform;
+import 'package:netcompany_office_tool/dialog/logout_dialog.dart';
 import 'package:netcompany_office_tool/screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
 import 'package:netcompany_office_tool/screens/login_screen.dart';
@@ -101,9 +102,10 @@ class InitState extends  State<NavigationScreen>{
               onTap: (index) {
                 setState(() {
                   if (index == 4) {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                    showDialog(context: context,
+                        builder: (BuildContext context) {
+                          return LogoutDialog(index: (!check) ? widget.index : _currentIndex,);
+                        });
                   } else {
                     _currentIndex = index;
                     setState(() {
@@ -164,9 +166,10 @@ class InitState extends  State<NavigationScreen>{
         onTap: (index) {
           setState(() {
             if (index == 4) {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()));
+              showDialog(context: context,
+                  builder: (BuildContext context) {
+                    return LogoutDialog(index: (!check) ? widget.index : _currentIndex,);
+                  });
             } else {
               _currentIndex = index;
               setState(() {
