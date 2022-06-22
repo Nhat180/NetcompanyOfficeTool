@@ -19,6 +19,10 @@ class StorageService {
     await secureStorage.delete(key: item.key, aOptions: _getAndroidOptions());
   }
 
+  Future<void> deleteAllSecureData() async {
+    await secureStorage.deleteAll(aOptions: _getAndroidOptions());
+  }
+
   Future<bool> isContainKey (String key) async {
     var isContain = await secureStorage.containsKey(key: key, aOptions: _getAndroidOptions());
     return isContain;
