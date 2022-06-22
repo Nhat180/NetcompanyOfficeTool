@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:netcompany_office_tool/screens/report_screens/report_detail_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_form.dart';
 
 import '../../model/reports.dart';
@@ -91,9 +92,9 @@ class _ReportScreenState extends State<ReportScreen> {
                       title: Text(report.title,  overflow: TextOverflow.ellipsis, softWrap: false),
                       subtitle: Text("Created on " + report.dateCreate + "\nStatus: " + report.status),
                       onTap: () {
-                        // Navigator.pushReplacement(context, MaterialPageRoute(
-                        //     builder: (context) => ReportDetailScreen(report)
-                        // ));
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                            builder: (context) => ReportDetailScreen(report)
+                        ));
                       },
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,

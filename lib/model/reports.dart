@@ -7,6 +7,7 @@ class Report {
   final String description;
   final String comment;
   final String imgUrl;
+  final String totalCom;
 
   const Report({
     required this.creator,
@@ -16,7 +17,8 @@ class Report {
     required this.type,
     required this.description,
     required this.comment,
-    required this.imgUrl
+    required this.imgUrl,
+    required this.totalCom,
   });
 }
 
@@ -27,20 +29,22 @@ const allReports =[
       dateCreate: '11/12/2022',
       status: "viewed",
       type: "Device",
-      description: "this is one of the most useful case",
+      description: "This is one of the most useful case, I wanna buy new laptop to study iOS. However, my family can not be affordable , so can you help me?",
       comment: "Oke I oke",
-      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y"
+      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y",
+      totalCom: "8"
   ),
 
   Report(
       creator: 'Nhat nguyen',
-      title: 'Jumping Red Glass of My mother ',
+      title: 'Jumping Red Glass of My mother asd as as das asd asd asd sad asd sa dasd asd sadasd as asdasd ',
       dateCreate: '11/12/2022',
       status: "unview",
       type: "Device",
-      description: "this is one of the most useful case",
+      description: "This is one of the most useful case, I wanna buy new laptop to study iOS. However, my family can not be affordable , so can you help me?",
       comment: "Oke I oke",
-      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y"
+      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y",
+      totalCom: "10"
   ),
 
   Report(
@@ -51,7 +55,8 @@ const allReports =[
       type: "Food",
       description: "this is one of the most useful case",
       comment: "Oke I oke",
-      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y"
+      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y",
+      totalCom: "2"
   ),
 
   Report(
@@ -62,7 +67,8 @@ const allReports =[
       type: "Device",
       description: "this is one of the most useful case",
       comment: "Oke I oke",
-      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y"
+      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y",
+      totalCom: "9"
   ),
 
   Report(
@@ -73,7 +79,8 @@ const allReports =[
       type: "Device",
       description: "this is one of the most useful case",
       comment: "Oke I oke",
-      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y"
+      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y",
+      totalCom: "12"
   ),
 
   Report(
@@ -84,7 +91,8 @@ const allReports =[
       type: "Device",
       description: "this is one of the most useful case",
       comment: "Oke I oke",
-      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y"
+      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y",
+      totalCom: "11"
   ),
 
   Report(
@@ -95,7 +103,8 @@ const allReports =[
       type: "Device",
       description: "this is one of the most useful case",
       comment: "Oke I oke",
-      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y"
+      imgUrl: "https://play-lh.googleusercontent.com/6f6MrwfRIEnR-OIKIt_O3VdplItbaMqtqgCNSOxcfVMCKGKsOdBK5XcI6HZpjssnB2Y",
+      totalCom: "20"
   ),
 
 
