@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/screens/weeklylunch_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:netcompany_office_tool/services/firebase_service.dart';
+import 'package:netcompany_office_tool/services/httphandler_service.dart';
+import 'package:netcompany_office_tool/services/storage_service.dart';
 import 'package:sizer/sizer.dart';
 
 import 'login_screen.dart';
@@ -15,21 +18,16 @@ class HomeScreen  extends StatefulWidget {
 }
 
 
-///Get the data from Firebase using Function Future Call
-// Future<String> getLunchMenu() async {
-//   var collection = FirebaseFirestore.instance.collection("lunch");
-//   var doc = await collection.doc("mon").get();
-//   String value = '';
-//   if (doc.exists) {
-//     Map<String, dynamic>? data = doc.data();
-//     value = data!['main'];
-//   }
-//   return value;
-// }
 
 
 class _State extends State<HomeScreen> {
+  final StorageService storageService = StorageService();
+  final HttpHandlerService handlerService = HttpHandlerService();
+  final FirebaseService firebaseService = FirebaseService();
+  DateTime currentTime = DateTime.now();
   String docDate = '';
+  bool isCrawlAuthenticate = true;
+  bool loadingCrawl = false;
   List<String> mainDish = [];
   List<String> sideDish = [];
   List<String> soup = [];
@@ -50,18 +48,41 @@ class _State extends State<HomeScreen> {
     }
   }
 
+  void requestCrawlService() async {
+    loadingCrawl = true;
+    DateTime updateTime = await firebaseService.getCrawlTimeStamp();
+    if(currentTime.isAfter(updateTime) || currentTime.isAtSameMomentAs(updateTime)) {
+      String? name = await storageService.readSecureData('name');
+      String? password = await storageService.readSecureData('password');
+      isCrawlAuthenticate = await handlerService.crawl(name!, password!);
+      setState(() {
+        loadingCrawl = false;
+      });
+    } else {
+      setState(() {
+        loadingCrawl = false;
+      });
+    }
+  }
+
+
   @override
   void initState() {
     super.initState();
-    DateTime dateTime = DateTime.now();
-    String dateFormat = DateFormat('EEEE').format(dateTime);
+    String dateFormat = DateFormat('EEEE').format(currentTime);
     convertDateToAbbrev(dateFormat);
+    requestCrawlService();
+    // ignore: avoid_print
+    print(loadingCrawl);
   }
 
 
   @override
   Widget build(BuildContext context) {
-      return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      return (loadingCrawl) ?
+      const Center(child: CircularProgressIndicator()) : (!isCrawlAuthenticate) ?
+      const Center(child: Text("It seems there is something wrong, we recommend to login again")) :
+      FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         future: FirebaseFirestore.instance.collection('lunch').doc(docDate).get(),
         builder: (_,snapshot) {
           if (snapshot.hasError) return const Text("Error");

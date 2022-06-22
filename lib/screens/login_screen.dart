@@ -1,14 +1,12 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/model/storage_item.dart';
+import 'package:netcompany_office_tool/services/firebase_service.dart';
+import 'package:netcompany_office_tool/services/httphandler_service.dart';
 import '../services/storage_service.dart';
 import 'landscape_mode.dart';
 import 'navigation_screen.dart';
-import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,71 +15,11 @@ class LoginScreen extends StatefulWidget {
   State<StatefulWidget> createState() => InitState();
 }
 
-Future<bool> login (String name, String password) async {
-  const String api = "https://netcompany-crawl-server.herokuapp.com/auth";
-  // const String api = "http://10.0.2.2:8080/auth";
-  final response = await http.post(Uri.parse(api),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-      'username': name,
-      'password': password
-    })
-  );
-  if (response.statusCode == 200) {
-    return true;
-  } else {
-    return false;
-  }
-
-}
-
-// Save user info to Firestore
-Future<void> setUser (String name) async {
-  final firestoreDB = FirebaseFirestore.instance;
-  await firestoreDB.collection("users").doc(name).set({
-    "username": name,
-    "isAdmin": false
-  });
-}
-
-// Register current user to Firebase auth
-Future<void> register (String name, String password) async {
-  try {
-    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: name+"@gmail.com",
-        password: password
-    );
-    setUser(name);
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'email-already-in-use') {
-      loginFirebase(name, password);
-    }
-  } catch (e) {
-    // ignore: avoid_print
-    print(e);
-  }
-}
-
-// Sign in current user to Firebase auth
-Future<void> loginFirebase (String name, String password) async {
-  try {
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: name+"@gmail.com",
-        password: password
-    );
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'user-not-found') {
-      // ignore: avoid_print
-      print('No user found for that email.');
-    } else if (e.code == "wrong-password") {
-      // ignore: avoid_print
-      print('Wrong password');
-    }
-  }
-}
 
 class InitState extends State<LoginScreen> {
   final StorageService storageService = StorageService();
+  final FirebaseService firebaseService = FirebaseService();
+  final HttpHandlerService handlerService = HttpHandlerService();
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
   bool _isPassVisible = true;
@@ -284,21 +222,29 @@ class InitState extends State<LoginScreen> {
                     buttonLoading = true;
                   });
 
-                  final bool isAuthenticate = await login(name, password);
-
+                  final bool isAuthenticate = await handlerService.login(name, password);
 
                   if(isAuthenticate) {
                     StorageItem usernameItem = StorageItem("name", name);
                     StorageItem passwordItem = StorageItem("password", password);
                     storageService.writeSecureData(usernameItem);
                     storageService.writeSecureData(passwordItem);
-                    register(name, password);
+                    firebaseService.registerFirebase(name, password);
                     setState(() {
                       buttonLoading = false;
                     });
                     if (!buttonLoading) {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => NavigationScreen(index: 0)));
+                      final FirebaseAuth auth = FirebaseAuth.instance;
+                      final User? user = auth.currentUser;
+                      if (user == null) {
+                        Future.delayed(const Duration(seconds: 1), () {
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) => const NavigationScreen(index: 0)));
+                        });
+                      } else {
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => const NavigationScreen(index: 0)));
+                      }
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(alertSnackBar);

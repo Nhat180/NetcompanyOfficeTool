@@ -29,7 +29,7 @@ class MenuDialog extends StatelessWidget {
               ),
               child: Container(
                 width: MediaQuery.of(context).size.width - 20,
-                height: MediaQuery.of(context).size.height - 200,
+                height: 80.h,
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.brown, width: 10),
                     borderRadius: BorderRadius.circular(8)
@@ -57,7 +57,7 @@ class MenuDialog extends StatelessWidget {
                         margin: const EdgeInsets.only(top: 20),
                         child: Column(
                           children: <Widget>[
-                            const Text("Main Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            Text("Main Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
                             ListView.builder(
                                 itemCount: mainDish.length,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -77,7 +77,7 @@ class MenuDialog extends StatelessWidget {
                         // margin: const EdgeInsets.only(top: 30),
                         child: Column(
                           children: <Widget>[
-                            const Text("Side Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            Text("Side Dish", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
                             ListView.builder(
                                 itemCount: sideDish.length,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -96,7 +96,7 @@ class MenuDialog extends StatelessWidget {
                         alignment: Alignment.center,
                         child: Column(
                           children: <Widget>[
-                            const Text("Soup", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            Text("Soup", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
                             ListView.builder(
                                 itemCount: soup.length,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -115,7 +115,7 @@ class MenuDialog extends StatelessWidget {
                         alignment: Alignment.center,
                         child: Column(
                           children: <Widget>[
-                            const Text("Dessert", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            Text("Dessert", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
                             ListView.builder(
                                 itemCount: dessert.length,
                                 physics: const NeverScrollableScrollPhysics(),
