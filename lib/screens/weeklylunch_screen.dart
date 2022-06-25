@@ -5,7 +5,6 @@ import 'package:netcompany_office_tool/dialog/menu_dialog.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:sizer/sizer.dart';
 
 class WeeklyLunchScreen extends StatefulWidget {
@@ -57,103 +56,57 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                     ),
                   ),
                   Container(
-                    height: 68.h,
-                    padding:const EdgeInsets.only(left: 32),
-                    child: Swiper(
-                        itemCount: weekdays.length,
-                        itemWidth: MediaQuery.of(context).size.width - 2 * 64,
-                        layout: SwiperLayout.STACK,
-                        // pagination: const SwiperPagination(
-                        //   builder: DotSwiperPaginationBuilder(activeSize: 20, space: 5, color: Colors.black),
-                        // ),
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              //     content: Text(weekdays[index].position.toString())));
-                              showDialog(context: context,
-                                  builder: (BuildContext context) {
-                                    return MenuDialog(title: weekdays[index].abbrev);
-                                  });
-                            },
-                            child: Stack(
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    const SizedBox(height: 50),
-                                    Card(
-                                      elevation: 8,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(32)
-                                      ),
-                                      color: const Color(0xff0f2147),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 50),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            SizedBox(height: 10.h),
-                                            Text(
-                                              weekdays[index].name,
-                                              style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                                                fontSize: 35,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w900,
-                                              )),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            SizedBox(height: 1.h),
-                                            Text("Lunch Menu",
-                                              style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                              )),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            SizedBox(height: 20.h),
-                                            Row(
-                                              children: <Widget>[
-                                                Text(
-                                                  "Show more",
-                                                  style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w500,
-                                                  )),
-                                                  textAlign: TextAlign.left,
-                                                ),
-                                                const Icon(
-                                                  Icons.arrow_forward,
-                                                  color: Colors.white,
-                                                ),
-                                              ],
-                                            )
-                                          ],
+                    margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Column(
+                            children: [
+                              ListView.builder(
+                                  itemCount: weekdays.length,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8)
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Hero(tag: weekdays[index].position, child: Image.asset(weekdays[index].iconImage,
-                                    height: 180,
-                                    width: MediaQuery.of(context).size.width
-                                )),
-                                Positioned(
-                                  right: 24,
-                                  top: 220,
-                                  child: Text(weekdays[index].position.toString(),
-                                    style: GoogleFonts.ubuntu(textStyle: TextStyle(
-                                      fontSize: 200,
-                                      color: Colors.white.withOpacity(0.08),
-                                      fontWeight: FontWeight.w900,
-                                    )),
-                                    textAlign: TextAlign.left,),
-                                )
-                              ],
-                            ),
-                          );
-                        }
+                                        color: const Color(0xff0f2147),
+                                        elevation: 8,
+                                        child: ListTile(
+                                          contentPadding: const EdgeInsets.all(12),
+                                          onTap: () {
+                                            showDialog(context: context, builder: (BuildContext context) {
+                                              return MenuDialog(title: weekdays[index].abbrev);
+                                            });
+                                          },
+                                          title: Text(weekdays[index].name,
+                                            style: GoogleFonts.ubuntu(textStyle: const TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w900,
+                                            )),
+                                            textAlign: TextAlign.left,
+                                          ),
+                                          subtitle: Text("Lunch Menu",
+                                            style: GoogleFonts.ubuntu(textStyle: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w900,
+                                          )),
+                                            textAlign: TextAlign.left,
+                                          ),
+                                          trailing: Image.asset(weekdays[index].iconImage,
+                                              height: 60, width: 60, fit: BoxFit.cover,
+                                          ),
+                                        )
+                                    );
+                                  }
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 ],
