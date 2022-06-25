@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:netcompany_office_tool/loading/crawl_spinner.dart';
+import 'package:netcompany_office_tool/screens/closedmenu_screen.dart';
 import 'package:netcompany_office_tool/screens/weeklylunch_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
@@ -43,8 +45,10 @@ class _State extends State<HomeScreen> {
       docDate = 'wed';
     } else if (dateFormat == 'Thursday') {
       docDate = 'thu';
-    } else {
+    } else if (dateFormat == 'Friday') {
       docDate = 'fri';
+    } else {
+      docDate = 'wkd';
     }
   }
 
@@ -54,10 +58,17 @@ class _State extends State<HomeScreen> {
     if(currentTime.isAfter(updateTime) || currentTime.isAtSameMomentAs(updateTime)) {
       String? name = await storageService.readSecureData('name');
       String? password = await storageService.readSecureData('password');
-      isCrawlAuthenticate = await handlerService.crawl(name!, password!);
-      setState(() {
-        loadingCrawl = false;
-      });
+      final bool response =  await handlerService.crawl(name!, password!);
+      if (response) {
+        setState(() {
+          loadingCrawl = false;
+        });
+      } else {
+        setState(() {
+          isCrawlAuthenticate = response;
+          loadingCrawl = false;
+        });
+      }
     } else {
       setState(() {
         loadingCrawl = false;
@@ -80,8 +91,9 @@ class _State extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
       return (loadingCrawl) ?
-      const Center(child: CircularProgressIndicator()) : (!isCrawlAuthenticate) ?
+      const CrawlSpinner() : (!isCrawlAuthenticate) ?
       const Center(child: Text("It seems there is something wrong, we recommend to login again")) :
+      (docDate == 'wkd') ? const ClosedMenu() :
       FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         future: FirebaseFirestore.instance.collection('lunch').doc(docDate).get(),
         builder: (_,snapshot) {
@@ -194,7 +206,7 @@ class _State extends State<HomeScreen> {
                           ),
 
                           Container(
-                              margin: const EdgeInsets.only(top: 30, bottom: 15),
+                              margin: const EdgeInsets.only(top: 50, bottom: 15),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
