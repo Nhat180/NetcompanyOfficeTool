@@ -29,10 +29,8 @@ class MenuDialog extends StatelessWidget {
               ),
               child: Container(
                 width: MediaQuery.of(context).size.width - 20,
-                height: 80.h,
                 decoration: BoxDecoration(
-                    border: Border.all(color: Colors.brown, width: 10),
-                    borderRadius: BorderRadius.circular(8)
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: SingleChildScrollView(
                   child: Column(
