@@ -225,7 +225,7 @@ class InitState extends State<LoginScreen> {
                   final bool isAuthenticate = await handlerService.login(name, password);
 
                   if(isAuthenticate) {
-                    firebaseService.registerFirebase(name, password);
+                    firebaseService.registerFirebase(name);
                     StorageItem usernameItem = StorageItem("name", name);
                     StorageItem passwordItem = StorageItem("password", password);
                     storageService.writeSecureData(usernameItem);
