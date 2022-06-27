@@ -4,19 +4,19 @@ import 'package:intl/intl.dart';
 
 class FirebaseService {
 
-  Future<void> registerFirebase (String name, String password) async {
+  Future<void> registerFirebase (String name) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     try {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: name+"@gmail.com",
-          password: password
+          password: "123456"
       );
       setUser(name);
       user = userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        loginFirebase(name, password);
+        loginFirebase(name);
       }
     } catch (e) {
       // ignore: avoid_print
@@ -32,13 +32,13 @@ class FirebaseService {
     });
   }
 
-  Future<void> loginFirebase (String name, String password) async {
+  Future<void> loginFirebase (String name) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     try {
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: name+"@gmail.com",
-          password: password
+          password: "123456"
       );
       user = userCredential.user;
     } on FirebaseAuthException catch (e) {
