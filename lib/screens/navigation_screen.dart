@@ -3,20 +3,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform;
 import 'package:netcompany_office_tool/dialog/logout_dialog.dart';
+import 'package:netcompany_office_tool/loading/crawl_spinner.dart';
 import 'package:netcompany_office_tool/screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
-import 'package:netcompany_office_tool/screens/login_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screen.dart';
 import 'package:netcompany_office_tool/screens/surveylist_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:netcompany_office_tool/services/firebase_service.dart';
+import 'package:netcompany_office_tool/services/httphandler_service.dart';
 import 'package:netcompany_office_tool/services/storage_service.dart';
 
 class NavigationScreen extends StatefulWidget {
   final int index;
 
   const NavigationScreen({Key? key, required this.index}) : super(key: key);
+
 
   @override
   State<StatefulWidget> createState() => InitState();
@@ -37,12 +40,16 @@ const List<Choice> choices = <Choice>[
 ];
 
 class InitState extends  State<NavigationScreen>{
-  String docDate = '';
-  int _currentIndex = 0;
-  String? name;
-  bool check = false;
-  final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final StorageService storageService = StorageService();
+  final HttpHandlerService handlerService = HttpHandlerService();
+  final FirebaseService firebaseService = FirebaseService();
+  DateTime currentTime = DateTime.now();
+  bool isCrawlAuthenticate = true;
+  bool loadingCrawl = false;
+  int _currentIndex = 0;
+  bool check = false;
+  bool checkCrawl = true;
+  final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
 
   final _currentScreen = [
@@ -60,13 +67,34 @@ class InitState extends  State<NavigationScreen>{
     String dateFormat = DateFormat('EEEE').format(dateTime);
     // ignore: avoid_print
     print(dateFormat);
-    getName();
+    _currentIndex = widget.index;
+    if (_currentIndex == 0) {
+      requestCrawlService();
+    }
   }
 
-  void getName() async {
-    name = await storageService.readSecureData("name");
-    // ignore: avoid_print
-    print(name);
+  void requestCrawlService() async {
+    loadingCrawl = true;
+    DateTime updateTime = await firebaseService.getCrawlTimeStamp();
+    if(currentTime.isAfter(updateTime) || currentTime.isAtSameMomentAs(updateTime)) {
+      String? name = await storageService.readSecureData('name');
+      String? password = await storageService.readSecureData('password');
+      final bool response =  await handlerService.crawl(name!, password!);
+      if (response) {
+        setState(() {
+          loadingCrawl = false;
+        });
+      } else {
+        setState(() {
+          isCrawlAuthenticate = response;
+          loadingCrawl = false;
+        });
+      }
+    } else {
+      setState(() {
+        loadingCrawl = false;
+      });
+    }
   }
 
 
@@ -74,7 +102,11 @@ class InitState extends  State<NavigationScreen>{
   Widget build(BuildContext context) {
     var _platform = Theme.of(context).platform;
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
-      return _platform == TargetPlatform.iOS ? iOSNav() : androidNav();
+      if (loadingCrawl) {
+        return const CrawlSpinner();
+      } else {
+        return _platform == TargetPlatform.iOS ? iOSNav() : androidNav();
+      }
     } else {
       return const LandScape();
     }
@@ -85,13 +117,14 @@ class InitState extends  State<NavigationScreen>{
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
-        initialIndex: widget.index,
+        initialIndex: _currentIndex,
         length: choices.length,
         child: Scaffold(
           appBar: AppBar(
             title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
             backgroundColor: const Color(0xff0f2147),
             bottom: TabBar(
+              indicatorColor: Colors.transparent,
               isScrollable: true,
               tabs: choices.map<Widget>((Choice choice) {
                 return Tab(
@@ -104,19 +137,23 @@ class InitState extends  State<NavigationScreen>{
                   if (index == 4) {
                     showDialog(context: context,
                         builder: (BuildContext context) {
-                          return LogoutDialog(index: (!check) ? widget.index : _currentIndex,);
+                          return LogoutDialog(index: _currentIndex,);
                         });
                   } else {
                     _currentIndex = index;
+                    if (_currentIndex == 0) {
+                      requestCrawlService();
+                    }
                     setState(() {
-                      check = true;
+                      isCrawlAuthenticate = true;
                     });
                   }
                 });
               },
             ),
           ),
-          body: (!check) ? _currentScreen[widget.index] : _currentScreen[_currentIndex],
+          body: (!isCrawlAuthenticate) ? const Center(child: Text("It seems there is something wrong, we recommend to login again"))
+              : _currentScreen[_currentIndex],
         ),
       ),
     );
@@ -129,9 +166,10 @@ class InitState extends  State<NavigationScreen>{
         title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
         backgroundColor: const Color(0xff0f2147),
       ),
-      body: (!check) ? _currentScreen[widget.index] : _currentScreen[_currentIndex],
+      body: (!isCrawlAuthenticate) ? const Center(child: Text("It seems there is something wrong, we recommend to login again"))
+          : _currentScreen[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: widget.index,
+        currentIndex: _currentIndex,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -168,12 +206,15 @@ class InitState extends  State<NavigationScreen>{
             if (index == 4) {
               showDialog(context: context,
                   builder: (BuildContext context) {
-                    return LogoutDialog(index: (!check) ? widget.index : _currentIndex,);
+                    return LogoutDialog(index: _currentIndex,);
                   });
             } else {
               _currentIndex = index;
+              if (_currentIndex == 0) {
+                requestCrawlService();
+              }
               setState(() {
-                check = true;
+                isCrawlAuthenticate = true;
               });
             }
           });

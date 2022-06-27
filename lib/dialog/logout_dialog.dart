@@ -30,8 +30,8 @@ class _State extends State<LogoutDialog> {
       actions: [
         TextButton(
             onPressed: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => NavigationScreen(index: widget.index,)));
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                NavigationScreen(index: widget.index)), (Route<dynamic> route) => false);
             },
             child: const Text("Cancel")
         ),
@@ -40,8 +40,8 @@ class _State extends State<LogoutDialog> {
             onPressed: () {
               FirebaseAuth.instance.signOut();
               storageService.deleteAllSecureData();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()));
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                  const LoginScreen()), (Route<dynamic> route) => false);
             },
             child: const Text("Ok")
         )
