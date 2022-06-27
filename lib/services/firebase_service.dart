@@ -59,7 +59,7 @@ class FirebaseService {
     DateTime dateTime = DateTime.now();
     if (doc.exists) {
       Map<String, dynamic>? data = doc.data();
-      Timestamp timestamp = data!['satDate'];
+      Timestamp timestamp = data!['updateDate'];
       dateTime = timestamp.toDate();
       // value = DateFormat('yyyy-MM-dd – kk:mm:ss').format(dateTime);
     }
