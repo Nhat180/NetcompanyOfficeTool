@@ -237,7 +237,7 @@ class InitState extends State<LoginScreen> {
                       final FirebaseAuth auth = FirebaseAuth.instance;
                       final User? user = auth.currentUser;
                       if (user == null) {
-                        Future.delayed(const Duration(seconds: 1), () {
+                        Future.delayed(const Duration(seconds: 2), () {
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) => const NavigationScreen(index: 0)));
                         });
