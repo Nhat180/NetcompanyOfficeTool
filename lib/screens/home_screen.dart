@@ -28,8 +28,6 @@ class _State extends State<HomeScreen> {
   final FirebaseService firebaseService = FirebaseService();
   DateTime currentTime = DateTime.now();
   String docDate = '';
-  bool isCrawlAuthenticate = true;
-  bool loadingCrawl = false;
   List<String> mainDish = [];
   List<String> sideDish = [];
   List<String> soup = [];
@@ -52,48 +50,18 @@ class _State extends State<HomeScreen> {
     }
   }
 
-  void requestCrawlService() async {
-    loadingCrawl = true;
-    DateTime updateTime = await firebaseService.getCrawlTimeStamp();
-    if(currentTime.isAfter(updateTime) || currentTime.isAtSameMomentAs(updateTime)) {
-      String? name = await storageService.readSecureData('name');
-      String? password = await storageService.readSecureData('password');
-      final bool response =  await handlerService.crawl(name!, password!);
-      if (response) {
-        setState(() {
-          loadingCrawl = false;
-        });
-      } else {
-        setState(() {
-          isCrawlAuthenticate = response;
-          loadingCrawl = false;
-        });
-      }
-    } else {
-      setState(() {
-        loadingCrawl = false;
-      });
-    }
-  }
-
 
   @override
   void initState() {
     super.initState();
     String dateFormat = DateFormat('EEEE').format(currentTime);
     convertDateToAbbrev(dateFormat);
-    requestCrawlService();
-    // ignore: avoid_print
-    print(loadingCrawl);
   }
 
 
   @override
   Widget build(BuildContext context) {
-      return (loadingCrawl) ?
-      const CrawlSpinner() : (!isCrawlAuthenticate) ?
-      const Center(child: Text("It seems there is something wrong, we recommend to login again")) :
-      (docDate == 'wkd') ? const ClosedMenu() :
+      return (docDate == 'wkd') ? const ClosedMenu() :
       FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         future: FirebaseFirestore.instance.collection('lunch').doc(docDate).get(),
         builder: (_,snapshot) {
