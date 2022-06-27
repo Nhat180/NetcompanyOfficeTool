@@ -265,12 +265,9 @@ class InitState extends  State<ReportForm>{
                                       ),
 
                                   )
-
-
                                 ],
-
                               ),
-                              );
+                            );
                           }
                       ),
                     ),

@@ -46,6 +46,7 @@ dependencies:
   firebase_auth: ^3.3.18
   http: ^0.13.4
   flutter_secure_storage: ^5.0.2
+  photo_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:
