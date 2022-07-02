@@ -1,10 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:netcompany_office_tool/comments/comment_box.dart';
 import 'package:netcompany_office_tool/comments/comment_list.dart';
 import 'package:netcompany_office_tool/gallery/image_detail.dart';
 import 'package:netcompany_office_tool/gallery/photo_grid.dart';
 import 'package:netcompany_office_tool/model/report.dart';
+import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
 
 
@@ -36,13 +38,14 @@ class ReportDetailScreen extends StatelessWidget{
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("netcompany"), //style: GoogleFonts.ubuntu(textStyle: style)
+          title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle:
+          const TextStyle(fontSize: 30, fontWeight: FontWeight.bold))), //style: GoogleFonts.ubuntu(textStyle: style)
           backgroundColor: const Color(0xff0f2147),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const ReportScreen()));
+                  MaterialPageRoute(builder: (context) => const NavigationScreen(index: 1)));
             },
           ),
         ),
