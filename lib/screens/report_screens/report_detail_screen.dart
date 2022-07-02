@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:netcompany_office_tool/model/reports.dart';
+import 'package:netcompany_office_tool/model/report.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
