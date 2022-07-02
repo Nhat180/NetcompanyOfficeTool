@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/model/report_draft.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_detail_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_draft_form.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_form.dart';
+import 'package:netcompany_office_tool/services/firebase_service.dart';
+import 'package:netcompany_office_tool/services/storage_service.dart';
 
-import '../../model/reports.dart';
+import '../../model/report.dart';
 
 
 enum WidgetMarker { report, draft}
@@ -16,7 +19,6 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends  State<ReportScreen> {
-  var ownList = allReports.where((report) => report.creator == 'Nhat nguyen').toList();
 
   @override
   Widget build(BuildContext context) {
@@ -56,15 +58,28 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
   WidgetMarker selectedWidgetMarker = WidgetMarker.report;
   // late AnimationController controller;
   // late Animation animation;
-  var ownList = allReports.where((report) => report.creator == 'Nhat nguyen').toList();
+  final FirebaseService firebaseService = FirebaseService();
+  final StorageService storageService = StorageService();
+  Future<List<Report>>? reportList;
+  List<Report>? retrievedReportList;
   var ownDraft = allDrafts.where((report) => report.creator == 'Nhat nguyen').toList();
+
+  void initRetrieval() async {
+    String? name = await storageService.readSecureData('name');
+    retrievedReportList = await firebaseService.retrieveReports(name!);
+    setState(() {
+      reportList = firebaseService.retrieveReports(name);
+    });
+
+  }
 
 
   @override
   void initState() {
     super.initState();
-
+    initRetrieval();
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -74,24 +89,9 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Text.rich(
-              TextSpan(
-                text: 'Tell us your ', // default text style'
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                children: <TextSpan>[
-                  TextSpan(text: 'ISSUES', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 50)),
-                ],
-              ),
-            ),
-          ],
-        ),
-
         Center(
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -142,7 +142,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
-                                  side: BorderSide(color: Colors.black)
+                                  side: const BorderSide(color: Colors.black)
                               )
                           )
                       ),
@@ -215,12 +215,12 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
             margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
             child: ListTile(
               contentPadding: const EdgeInsets.all(10.0),
-              leading: Text('[' + draft.status + ']', style: TextStyle(color:Colors.blue),),
+              leading: Text('[' + draft.status + ']', style: const TextStyle(color:Colors.blue),),
               title: Text(draft.title.isEmpty? "No Title" : draft.title ,  overflow: TextOverflow.ellipsis, softWrap: false),
               subtitle: Text(draft.description.isEmpty? "No preview is available" : draft.description, overflow: TextOverflow.ellipsis, softWrap: false),
 
               trailing: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.delete,
                   size: 20.0,
                   color: Colors.black,
@@ -231,7 +231,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
               ),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => ReportDraftForm(draft)
+                    builder: (context) => ReportDraftForm(draft: draft,)
                 ));
               },
             ),
@@ -243,51 +243,64 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
 
   Widget getReportsContainer() {
     return Expanded(
-      child: ownList.isEmpty?
-      Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Icon(
-                Icons.search_off,
-                size: 100,
-                color: Colors.blue,
-              ),
-              Text(('No Reports Found'),
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
-            ],
-          ))
-          :
-      ListView.builder(
-        padding: const EdgeInsets.only(top: 10),
-        itemCount: ownList.length,
-        itemBuilder: (context, index) {
-          final report = ownList[index];
-          return Card(
-            elevation: 10,
-            margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(10.0),
-              leading: Image.asset("images/paper.png", fit: BoxFit.cover, width: 50, height: 50,),
-              title: Text(report.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Created on " + report.dateCreate),
+      child: FutureBuilder(
+        future: reportList,
+        builder: (BuildContext context, AsyncSnapshot<List<Report>> snapshot) {
+          if(snapshot.hasError) return const Text("Error");
 
-                  Text(report.description, style: TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
-                ],
-              ),
-              trailing: Text("  " + report.status, style: report.status == "viewed"? TextStyle(color:Colors.red) : TextStyle(color:Colors.green)),
-              onTap: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(
-                    builder: (context) => ReportDetailScreen(report)
-                ));
+          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            return ListView.builder(padding: const EdgeInsets.only(top: 10),
+              itemCount: retrievedReportList!.length,
+              itemBuilder: (context, index) {
+                final report = retrievedReportList![index];
+                return Card(
+                  elevation: 10,
+                  margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(10.0),
+                    leading: Image.asset("images/paper.png", fit: BoxFit.cover, width: 50, height: 50,),
+                    title: Text(report.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Created on " + report.dateCreate),
+
+                        Text(report.description, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
+                      ],
+                    ),
+                    trailing: Text("  " + report.status, style: report.status == "pending"
+                        ? const TextStyle(color:Colors.red) : report.status == "process"
+                        ? const TextStyle(color:Colors.yellow) :  const TextStyle(color:Colors.green)),
+                    onTap: () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(
+                          builder: (context) => ReportDetailScreen(report)
+                      ));
+                    },
+                  ),
+                );
               },
-            ),
-          );
-        },
+            );
+          }
+          if(snapshot.connectionState == ConnectionState.done && retrievedReportList!.isEmpty) {
+            Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.search_off,
+                      size: 100,
+                      color: Colors.blue,
+                    ),
+                    Text(('No Reports Found'),
+                        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
+                  ],
+                ));
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return const Center(child: CircularProgressIndicator());
+        }
       ),
     );
   }
