@@ -1,36 +1,41 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:netcompany_office_tool/model/report_draft.dart';
+import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
 
-final val = ['Device', 'Electric', 'Meal', 'Elevator', 'Food'];
-// final option = allType;
-String? _dropDownValue;
-TextEditingController _title = new TextEditingController();
-TextEditingController _type = new TextEditingController();
-TextEditingController _description = new TextEditingController();
-// TextEditingController _title = new TextEditingController();
-// TextEditingController _title = new TextEditingController();
+
+class ReportDraftForm extends StatefulWidget {
+  final Draft draft;
+
+  const ReportDraftForm({Key? key, required this.draft}) : super(key: key);
+
+  @override
+  State<ReportDraftForm> createState() => _ReportDraftFormState();
+}
+
+class _ReportDraftFormState extends State<ReportDraftForm> {
+  String? _dropDownValue;
+  final val = ['Device', 'Electric', 'Meal', 'Elevator', 'Food'];
+  TextEditingController _title = TextEditingController();
+  TextEditingController _type = TextEditingController();
+  TextEditingController _description = TextEditingController();
 
 
 // https://pub.dev/packages/image_picker
-final ImagePicker imagePicker = ImagePicker();
-List<XFile>? imageFileList=[];
+  final ImagePicker imagePicker = ImagePicker();
+  List<XFile>? imageFileList=[];
 
-void selectImage() async {
-  final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-  if(selectedImages!.isNotEmpty){
-    imageFileList!.addAll(selectedImages);
+  void selectImage() async {
+    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+    if(selectedImages!.isNotEmpty){
+      imageFileList!.addAll(selectedImages);
+    }
+    setState(() {
+
+    });
   }
-  // setState(() {
-  // });
-}
-
-class ReportDraftForm extends StatelessWidget {
-  final Draft draft;
-  const ReportDraftForm(this.draft, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +51,7 @@ class ReportDraftForm extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () { Navigator.pushReplacement(context, MaterialPageRoute(
-                          builder: (context) => const ReportScreen()
+                          builder: (context) => const NavigationScreen(index: 1)
                       )); },),
                     const Text.rich(
                       TextSpan(
@@ -80,10 +85,10 @@ class ReportDraftForm extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                         child: TextField(
-                          controller: _title  = TextEditingController(text: draft.title.toString()),
-                          decoration: InputDecoration(
+                          controller: _title  = TextEditingController(text: widget.draft.title.toString()),
+                          decoration: const InputDecoration(
                             icon: Icon(
                               Icons.short_text,
                               color: Color(0xff0f2147),
@@ -130,9 +135,9 @@ class ReportDraftForm extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                         child: DropdownButton(
                           underline:Container(),
-                          hint: (_dropDownValue = draft.type.toString()) == null ?
+                          hint: widget.draft.type.toString().isEmpty ?
                           const Text('Select Report Type') : Text(
-                            _dropDownValue! + ' problem',
+                            widget.draft.type.toString() + ' problem',
                           ),
                           items: val.map(
                                 (value) {
@@ -143,11 +148,11 @@ class ReportDraftForm extends StatelessWidget {
                             },
                           ).toList(),
                           onChanged: (String? value) {
-                            // setState(
-                            //       () {
-                            //     _dropDownValue = value;
-                            //   },
-                            // );
+                            setState(
+                                  () {
+                                _dropDownValue = value;
+                              },
+                            );
                           },
                         ),
                       ),
@@ -174,7 +179,7 @@ class ReportDraftForm extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
                     child: TextField(
-                      controller: _description = TextEditingController(text: draft.description.toString()),
+                      controller: _description = TextEditingController(text: widget.draft.description.toString()),
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       decoration: const InputDecoration(
@@ -232,14 +237,14 @@ class ReportDraftForm extends StatelessWidget {
                                   right: -4,
                                   top: -4,
                                   child: Container(
-                                    color: Color.fromRGBO(255, 255, 244, 0.7),
+                                    color: const Color.fromRGBO(255, 255, 244, 0.7),
                                     child: IconButton(
                                       onPressed:(){
                                         imageFileList!.removeAt(index);
-                                        // setState(() {
-                                        // });
+                                        setState(() {
+                                        });
                                       },
-                                      icon: Icon(Icons.delete)
+                                      icon: const Icon(Icons.delete)
                                       ,color: Colors.red[500],
                                     ),
 
@@ -288,8 +293,8 @@ class ReportDraftForm extends StatelessWidget {
                     style: TextButton.styleFrom(
                       primary: Colors.white, // text + icon color
                     ),
-                    icon: Icon(Icons.send, size: 25),
-                    label: Text('Send', style: TextStyle(fontSize: 20)),
+                    icon: const Icon(Icons.send, size: 25),
+                    label: const Text('Send', style: TextStyle(fontSize: 20)),
                     onPressed: () {
                       Navigator.pushReplacement(context, MaterialPageRoute(
                           builder: (context) => ReportScreen()
@@ -305,3 +310,4 @@ class ReportDraftForm extends StatelessWidget {
     );
   }
 }
+
