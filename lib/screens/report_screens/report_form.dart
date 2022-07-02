@@ -1,11 +1,15 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:netcompany_office_tool/model/report.dart';
 import 'package:netcompany_office_tool/screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
-import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
+import 'package:intl/intl.dart';
+import 'package:netcompany_office_tool/services/firebase_service.dart';
+import 'package:netcompany_office_tool/services/storage_service.dart';
 
 class ReportForm extends StatefulWidget {
   const ReportForm({Key? key}) : super(key: key);
@@ -17,16 +21,27 @@ class ReportForm extends StatefulWidget {
 
 class InitState extends  State<ReportForm>{
   final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final val = ['Device', 'Electric', 'Meal', 'Elevator', 'Food'];
+
+  final FirebaseService firebaseService = FirebaseService();
+  final StorageService storageService = StorageService();
+  final TextEditingController titleController  = TextEditingController();
+  final TextEditingController descriptionController  = TextEditingController();
   String? _dropDownValue;
+  DateTime currentTime = DateTime.now();
+  bool loading = false;
+  bool isDone = true;
+
+
   //https://pub.dev/packages/image_picker
   final ImagePicker imagePicker = ImagePicker();
-  List<XFile>? imageFileList=[];
-
+  // List<XFile>? imageFileList=[];
+  List<File>? imageFileList=[];
   void selectImage() async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
     if(selectedImages!.isNotEmpty){
-      imageFileList!.addAll(selectedImages);
+      for(int i = 0; i < selectedImages.length; i++) {
+        imageFileList!.add(File(selectedImages[i].path));
+      }
     }
     setState(() {
 
@@ -34,8 +49,12 @@ class InitState extends  State<ReportForm>{
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return initWidget();
   }
 
@@ -62,8 +81,6 @@ class InitState extends  State<ReportForm>{
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
-
-
                               SizedBox(
                                 child: Text.rich(
                                 TextSpan(
@@ -98,11 +115,12 @@ class InitState extends  State<ReportForm>{
                     ),
 
                     child: Column(
-                      children: const <Widget>[
+                      children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                           child: TextField(
-                            decoration: InputDecoration(
+                            controller: titleController,
+                            decoration: const InputDecoration(
                               icon: Icon(
                                 Icons.short_text,
                                 color: Color(0xff0f2147),
@@ -136,42 +154,55 @@ class InitState extends  State<ReportForm>{
                         ),
                       ],
                     ),
-
-                      child: Row(
-                        children: [
-
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                            child: Icon(Icons.report, color: Color(0xff0f2147),),
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                            child: DropdownButton(
-                              underline:Container(),
-                              hint: _dropDownValue == null ?
-                              const Text('Select Report Type') : Text(
-                                _dropDownValue! + ' problem',
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance.collection("typeReports").snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          const Text("Loading.....");
+                        } else {
+                          List<DropdownMenuItem<String>> items = [];
+                          for(int i = 0; i < snapshot.data!.docs.length; i++) {
+                            DocumentSnapshot snap = snapshot.data!.docs[i];
+                            items.add(
+                              DropdownMenuItem(
+                                child: Text(
+                                  snap.id,
+                                  style: const TextStyle(color: Color(0xff0f2147)),
+                                ),
+                                value: snap.id,
                               ),
-                              items: val.map(
-                                    (value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text('$value problem'),
-                                  );
-                                },
-                              ).toList(),
-                              onChanged: (String? value) {
-                                setState(
-                                      () {
-                                    _dropDownValue = value;
+                            );
+                          }
+                          return Row(
+                            children: <Widget>[
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                                child: Icon(Icons.report, color: Color(0xff0f2147),),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                                child: DropdownButton<String>(
+                                  underline: Container(),
+                                  items: items,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _dropDownValue = value;
+                                    });
                                   },
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+                                  value: _dropDownValue,
+                                  hint: const Text(
+                                    "Select Report Type",
+                                    style: TextStyle(color: Color(0xff0f2147)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return const Text("Loading.....");
+                      }
+                    ),
                   ),
 
                 Container(
@@ -190,21 +221,21 @@ class InitState extends  State<ReportForm>{
                     ],
                   ),
 
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
                     child: TextField(
-
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration: InputDecoration(
-                              icon: Icon(
-                                Icons.notes_rounded,
-                                color: Color(0xff0f2147),
-                              ),
-                            hintText: "Description",
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
+                      controller: descriptionController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      decoration: const InputDecoration(
+                        icon: Icon(
+                          Icons.notes_rounded,
+                          color: Color(0xff0f2147),
                         ),
+                        hintText: "Description",
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                      ),
                     ),
                   ),
                 ),
@@ -238,32 +269,31 @@ class InitState extends  State<ReportForm>{
                               mainAxisSpacing: 10
                           ),
                           itemBuilder: (BuildContext context, int index) {
-                            return   Padding(
+                            return Padding(
                               padding: const EdgeInsets.all(1),
                               child: Stack(
                                 fit: StackFit.expand,
                                 children: [
-                              Image.file(
-                                  File(imageFileList![index].path),
-                                  fit: BoxFit.cover
-                              ),
+                                Image.file(
+                                    imageFileList![index],
+                                    fit: BoxFit.cover
+                                ),
                                   Positioned(
                                       right: -4,
                                       top: -4,
                                       child: Container(
-                                        color: Color.fromRGBO(255, 255, 244, 0.7),
+                                        color: const Color.fromRGBO(255, 255, 244, 0.7),
                                         child: IconButton(
                                           onPressed:(){
                                             imageFileList!.removeAt(index);
                                             setState(() {
                                             });
                                           },
-                                          icon: Icon(Icons.delete)
+                                          icon: const Icon(Icons.delete)
                                           ,color: Colors.red[500],
                                         ),
 
                                       ),
-
                                   )
                                 ],
                               ),
@@ -290,19 +320,65 @@ class InitState extends  State<ReportForm>{
                           )
 
                       ),
-
-
                     ),
                   ),
                   //attach image
 
 
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      if (titleController.text == '' || titleController.text.isEmpty
+                          || descriptionController.text == '' || descriptionController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Title and description must be filled to submit the form")
+                            )
+                        );
+                      } else {
+                        setState(() {
+                          loading = true;
+                          isDone = false;
+                        });
 
+                        String? name = await storageService.readSecureData('name');
+                        final List<String> imgUrls = await firebaseService.uploadFile(imageFileList);
+                        final String title = titleController.text;
+                        final String description = descriptionController.text;
+                        String formattedDate = DateFormat('yyyy-MM-dd').format(currentTime);
+                        String type = '';
+                        if (_dropDownValue == null) {
+                          type = "Other";
+                        } else {
+                          type = _dropDownValue!;
+                        }
+                        Report report  = Report(
+                            creator: name,
+                            title: title,
+                            dateCreate: formattedDate,
+                            status: "pending",
+                            type: type,
+                            description: description,
+                            imgUrls: imgUrls,
+                            totalCom: 0);
+
+                        await firebaseService.addReport(report);
+
+                        setState(() {
+                          isDone = true;
+                        });
+
+                        await Future.delayed(const Duration(seconds: 2));
+
+                        setState(() {
+                          loading = false;
+                          titleController.clear();
+                          descriptionController.clear();
+                          _dropDownValue = null;
+                          imageFileList?.clear();
+                        });
+                      }
                     },
-
-                    child: Container(
+                    child: (loading || !isDone) ? smallButton(isDone) : Container(
                       alignment: Alignment.center,
                       margin: const EdgeInsets.only(left: 90, right: 90, top: 10, bottom: 10),
                       padding: const EdgeInsets.only(left: 10, right: 10),
@@ -329,6 +405,19 @@ class InitState extends  State<ReportForm>{
                 ],
               )
           ),
+    );
+  }
+
+  Widget smallButton(bool isDone) {
+    final color = isDone ? Colors.green : const Color(0xff0f2147);
+    return Container(
+      height: 55,
+      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+      child: Center(
+        child: isDone
+            ? const Icon(Icons.done, size: 55, color: Colors.white,)
+            : const CircularProgressIndicator(color: Colors.white,)
+      ),
     );
   }
 }
