@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:netcompany_office_tool/model/question.dart';
+import 'package:netcompany_office_tool/model/report.dart';
+import 'package:path/path.dart' as Path;
 
 class FirebaseService {
 
@@ -64,5 +71,42 @@ class FirebaseService {
       // value = DateFormat('yyyy-MM-dd – kk:mm:ss').format(dateTime);
     }
     return dateTime;
+  }
+
+  Future<List<Report>> retrieveReports(String name) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("reports").where("creator", isEqualTo: name).get();
+    return snapshot.docs.map((docSnapshot) => Report.fromDocumentSnapshot(docSnapshot)).toList();
+  }
+
+  Future<void> addReport (Report report) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection("reports").add(report.toMap());
+  }
+
+  Future<List<String>> uploadFile(List<File>? images) async {
+    List<String> url = [];
+    firebase_storage.Reference ref;
+    if(images!.isEmpty) {
+      return url;
+    } else {
+      for(var image in images) {
+        ref = firebase_storage.FirebaseStorage.instance
+            .ref()
+            .child('reports_img/${Path.basename(image.path)}');
+        await ref.putFile(image).whenComplete(() async {
+          await ref.getDownloadURL().then((value) {
+            url.add(value);
+          });
+        });
+      }
+      return url;
+    }
+  }
+
+  Future<List<Question>> retrieveQuestions(String surveyID) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("surveys").doc(surveyID).collection("questions").get();
+    return snapshot.docs.map((docSnapshot) => Question.fromDocumentSnapshot(docSnapshot)).toList();
   }
 }
