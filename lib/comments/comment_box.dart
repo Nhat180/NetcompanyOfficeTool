@@ -1,7 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:netcompany_office_tool/comments/comment_image.dart';
 
 
 class CommentBox extends StatefulWidget{
@@ -13,21 +12,6 @@ class CommentBox extends StatefulWidget{
 }
 
 class CommentBoxState extends State<CommentBox>{
-  File? image;
-
-  Future pickImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-      if(image == null) return;
-
-      final imageTemp = File(image.path);
-
-      setState(() => this.image = imageTemp);
-    } on PlatformException catch(e) {
-      print('Failed to pick image: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,29 +38,11 @@ class CommentBoxState extends State<CommentBox>{
                 icon: Icon(Icons.camera_alt),
                 onPressed: () {
                   showModalBottomSheet(
-                      context: context,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(20)
-                          )
-                      ),
-                      builder: (context) => Center(
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 250, width: 100,),
-                            image != null ? Image.file(image!, width: 80, height: 140,): Text("No image selected"),
-
-                            ElevatedButton(
-                                child: const Text('add image'),
-                                onPressed: () {
-                                  pickImage();
-                                }
-                              // onPressed: () => Navigator.pop(context),
-                            ),
-                          ],
-                        ),
-                      ));
-                }),
+                    context: context,
+                    builder: (_) => CommentImage(),
+                  );
+                }
+            ),
             IconButton(icon: const Icon(Icons.send), onPressed: () {}),
           ],))
       ]),
