@@ -125,32 +125,6 @@ class ReportDetailScreen extends StatelessWidget{
                         ),
                       ),
 
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 40,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: const BoxDecoration(
-                              border: Border(
-                                top: BorderSide( //                    <--- top side
-                                  color: Colors.black,
-                                  width: 1.0,
-                                ),
-                                bottom: BorderSide( //                    <--- top side
-                                  color: Colors.black,
-                                  width: 1.0,
-                                ),
-                              )
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Text("Comment(" + report.totalCom.toString() + ")",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center,),
-                          ),
-                        ),
-                      ),
-
                       const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: CommentList()
