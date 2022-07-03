@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/model/weekdays_info.dart';
 import 'package:netcompany_office_tool/dialog/menu_dialog.dart';
+import 'package:netcompany_office_tool/screens/history_menu_screen.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,7 +47,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget> [
                   Padding(
-                    padding: const EdgeInsets.all(32),
+                    padding: const EdgeInsets.only(top: 32, right: 32, left: 32, bottom: 15),
                     child: Text("Daily Lunch Menu", style: GoogleFonts.ubuntu(textStyle: const TextStyle(
                       fontSize: 35,
                       color: Color(0xff0f2147),
@@ -54,6 +55,38 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                     )),
                       textAlign: TextAlign.left,
                     ),
+                  ),
+
+                  Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton.icon(
+
+                                style: TextButton.styleFrom(
+                                textStyle: const TextStyle(fontSize: 20),
+                                ),
+                                label: const Icon(Icons.arrow_circle_right,
+                                    size: 30,
+                                    color: Color(0xff0f2147)),
+                                icon: const Text('History',
+                                    style: TextStyle(
+                                      color: Color(0xff0f2147),
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 22,
+                                      decoration: TextDecoration.underline,)
+                                ),
+                                onPressed: () {
+                                  Navigator.pushReplacement(context, MaterialPageRoute(
+                                      builder: (context) => const HistoryMenuScreen()
+                                  ));
+
+                                },
+                              ),
+                            ],
+                          )
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
