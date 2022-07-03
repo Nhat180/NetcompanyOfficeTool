@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:netcompany_office_tool/model/report_draft.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_detail_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_draft_form.dart';
@@ -200,7 +201,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                 size: 100,
                 color: Colors.blue,
               ),
-              Text(('No Drafts Found'),
+              Text(('There is no draft'),
                   style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
             ],
           ))
@@ -213,27 +214,40 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
           return Card(
             elevation: 10,
             margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(10.0),
-              leading: Text('[' + draft.status + ']', style: const TextStyle(color:Colors.blue),),
-              title: Text(draft.title.isEmpty? "No Title" : draft.title ,  overflow: TextOverflow.ellipsis, softWrap: false),
-              subtitle: Text(draft.description.isEmpty? "No preview is available" : draft.description, overflow: TextOverflow.ellipsis, softWrap: false),
+            child: Slidable(
+              key: const ValueKey(0),
 
-              trailing: IconButton(
-                icon: const Icon(
-                  Icons.delete,
-                  size: 20.0,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  //   _onDeleteItemPressed(index);
+              endActionPane: ActionPane(
+                extentRatio: 0.25,
+                // A motion is a widget used to control how the pane animates.
+                motion: const ScrollMotion(),
+                // A pane can dismiss the Slidable.
+                // dismissible: DismissiblePane(onDismissed: () {print('remove me from list');}),
+
+                // All actions are defined in the children parameter.
+                children: [
+                  // A SlidableAction can have an icon and/or a label.
+                  SlidableAction(
+                    onPressed: doNothing,
+                    backgroundColor: const Color(0xFFFE4A49),
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                  ),
+                ],
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(10.0),
+                leading: Text('[' + draft.status + ']', style: const TextStyle(color:Colors.blue),),
+                title: Text(draft.title.isEmpty? "No Title" : draft.title ,  overflow: TextOverflow.ellipsis, softWrap: false),
+                subtitle: Text(draft.description.isEmpty? "No preview is available" : draft.description, overflow: TextOverflow.ellipsis, softWrap: false),
+
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => ReportDraftForm(draft: draft,)
+                  ));
                 },
               ),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => ReportDraftForm(draft: draft,)
-                ));
-              },
             ),
           );
         },
@@ -303,5 +317,8 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
         }
       ),
     );
+  }
+
+  void doNothing(BuildContext context) {
   }
 }
