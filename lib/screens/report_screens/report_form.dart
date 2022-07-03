@@ -411,6 +411,7 @@ class InitState extends  State<ReportForm>{
   Widget smallButton(bool isDone) {
     final color = isDone ? Colors.green : const Color(0xff0f2147);
     return Container(
+      margin: const EdgeInsets.only(bottom: 10),
       height: 55,
       decoration: BoxDecoration(shape: BoxShape.circle, color: color),
       child: Center(

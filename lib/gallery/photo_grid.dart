@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 
 
 // Declare model
@@ -23,6 +24,10 @@ class PhotoGrid extends StatefulWidget {
 
 // Display image and Shortcut image list
 class PhotoGridState extends State<PhotoGrid> {
+  void closeDrawer() {
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     var images = buildImages();
@@ -36,9 +41,55 @@ class PhotoGridState extends State<PhotoGrid> {
     else if (widget.imageUrls.length == 1) {
       return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.network(
-              widget.imageUrls.first,
-              fit: BoxFit.cover, alignment: Alignment.center)
+          child: InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) =>
+                    Stack(
+                      alignment: Alignment.topCenter,
+                      children: [
+                        PhotoView(
+                          imageProvider: NetworkImage(
+                              widget.imageUrls.first),
+
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            // crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment
+                                .spaceBetween,
+                            children: [
+                              ClipOval(
+                                child: Material(
+                                  color: Colors.white,
+                                  // Button color
+                                  child: InkWell(
+                                    splashColor: Colors.red,
+                                    // Splash color
+                                    onTap: closeDrawer,
+                                    child: const SizedBox(
+                                        width: 30,
+                                        height: 30,
+                                        child: Icon(
+                                            Icons.close)),
+                                  ),
+                                ),
+                              ),
+
+                              const Text(''),
+                              const Text(''),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+              ));
+            },
+            child: Image.network(
+                widget.imageUrls.first,
+                fit: BoxFit.cover, alignment: Alignment.center),
+          )
       );
     }
     // display max 4 image and shortcut the remaining image

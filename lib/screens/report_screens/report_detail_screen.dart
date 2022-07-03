@@ -10,14 +10,6 @@ import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
 
 
-var urls = <String>[
-  'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80',
-  'https://images.unsplash.com/photo-1542998967-692be9110b46?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-  'https://images.unsplash.com/photo-1550496913-b1a19c3779e9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-  'https://ggsc.s3.amazonaws.com/images/uploads/The_Science-Backed_Benefits_of_Being_a_Dog_Owner.jpg',
-  'https://images.unsplash.com/photo-1521320226546-87b106956014?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"',
-  'https://images.unsplash.com/photo-1483412919093-03a22057d0d7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-];
 
 
 //https://www.youtube.com/watch?v=q_nesGrGzfw
@@ -28,7 +20,7 @@ class ReportDetailScreen extends StatelessWidget{
 
   openGallery(BuildContext context, final int i) => Navigator.of(context).push(MaterialPageRoute(
     builder: (_) => GalleryWidget(
-      urlImages: urls,
+      urlImages: report.imgUrls!,
       index: i,
     ),
   ));
@@ -121,7 +113,7 @@ class ReportDetailScreen extends StatelessWidget{
                         padding: const EdgeInsets.all(8.0),
                         child:
                         PhotoGrid(
-                          imageUrls: urls,
+                          imageUrls: report.imgUrls!,
 
                           onImageClicked: (i) {
                             openGallery(context, i);
@@ -159,8 +151,8 @@ class ReportDetailScreen extends StatelessWidget{
                         ),
                       ),
 
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
+                      const Padding(
+                          padding: EdgeInsets.all(8.0),
                           child: CommentList()
                       ),
                     ],
@@ -170,8 +162,8 @@ class ReportDetailScreen extends StatelessWidget{
             ),
 
 
-            Padding(
-                padding: const EdgeInsets.all(8.0),
+            const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: CommentBox()
             ),
           ],
