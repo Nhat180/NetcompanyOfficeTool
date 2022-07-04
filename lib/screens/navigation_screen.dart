@@ -141,9 +141,6 @@ class InitState extends  State<NavigationScreen>{
                           return LogoutDialog(index: _currentIndex,);
                         });
                   }
-                  else if(!isCrawlAuthenticate){
-
-                  }
                   else {
                     _currentIndex = index;
                     if (_currentIndex == 0) {
