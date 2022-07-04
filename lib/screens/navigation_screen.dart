@@ -8,6 +8,7 @@ import 'package:netcompany_office_tool/screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screen.dart';
+import 'package:netcompany_office_tool/screens/error_access_screen.dart';
 import 'package:netcompany_office_tool/screens/survey_screens/surveylist_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -139,7 +140,8 @@ class InitState extends  State<NavigationScreen>{
                         builder: (BuildContext context) {
                           return LogoutDialog(index: _currentIndex,);
                         });
-                  } else {
+                  }
+                  else {
                     _currentIndex = index;
                     if (_currentIndex == 0) {
                       requestCrawlService();
@@ -152,7 +154,7 @@ class InitState extends  State<NavigationScreen>{
               },
             ),
           ),
-          body: (!isCrawlAuthenticate) ? const Center(child: Text("It seems there is something wrong, we recommend to login again"))
+          body: (!isCrawlAuthenticate) ? ErrorAccessScreen()
               : _currentScreen[_currentIndex],
         ),
       ),
@@ -166,7 +168,7 @@ class InitState extends  State<NavigationScreen>{
         title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
         backgroundColor: const Color(0xff0f2147),
       ),
-      body: (!isCrawlAuthenticate) ? const Center(child: Text("It seems there is something wrong, we recommend to login again"))
+      body: (!isCrawlAuthenticate) ? ErrorAccessScreen()
           : _currentScreen[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
