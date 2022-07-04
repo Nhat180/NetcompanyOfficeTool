@@ -70,7 +70,7 @@ class _State extends State<ErrorAccessScreen> {
               child: Text.rich(
                   TextSpan(
                     text: 'Note: ', // default text style'
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Color(0xff0f2147)),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Color(0xff0f2147), fontStyle: FontStyle.italic),
                     children: <TextSpan>[
                       TextSpan(text: 'If you update your password recently try logging in again', style: TextStyle(fontSize: 22, color: Color(0xff0f2147))),
                     ],
