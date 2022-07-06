@@ -1,15 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Comment {
-  final String creator;
+  final String? id;
+  final String? creator;
   final String type;
   final String text;
   final String imgUrl;
 
 
   const Comment({
-  required this.creator,
-  required this.type,
-  required this.text,
-  required this.imgUrl,});
+    this.id,
+    this.creator,
+    required this.type,
+    required this.text,
+    required this.imgUrl,});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'creator': creator,
+      'type': type,
+      'text': text,
+      'imgUrl': imgUrl
+    };
+  }
+
+  Comment.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
+      : id = doc.id,
+        creator = doc.data()!["creator"],
+        type = doc.data()!["type"],
+        text = doc.data()!["text"],
+        imgUrl = doc.data()!["imgUrl"];
 }
 
 const allComments =[

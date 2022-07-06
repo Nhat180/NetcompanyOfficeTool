@@ -1,23 +1,46 @@
 
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:netcompany_office_tool/model/comment.dart';
 
 
 class CommentList extends StatefulWidget {
-  const CommentList({Key? key}) : super(key: key);
+  final String id;
+
+  const CommentList({Key? key, required this.id}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CommentListState();
 }
 
 class CommentListState extends State<CommentList> {
-  var comments = allComments;
+  final FirebaseService firebaseService = FirebaseService();
+  int? totalComment;
+
+  // var comments = allComments;
+  List<Comment> comments = [];
   final ScrollController _controller = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    getTotalComment();
+  }
+
+  void getTotalComment() async {
+    totalComment = await firebaseService.getTotalComment(widget.id);
+    setState(() {
+
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
+    return (totalComment == null) ? Center(child: const CircularProgressIndicator(),) :
+    Center(
       child: Column(
         children: [
           Padding(
@@ -31,26 +54,22 @@ class CommentListState extends State<CommentList> {
                       color: Colors.black,
                       width: 1.0,
                     ),
-                    bottom: BorderSide( //                    <--- top side
+                    bottom: BorderSide( //                  <--- bottom side
                       color: Colors.black,
                       width: 1.0,
                     ),
                   )
               ),
-
-
               child: Row(
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children:
-                [
+                children: [
                   //update
                   Text(
-                    "Total Comment(10)",
+                    "Total Comment (" + totalComment!.toString() + ")",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.black, fontSize: 20),
                   ),
-
 
                   const SizedBox(height: 30),
                   TextButton(
@@ -59,8 +78,8 @@ class CommentListState extends State<CommentList> {
                     ),
                     onPressed: () => _animateToIndex(comments.length),
                     child: Row(
-                      children: [
-                        const Text('Latest'),
+                      children: const [
+                        Text('Latest'),
                         Icon(Icons.arrow_downward)
                       ],
                     ),
@@ -71,156 +90,150 @@ class CommentListState extends State<CommentList> {
           ),
 
           SizedBox(
-            height: 450, // Some height
-            child: Stack(
-              // mainAxisSize: MainAxisSize.max,
-              children: [
-                ListView.builder(
-                  controller: _controller,
-                  reverse: false,
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.only(top: 1),
-                  itemCount: comments.length,
-                  itemBuilder: (context, index) {
-                    final comment = comments[index];
-                    return Container(
-                      margin: const EdgeInsets.only(
-                        top: 8.0,
-                        bottom: 8.0,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 1.0, vertical: 1.0),
-                      decoration: BoxDecoration(
-                        color: comment.creator == "admin"
-                            ? Colors.grey[300]
-                            : Colors.blue[100],
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(15.0),
-                          bottomRight: Radius.circular(15.0),
-                        ),
-                      ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(5.0),
-                        leading: comment.creator == "admin" ? Image.asset(
-                          "images/admin.png", fit: BoxFit.cover,
-                          width: 50,
-                          height: 50,) :
-                        Image.asset(
-                          "images/officer.png", fit: BoxFit.cover,
-                          width: 50,
-                          height: 50,),
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection("reports")
+                  .doc(widget.id).collection("comments").snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) return const Text('Something went wrong');
 
-                        title: Text(comment.creator),
-                        subtitle: Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: comment.imgUrl.isNotEmpty ?
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) =>
-                                          Stack(
-                                            alignment: Alignment.topCenter,
-                                            children: [
-                                              PhotoView(
-                                                imageProvider: NetworkImage(
-                                                    comment.imgUrl),
-
-                                              ),
-                                              Container(
-                                                padding: const EdgeInsets.all(16),
-                                                child: Row(
-                                                  // crossAxisAlignment: CrossAxisAlignment.center,
-                                                  mainAxisAlignment: MainAxisAlignment
-                                                      .spaceBetween,
-                                                  children: [
-                                                    ClipOval(
-                                                      child: Material(
-                                                        color: Colors.white,
-                                                        // Button color
-                                                        child: InkWell(
-                                                          splashColor: Colors.red,
-                                                          // Splash color
-                                                          onTap: closeDrawer,
-                                                          child: const SizedBox(
-                                                              width: 30,
-                                                              height: 30,
-                                                              child: Icon(
-                                                                  Icons.close)),
-                                                        ),
-                                                      ),
-                                                    ),
-
-                                                    const Text(''),
-                                                    const Text(''),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                    ));
-                                  },
-
-                                  child: Container(
-                                    height: 180,
-                                    width: 150,
-                                    // child: Image.asset("images/paper.png", fit: BoxFit.fill),
-                                    child: Image.network(
-                                        comment.imgUrl, fit: BoxFit.cover),
-                                  ),
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  if (snapshot.data!.docs.isEmpty) {
+                    return const Center(child: Text("No comments yet.", style: TextStyle(fontSize: 16),),);
+                  } else {
+                    if (comments.isEmpty) {
+                      for(int i = 0; i < snapshot.data!.docs.length; i++) {
+                        DocumentSnapshot snap = snapshot.data!.docs[i];
+                        comments.add(Comment(
+                            id: snap.id,
+                            creator: snap["creator"],
+                            type: snap["type"],
+                            text: snap["text"],
+                            imgUrl: snap["imgUrl"]));
+                      }
+                    } else if (comments.isNotEmpty && comments.length < snapshot.data!.docs.length){
+                      DocumentSnapshot snap = snapshot.data!.docs[snapshot.data!.docs.length - 1];
+                      comments.add(Comment(
+                          id: snap.id,
+                          creator: snap["creator"],
+                          type: snap["type"],
+                          text: snap["text"],
+                          imgUrl: snap["imgUrl"]));
+                    }
+                    return Stack(
+                      children: [
+                        ListView.builder(
+                          controller: _controller,
+                          reverse: false,
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(top: 1),
+                          itemCount: comments.length,
+                          itemBuilder: (context, index) {
+                            final comment = comments[index];
+                            return Container(
+                              margin: const EdgeInsets.only(
+                                top: 8.0,
+                                bottom: 8.0,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 1.0, vertical: 1.0),
+                              decoration: BoxDecoration(
+                                color: comment.creator == "admin"
+                                    ? Colors.grey[300]
+                                    : Colors.blue[100],
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(15.0),
+                                  bottomRight: Radius.circular(15.0),
                                 ),
-                                // Image.asset("images/paper.png", fit: BoxFit.fitHeight),
-                              ],
-                            ) :
-                            Container(
-                                child: Text(comment.cmt))
+                              ),
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.all(5.0),
+                                leading: comment.creator == "admin" ? Image.asset(
+                                  "images/admin.png", fit: BoxFit.cover,
+                                  width: 50,
+                                  height: 50,) :
+                                Image.asset(
+                                  "images/officer.png", fit: BoxFit.cover,
+                                  width: 50,
+                                  height: 50,),
+
+                                title: Text(comment.creator!),
+                                subtitle: Padding(
+                                    padding: const EdgeInsets.all(1.0),
+                                    child: comment.imgUrl.isNotEmpty ?
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (_) =>
+                                                  Stack(
+                                                    alignment: Alignment.topCenter,
+                                                    children: [
+                                                      PhotoView(
+                                                        imageProvider: NetworkImage(
+                                                            comment.imgUrl),
+
+                                                      ),
+                                                      Container(
+                                                        padding: const EdgeInsets.all(16),
+                                                        child: Row(
+                                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                                          mainAxisAlignment: MainAxisAlignment
+                                                              .spaceBetween,
+                                                          children: [
+                                                            ClipOval(
+                                                              child: Material(
+                                                                color: Colors.white,
+                                                                // Button color
+                                                                child: InkWell(
+                                                                  splashColor: Colors.red,
+                                                                  // Splash color
+                                                                  onTap: closeDrawer,
+                                                                  child: const SizedBox(
+                                                                      width: 30,
+                                                                      height: 30,
+                                                                      child: Icon(
+                                                                          Icons.close)),
+                                                                ),
+                                                              ),
+                                                            ),
+
+                                                            const Text(''),
+                                                            const Text(''),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                            ));
+                                          },
+
+                                          child: SizedBox(
+                                            height: 180,
+                                            width: 150,
+                                            child: Image.network(
+                                                comment.imgUrl, fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                        // Image.asset("images/paper.png", fit: BoxFit.fitHeight),
+                                      ],
+                                    ) :
+                                    Container(
+                                        child: Text(comment.text))
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-
+                      ],
                     );
-                  },
-                ),
-
-
-                //     ListView.builder(
-                //         reverse: false,
-                //         shrinkWrap: true,
-                //         padding: EdgeInsets.only(top: 1.0),
-                //         itemCount: comments.length,
-                //         itemBuilder: (BuildContext context, int index) {
-                //         return Container(
-                //             margin:EdgeInsets.only(
-                //               top: 8.0,
-                //               bottom: 8.0,
-                //               left: 1.0,
-                //             ),
-                //         padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 15.0),
-                //         width: MediaQuery.of(context).size.width * 0.75,
-                //           decoration: BoxDecoration(
-                //             color: Color(0xFFFFEFEE),
-                //             borderRadius: BorderRadius.only(
-                //               topLeft: Radius.circular(15.0),
-                //               bottomLeft: Radius.circular(15.0),
-                //             )
-                //           ),
-                //         child: Column(
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: <Widget>[
-                //           Text(
-                //           comments[index],
-                //           style: TextStyle(
-                //           color: Colors.blueGrey,
-                //           fontSize: 16.0,
-                //           fontWeight: FontWeight.w600,
-                //           ),
-                //         ),
-                //         ],
-                //         ),
-                //         );}
-                // )
-              ],
+                  }
+                }
+              }
             ),
           ),
         ],
@@ -235,7 +248,7 @@ class CommentListState extends State<CommentList> {
   void _animateToIndex(int index) {
     _controller.animateTo(
       index * 500,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       curve: Curves.easeOut,
     );
   }

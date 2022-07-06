@@ -341,7 +341,7 @@ class InitState extends  State<ReportForm>{
                         });
 
                         String? name = await storageService.readSecureData('name');
-                        final List<String> imgUrls = await firebaseService.uploadFile(imageFileList);
+                        final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList);
                         final String title = titleController.text;
                         final String description = descriptionController.text;
                         String formattedDate = DateFormat('yyyy-MM-dd').format(currentTime);

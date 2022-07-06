@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:netcompany_office_tool/model/comment.dart';
 import 'package:netcompany_office_tool/model/question.dart';
 import 'package:netcompany_office_tool/model/report.dart';
 import 'package:path/path.dart' as Path;
@@ -84,7 +85,26 @@ class FirebaseService {
     await db.collection("reports").add(report.toMap());
   }
 
-  Future<List<String>> uploadFile(List<File>? images) async {
+  /// Note: Add suggestion case
+  Future<void> addComment (Comment comment, int commentID, String reportID) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection("reports").doc(reportID).collection("comments").doc(commentID.toString()).set(comment.toMap());
+  }
+
+  /// Note: Add suggestion case
+  Future<int> getTotalComment(String id) async {
+    var collection = FirebaseFirestore.instance.collection("reports");
+    var doc = await collection.doc(id).get();
+    int total = 0;
+    if (doc.exists) {
+      Map<String, dynamic>? data = doc.data();
+      total = data!["totalCom"];
+    }
+    return total;
+  }
+
+  /// Note: Add suggestion case
+  Future<List<String>> uploadFiles(List<File>? images) async {
     List<String> url = [];
     firebase_storage.Reference ref;
     if(images!.isEmpty) {
@@ -102,6 +122,20 @@ class FirebaseService {
       }
       return url;
     }
+  }
+
+  Future<String> uploadFile(File image) async {
+    String imgUrl = '';
+    firebase_storage.Reference reference;
+    reference = firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('comments_img/${Path.basename(image.path)}');
+    await reference.putFile(image).whenComplete(() async {
+      await reference.getDownloadURL().then((value) {
+        imgUrl = value;
+      });
+    });
+    return imgUrl;
   }
 
   Future<List<Question>> retrieveQuestions(String surveyID) async {

@@ -87,8 +87,21 @@ class PhotoGridState extends State<PhotoGrid> {
               ));
             },
             child: Image.network(
-                widget.imageUrls.first,
-                fit: BoxFit.cover, alignment: Alignment.center),
+              widget.imageUrls.first,
+              fit: BoxFit.cover, alignment: Alignment.center,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+            ),
           )
       );
     }
@@ -122,7 +135,19 @@ class PhotoGridState extends State<PhotoGrid> {
           return GestureDetector(
             child: Image.network(
               imageUrl,
-              fit: BoxFit.cover,
+              fit: BoxFit.cover, alignment: Alignment.center,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
             ),
             onTap: () => widget.onImageClicked(index),
           );
@@ -152,7 +177,19 @@ class PhotoGridState extends State<PhotoGrid> {
         return GestureDetector(
           child: Image.network(
             imageUrl,
-            fit: BoxFit.cover,
+            fit: BoxFit.cover, alignment: Alignment.center,
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
+              );
+            },
           ),
           onTap: () => widget.onImageClicked(index),
         );
