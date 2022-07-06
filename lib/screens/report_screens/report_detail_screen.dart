@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:netcompany_office_tool/comments/comment_box.dart';
 import 'package:netcompany_office_tool/comments/comment_list.dart';
+import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/gallery/image_detail.dart';
 import 'package:netcompany_office_tool/gallery/photo_grid.dart';
 import 'package:netcompany_office_tool/model/report.dart';
@@ -37,7 +38,7 @@ class ReportDetailScreen extends StatelessWidget{
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const NavigationScreen(index: 1)));
+                  MaterialPageRoute(builder: (context) => NavigationScreen(index: reportScreen)));
             },
           ),
         ),

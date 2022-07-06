@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/model/storage_item.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:netcompany_office_tool/services/httphandler_service.dart';
@@ -239,11 +240,11 @@ class InitState extends State<LoginScreen> {
                       if (user == null) {
                         Future.delayed(const Duration(seconds: 2), () {
                           Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) => const NavigationScreen(index: 0)));
+                              MaterialPageRoute(builder: (context) => NavigationScreen(index: homeScreen)));
                         });
                       } else {
                         Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => const NavigationScreen(index: 0)));
+                            MaterialPageRoute(builder: (context) => NavigationScreen(index: homeScreen)));
                       }
                     }
                   } else {

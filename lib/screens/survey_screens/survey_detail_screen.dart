@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/model/question.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 
@@ -51,7 +52,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const NavigationScreen(index: 3,)));
+                  MaterialPageRoute(builder: (context) => NavigationScreen(index: surveyScreen,)));
             },
           ),
         ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:netcompany_office_tool/constants.dart';
 import 'login_screen.dart';
 import 'navigation_screen.dart';
 
@@ -28,7 +29,7 @@ class InitState extends  State<SplashScreen>{
     final User? user = auth.currentUser;
     if (user != null) {
       Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => const NavigationScreen(index: 0,)
+          builder: (context) => NavigationScreen(index: homeScreen,)
       ));
     } else {
       Navigator.pushReplacement(context, MaterialPageRoute(
