@@ -285,7 +285,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                     ),
                     trailing: Text("  " + report.status, style: report.status == "pending"
                         ? const TextStyle(color:Colors.red) : report.status == "process"
-                        ? const TextStyle(color:Colors.yellow) :  const TextStyle(color:Colors.green)),
+                        ? const TextStyle(color:Color(0xFFFBC02D)) :  const TextStyle(color:Colors.green)),
                     onTap: () {
                       Navigator.pushReplacement(context, MaterialPageRoute(
                           builder: (context) => ReportDetailScreen(report)
