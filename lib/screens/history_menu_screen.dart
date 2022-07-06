@@ -5,8 +5,10 @@ import 'package:netcompany_office_tool/dialog/menu_dialog.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:netcompany_office_tool/screens/weeklylunch_screen.dart';
 import 'package:sizer/sizer.dart';
 
+enum WidgetMarker { one_week, two_week, three_week }
 class HistoryMenuScreen extends StatefulWidget {
   const HistoryMenuScreen({Key? key}) : super(key: key);
 
@@ -36,21 +38,301 @@ class _HistoryMenuScreenState extends State<HistoryMenuScreen> {
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const NavigationScreen(index: 0,)));
+                    MaterialPageRoute(builder: (context) => WeeklyLunchScreen()));
               },
             ),
           ),
-          body: Container(
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget> [
-
-                ],
-              ),
-            ),
-          )
+          body: BodyWidget(),
       );
     },);
+  }
+}
+
+class BodyWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => BodyWidgetState();
+}
+
+class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMixin<BodyWidget> {
+  WidgetMarker selectedWidgetMarker = WidgetMarker.one_week;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      child: Column(
+        children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: Text('Lunch Menu History ', // default text style'
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 20, bottom: 25),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                CustomButton("1 week ago", WidgetMarker.one_week),
+                CustomButton("2 week ago", WidgetMarker.two_week),
+                CustomButton("3 week ago", WidgetMarker.three_week)
+
+              ],
+            ),
+          ),
+          FutureBuilder(
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return getCustomContainer();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getCustomContainer() {
+    switch (selectedWidgetMarker) {
+      case WidgetMarker.one_week:
+        return getMenuOne();
+      case WidgetMarker.two_week:
+        return getMenuTwo();
+      case WidgetMarker.three_week:
+        return getMenuThree();
+    }
+    return getMenuOne();
+  }
+
+  Widget getMenuOne() {
+    return Expanded(
+        child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return Row(
+                children: [
+                  timeline(Colors.grey[600]!),
+                  Expanded(child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)
+                      ),
+                      color: Colors.grey[600],
+                      elevation: 8,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(12),
+                        onTap: () {
+                          // showDialog(context: context, builder: (BuildContext context) {
+                          // return MenuDialog(title: weekdays[index].abbrev);
+                          // });
+                        },
+                        title: Text("weekdays[index].name",
+                          style: GoogleFonts.ubuntu(textStyle: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                          )),
+                          textAlign: TextAlign.left,
+                        ),
+                        // subtitle: Text("Lunch Menu",
+                        //   style: GoogleFonts.ubuntu(textStyle: const TextStyle(
+                        //     color: Colors.white,
+                        //     fontSize: 15,
+                        //     fontWeight: FontWeight.w900,
+                        //   )),
+                        //   textAlign: TextAlign.left,
+                        // ),
+                        trailing: Image.asset("images/paper.png",
+                          height: 30, width: 30, fit: BoxFit.cover,
+                        ),
+                      )
+                  ),)
+                ],
+              );
+            }),
+    );
+  }
+
+  Widget getMenuTwo() {
+    return Expanded(
+        child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return Container(
+                child: Row(
+                  children: [
+                    timeline(Colors.grey[700]!),
+                    Expanded(child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)
+                        ),
+                        color: Colors.grey[700],
+                        elevation: 8,
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(12),
+                          onTap: () {
+
+
+                            // showDialog(context: context, builder: (BuildContext context) {
+                            // return MenuDialog(title: weekdays[index].abbrev);
+                            // });
+                          },
+                          title: Text("weekdays[index].name",
+                            style: GoogleFonts.ubuntu(textStyle: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                            )),
+                            textAlign: TextAlign.left,
+                          ),
+                          // subtitle: Text("Lunch Menu",
+                          //   style: GoogleFonts.ubuntu(textStyle: const TextStyle(
+                          //     color: Colors.white,
+                          //     fontSize: 15,
+                          //     fontWeight: FontWeight.w900,
+                          //   )),
+                          //   textAlign: TextAlign.left,
+                          // ),
+                          trailing: Image.asset("images/paper.png",
+                            height: 30, width: 30, fit: BoxFit.cover,
+                          ),
+                        )
+                    ),)
+                  ],
+                ),
+              );
+            }),
+
+    );
+  }
+
+  Widget getMenuThree() {
+    return Expanded(
+        child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return Container(
+                child: Row(
+                  children: [
+                    timeline(Colors.grey[800]!),
+                    Expanded(child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)
+                        ),
+                        color: Colors.grey[800],
+                        elevation: 8,
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(12),
+                          onTap: () {
+                            // showDialog(context: context, builder: (BuildContext context) {
+                            // return MenuDialog(title: weekdays[index].abbrev);
+                            // });
+                          },
+                          title: Text("weekdays[index].name",
+                            style: GoogleFonts.ubuntu(textStyle: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                            )),
+                            textAlign: TextAlign.left,
+                          ),
+                          // subtitle: Text("Lunch Menu",
+                          //   style: GoogleFonts.ubuntu(textStyle: const TextStyle(
+                          //     color: Colors.white,
+                          //     fontSize: 15,
+                          //     fontWeight: FontWeight.w900,
+                          //   )),
+                          //   textAlign: TextAlign.left,
+                          // ),
+                          trailing: Image.asset("images/paper.png",
+                            height: 30, width: 30, fit: BoxFit.cover,
+                          ),
+                        )
+                    ),)
+                  ],
+                ),
+              );
+            }),
+    );
+  }
+
+  Widget timeline(Color color) {
+    return Column(
+      children: [
+        Container(
+          width: 2,
+          height: 40,
+          color: Colors.black,
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 5, right: 5),
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(10)
+          ),
+          child: Icon(Icons.history_outlined, color: Colors.white,),
+        ),
+        Container(
+          width: 2,
+          height: 40,
+          color: Colors.black,
+        ),
+      ],
+    );
+  }
+
+  Widget CustomButton(String textbutton, WidgetMarker value) {
+    return SizedBox(
+      height: 40,
+      width: 110,
+      child: ElevatedButton(
+        child: Text(textbutton,
+            style: (selectedWidgetMarker == value) ?
+            const TextStyle(
+                fontSize:  16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white)
+                :
+            const TextStyle(
+                fontSize:  14,
+                fontWeight: FontWeight.bold,
+                color: Colors.black
+            )
+        ),
+        onPressed: () {
+          setState(() {
+            selectedWidgetMarker = value;
+          });
+        },
+        style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(10)),
+            backgroundColor: (selectedWidgetMarker == value) ? MaterialStateProperty.all<Color>(Color(0xff0f2147)) : MaterialStateProperty.all<Color>(Colors.white),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    side: const BorderSide(color: Colors.black)
+                )
+            )
+        ),
+      ),
+
+    );
   }
 }
