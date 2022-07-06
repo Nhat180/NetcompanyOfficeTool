@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/model/report.dart';
 import 'package:netcompany_office_tool/screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
@@ -67,7 +68,7 @@ class InitState extends  State<ReportForm>{
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const NavigationScreen(index: 1,)));
+                MaterialPageRoute(builder: (context) => NavigationScreen(index: reportScreen,)));
           },
         ),
       ),

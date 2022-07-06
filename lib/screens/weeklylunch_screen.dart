@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/model/weekdays_info.dart';
 import 'package:netcompany_office_tool/dialog/menu_dialog.dart';
 import 'package:netcompany_office_tool/screens/history_menu_screen.dart';
@@ -37,7 +38,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const NavigationScreen(index: 0,)));
+                    MaterialPageRoute(builder: (context) => NavigationScreen(index: homeScreen,)));
               },
             ),
           ),
