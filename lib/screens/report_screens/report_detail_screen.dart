@@ -79,7 +79,7 @@ class ReportDetailScreen extends StatelessWidget{
                                 Padding(
                                   padding: const EdgeInsets.only(top: 1.0),
                                   child: Text(
-                                    "On " + report.dateCreate.toString() ,
+                                    "Created on " + report.dateCreate.toString() ,
                                     textAlign: TextAlign.left,
                                     style: const TextStyle(fontSize: 15),
                                   ),
@@ -125,9 +125,9 @@ class ReportDetailScreen extends StatelessWidget{
                         ),
                       ),
 
-                      const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CommentList()
+                      Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CommentList(id: report.id!,)
                       ),
                     ],
                   ),
@@ -136,9 +136,9 @@ class ReportDetailScreen extends StatelessWidget{
             ),
 
 
-            const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CommentBox()
+            Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CommentBox(id: report.id!,) /// Note: Add suggestion case
             ),
           ],
         ),
