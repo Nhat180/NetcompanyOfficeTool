@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class MenuDialog extends StatelessWidget {
-  final String title;
+  final String weekdayAbbrev;
+  final String? history;
 
-  const MenuDialog({Key? key, required this.title}) : super(key: key);
+  const MenuDialog({Key? key, required this.weekdayAbbrev, this.history}) : super(key: key);
 
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-      future: FirebaseFirestore.instance.collection('lunch').doc(title).get(),
+      future: (history == null) ? FirebaseFirestore.instance.collection('lunch').doc(weekdayAbbrev).get()
+          : FirebaseFirestore.instance.collection('lunch').doc(weekdayAbbrev).collection("history").doc(weekdayAbbrev+history!).get(),
       builder: (_,snapshot) {
         if (snapshot.hasError) return const Text("Error");
 

@@ -38,7 +38,7 @@ class _HistoryMenuScreenState extends State<HistoryMenuScreen> {
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => WeeklyLunchScreen()));
+                    MaterialPageRoute(builder: (context) => const WeeklyLunchScreen()));
               },
             ),
           ),
@@ -49,6 +49,8 @@ class _HistoryMenuScreenState extends State<HistoryMenuScreen> {
 }
 
 class BodyWidget extends StatefulWidget {
+  const BodyWidget({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => BodyWidgetState();
 }
@@ -75,7 +77,7 @@ class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMi
           const Padding(
             padding: EdgeInsets.only(top: 10.0),
             child: Text('Lunch Menu History ', // default text style'
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30), textAlign: TextAlign.center,
             ),
           ),
 
@@ -85,8 +87,8 @@ class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMi
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 CustomButton("1 week ago", WidgetMarker.one_week),
-                CustomButton("2 week ago", WidgetMarker.two_week),
-                CustomButton("3 week ago", WidgetMarker.three_week)
+                CustomButton("2 weeks ago", WidgetMarker.two_week),
+                CustomButton("3 weeks ago", WidgetMarker.three_week)
 
               ],
             ),
@@ -116,11 +118,10 @@ class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMi
   Widget getMenuOne() {
     return Expanded(
         child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            itemCount: 5,
-            itemBuilder: (context, index) {
+            itemCount: weekdays.length,
+            itemBuilder: (BuildContext context, int index) {
               return Row(
                 children: [
                   timeline(Colors.grey[600]!),
@@ -133,28 +134,17 @@ class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMi
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(12),
                         onTap: () {
-                          // showDialog(context: context, builder: (BuildContext context) {
-                          // return MenuDialog(title: weekdays[index].abbrev);
-                          // });
+                          showDialog(context: context, builder: (BuildContext context) {
+                          return MenuDialog(weekdayAbbrev: weekdays[index].abbrev, history: "History1",);
+                          });
                         },
-                        title: Text("weekdays[index].name",
+                        title: Text(weekdays[index].name,
                           style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 25,
                             color: Colors.white,
                             fontWeight: FontWeight.w900,
                           )),
                           textAlign: TextAlign.left,
-                        ),
-                        // subtitle: Text("Lunch Menu",
-                        //   style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                        //     color: Colors.white,
-                        //     fontSize: 15,
-                        //     fontWeight: FontWeight.w900,
-                        //   )),
-                        //   textAlign: TextAlign.left,
-                        // ),
-                        trailing: Image.asset("images/paper.png",
-                          height: 30, width: 30, fit: BoxFit.cover,
                         ),
                       )
                   ),)
@@ -167,10 +157,9 @@ class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMi
   Widget getMenuTwo() {
     return Expanded(
         child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            itemCount: 5,
+            itemCount: weekdays.length,
             itemBuilder: (context, index) {
               return Container(
                 child: Row(
@@ -185,30 +174,17 @@ class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMi
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(12),
                           onTap: () {
-
-
-                            // showDialog(context: context, builder: (BuildContext context) {
-                            // return MenuDialog(title: weekdays[index].abbrev);
-                            // });
+                            showDialog(context: context, builder: (BuildContext context) {
+                            return MenuDialog(weekdayAbbrev: weekdays[index].abbrev, history: "History2",);
+                            });
                           },
-                          title: Text("weekdays[index].name",
+                          title: Text(weekdays[index].name,
                             style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 25,
                               color: Colors.white,
                               fontWeight: FontWeight.w900,
                             )),
                             textAlign: TextAlign.left,
-                          ),
-                          // subtitle: Text("Lunch Menu",
-                          //   style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                          //     color: Colors.white,
-                          //     fontSize: 15,
-                          //     fontWeight: FontWeight.w900,
-                          //   )),
-                          //   textAlign: TextAlign.left,
-                          // ),
-                          trailing: Image.asset("images/paper.png",
-                            height: 30, width: 30, fit: BoxFit.cover,
                           ),
                         )
                     ),)
@@ -223,9 +199,8 @@ class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMi
   Widget getMenuThree() {
     return Expanded(
         child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: 5,
+            itemCount: weekdays.length,
             itemBuilder: (context, index) {
               return Container(
                 child: Row(
@@ -240,28 +215,17 @@ class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMi
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(12),
                           onTap: () {
-                            // showDialog(context: context, builder: (BuildContext context) {
-                            // return MenuDialog(title: weekdays[index].abbrev);
-                            // });
+                            showDialog(context: context, builder: (BuildContext context) {
+                            return MenuDialog(weekdayAbbrev: weekdays[index].abbrev, history: "History3",);
+                            });
                           },
-                          title: Text("weekdays[index].name",
+                          title: Text(weekdays[index].name,
                             style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 25,
                               color: Colors.white,
                               fontWeight: FontWeight.w900,
                             )),
                             textAlign: TextAlign.left,
-                          ),
-                          // subtitle: Text("Lunch Menu",
-                          //   style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                          //     color: Colors.white,
-                          //     fontSize: 15,
-                          //     fontWeight: FontWeight.w900,
-                          //   )),
-                          //   textAlign: TextAlign.left,
-                          // ),
-                          trailing: Image.asset("images/paper.png",
-                            height: 30, width: 30, fit: BoxFit.cover,
                           ),
                         )
                     ),)
@@ -277,33 +241,33 @@ class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMi
       children: [
         Container(
           width: 2,
-          height: 40,
+          height: 35,
           color: Colors.black,
         ),
         Container(
-          margin: EdgeInsets.only(left: 5, right: 5),
-          padding: EdgeInsets.all(2),
+          margin: const EdgeInsets.only(left: 5, right: 5),
+          padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(10)
           ),
-          child: Icon(Icons.history_outlined, color: Colors.white,),
+          child: const Icon(Icons.history_outlined, color: Colors.white,),
         ),
         Container(
           width: 2,
-          height: 40,
+          height: 35,
           color: Colors.black,
         ),
       ],
     );
   }
 
-  Widget CustomButton(String textbutton, WidgetMarker value) {
+  Widget CustomButton(String textButton, WidgetMarker value) {
     return SizedBox(
       height: 40,
       width: 110,
       child: ElevatedButton(
-        child: Text(textbutton,
+        child: Text(textButton,
             style: (selectedWidgetMarker == value) ?
             const TextStyle(
                 fontSize:  16,
