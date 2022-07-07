@@ -111,7 +111,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                                           contentPadding: const EdgeInsets.all(12),
                                           onTap: () {
                                             showDialog(context: context, builder: (BuildContext context) {
-                                              return MenuDialog(title: weekdays[index].abbrev);
+                                              return MenuDialog(weekdayAbbrev: weekdays[index].abbrev);
                                             });
                                           },
                                           title: Text(weekdays[index].name,
