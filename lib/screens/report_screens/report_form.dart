@@ -342,7 +342,7 @@ class InitState extends  State<ReportForm>{
                         });
 
                         String? name = await storageService.readSecureData('name');
-                        final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList);
+                        final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList, "reports"); /// Note: Add suggestion case
                         final String title = titleController.text;
                         final String description = descriptionController.text;
                         String formattedDate = DateFormat('yyyy-MM-dd').format(currentTime);
@@ -377,6 +377,9 @@ class InitState extends  State<ReportForm>{
                           _dropDownValue = null;
                           imageFileList?.clear();
                         });
+
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => NavigationScreen(index: reportScreen,)));
                       }
                     },
                     child: (loading || !isDone) ? smallButton(isDone) : Container(

@@ -9,8 +9,9 @@ import 'package:netcompany_office_tool/model/comment.dart';
 
 class CommentList extends StatefulWidget {
   final String id;
+  final String featureType;
 
-  const CommentList({Key? key, required this.id}) : super(key: key);
+  const CommentList({Key? key, required this.id, required this.featureType}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CommentListState();
@@ -31,7 +32,7 @@ class CommentListState extends State<CommentList> {
   }
 
   void getTotalComment() async {
-    totalComment = await firebaseService.getTotalComment(widget.id);
+    totalComment = await firebaseService.getTotalComment(widget.id, widget.featureType);
     setState(() {
 
     });
@@ -92,7 +93,7 @@ class CommentListState extends State<CommentList> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection("reports")
+              stream: FirebaseFirestore.instance.collection(widget.featureType)
                   .doc(widget.id).collection("comments").snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) return const Text('Something went wrong');

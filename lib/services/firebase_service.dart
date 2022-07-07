@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:netcompany_office_tool/model/comment.dart';
 import 'package:netcompany_office_tool/model/question.dart';
 import 'package:netcompany_office_tool/model/report.dart';
+import 'package:netcompany_office_tool/model/suggestion.dart';
 import 'package:path/path.dart' as Path;
 
 class FirebaseService {
@@ -76,8 +77,34 @@ class FirebaseService {
 
   Future<List<Report>> retrieveReports(String name) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
+    List<Report> reports = [];
     QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("reports").where("creator", isEqualTo: name).get();
-    return snapshot.docs.map((docSnapshot) => Report.fromDocumentSnapshot(docSnapshot)).toList();
+    reports = snapshot.docs.map((docSnapshot) => Report.fromDocumentSnapshot(docSnapshot)).toList();
+    reports.sort((a,b) { // Sort the list, bring the latest reports to top
+      var aDate = a.dateCreate;
+      var bDate = b.dateCreate;
+      return bDate.compareTo(aDate);
+    });
+    return reports;
+  }
+
+  Future<List<Suggestion>> retrieveSuggestions(String name) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    List<Suggestion> suggestions = [];
+    QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("suggestions").where("creator", isEqualTo: name).get();
+    suggestions = snapshot.docs.map((docSnapshot) => Suggestion.fromDocumentSnapshot(docSnapshot)).toList();
+    suggestions.sort((a,b) { // Sort the list, bring the latest reports to top
+      var aDate = a.dateCreate;
+      var bDate = b.dateCreate;
+      return bDate.compareTo(aDate);
+    });
+    return suggestions;
+  }
+
+  Future<List<Question>> retrieveQuestions(String surveyID) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("surveys").doc(surveyID).collection("questions").get();
+    return snapshot.docs.map((docSnapshot) => Question.fromDocumentSnapshot(docSnapshot)).toList();
   }
 
   Future<void> addReport (Report report) async {
@@ -85,15 +112,20 @@ class FirebaseService {
     await db.collection("reports").add(report.toMap());
   }
 
-  /// Note: Add suggestion case
-  Future<void> addComment (Comment comment, int commentID, String reportID) async {
+  Future<void> addSuggestion (Suggestion suggestion) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
-    await db.collection("reports").doc(reportID).collection("comments").doc(commentID.toString()).set(comment.toMap());
+    await db.collection("suggestions").add(suggestion.toMap());
   }
 
   /// Note: Add suggestion case
-  Future<int> getTotalComment(String id) async {
-    var collection = FirebaseFirestore.instance.collection("reports");
+  Future<void> addComment (Comment comment, int commentID, String reportID, String featureType) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection(featureType).doc(reportID).collection("comments").doc(commentID.toString()).set(comment.toMap());
+  }
+
+  /// Note: Add suggestion case
+  Future<int> getTotalComment(String id, String featureType) async {
+    var collection = FirebaseFirestore.instance.collection(featureType);
     var doc = await collection.doc(id).get();
     int total = 0;
     if (doc.exists) {
@@ -104,21 +136,34 @@ class FirebaseService {
   }
 
   /// Note: Add suggestion case
-  Future<List<String>> uploadFiles(List<File>? images) async {
+  Future<List<String>> uploadFiles(List<File>? images, String featureType) async {
     List<String> url = [];
     firebase_storage.Reference ref;
     if(images!.isEmpty) {
       return url;
     } else {
-      for(var image in images) {
-        ref = firebase_storage.FirebaseStorage.instance
-            .ref()
-            .child('reports_img/${Path.basename(image.path)}');
-        await ref.putFile(image).whenComplete(() async {
-          await ref.getDownloadURL().then((value) {
-            url.add(value);
+      if (featureType == "reports") {
+        for(var image in images) {
+          ref = firebase_storage.FirebaseStorage.instance
+              .ref()
+              .child('reports_img/${Path.basename(image.path)}');
+          await ref.putFile(image).whenComplete(() async {
+            await ref.getDownloadURL().then((value) {
+              url.add(value);
+            });
           });
-        });
+        }
+      } else {
+        for(var image in images) {
+          ref = firebase_storage.FirebaseStorage.instance
+              .ref()
+              .child('suggestions_img/${Path.basename(image.path)}');
+          await ref.putFile(image).whenComplete(() async {
+            await ref.getDownloadURL().then((value) {
+              url.add(value);
+            });
+          });
+        }
       }
       return url;
     }
@@ -136,11 +181,5 @@ class FirebaseService {
       });
     });
     return imgUrl;
-  }
-
-  Future<List<Question>> retrieveQuestions(String surveyID) async {
-    final FirebaseFirestore db = FirebaseFirestore.instance;
-    QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("surveys").doc(surveyID).collection("questions").get();
-    return snapshot.docs.map((docSnapshot) => Question.fromDocumentSnapshot(docSnapshot)).toList();
   }
 }
