@@ -9,8 +9,9 @@ import 'package:netcompany_office_tool/services/storage_service.dart';
 
 class CommentBox extends StatefulWidget{
   final String id;
+  final String featureType;
 
-  const CommentBox({Key? key, required this.id}) : super(key: key); /// Note: Add report/suggestion case
+  const CommentBox({Key? key, required this.id, required this.featureType}) : super(key: key); /// Note: Add report/suggestion case
 
   @override
   State<StatefulWidget> createState() => CommentBoxState();
@@ -51,7 +52,7 @@ class CommentBoxState extends State<CommentBox>{
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,
-                    builder: (_) => CommentImage(id: widget.id,), /// Note: Add suggestion case
+                    builder: (_) => CommentImage(id: widget.id, featureType: widget.featureType,), /// Note: Add suggestion case
                   );
                 }
             ),
@@ -67,7 +68,7 @@ class CommentBoxState extends State<CommentBox>{
                       loading = true;
                     });
                     String? name = await storageService.readSecureData('name');
-                    final int commentID = await firebaseService.getTotalComment(widget.id);
+                    final int commentID = await firebaseService.getTotalComment(widget.id, widget.featureType);
                     final String text = textController.text;
 
                     Comment comment = Comment(
@@ -77,8 +78,8 @@ class CommentBoxState extends State<CommentBox>{
                         imgUrl: "");
 
 
-                    await firebaseService.addComment(comment, commentID, widget.id); /// Note: Add suggestion case
-                    FirebaseFirestore.instance.collection("reports")
+                    await firebaseService.addComment(comment, commentID, widget.id, widget.featureType); /// Note: Add suggestion case
+                    FirebaseFirestore.instance.collection(widget.featureType)
                         .doc(widget.id).update({'totalCom': commentID + 1}); /// Note: Add suggestion case
                     textController.clear();
 

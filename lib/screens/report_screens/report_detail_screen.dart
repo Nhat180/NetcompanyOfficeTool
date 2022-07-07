@@ -128,7 +128,7 @@ class ReportDetailScreen extends StatelessWidget{
 
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: CommentList(id: report.id!,)
+                          child: CommentList(id: report.id!, featureType: "reports",)
                       ),
                     ],
                   ),
@@ -139,7 +139,7 @@ class ReportDetailScreen extends StatelessWidget{
 
             Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: CommentBox(id: report.id!,) /// Note: Add suggestion case
+                child: CommentBox(id: report.id!, featureType: "reports",) /// Note: Add suggestion case
             ),
           ],
         ),

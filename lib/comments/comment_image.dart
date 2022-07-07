@@ -9,8 +9,9 @@ import 'package:netcompany_office_tool/services/storage_service.dart';
 
 class CommentImage extends StatefulWidget {
   final String id;
+  final String featureType;
 
-  const CommentImage({Key? key, required this.id}) : super(key: key); /// Note: Add report/suggestion case
+  const CommentImage({Key? key, required this.id, required this.featureType}) : super(key: key); /// Note: Add report/suggestion case
 
   @override
   CommentImageState createState() => CommentImageState();
@@ -98,7 +99,7 @@ class CommentImageState extends State<CommentImage> {
                       loading = true;
                     });
                     String? name = await storageService.readSecureData('name');
-                    final int commentID = await firebaseService.getTotalComment(widget.id);
+                    final int commentID = await firebaseService.getTotalComment(widget.id, widget.featureType);
                     final String imgUrl = await firebaseService.uploadFile(image!);
 
                     Comment comment = Comment(
@@ -107,8 +108,8 @@ class CommentImageState extends State<CommentImage> {
                         text: "",
                         imgUrl: imgUrl);
 
-                    await firebaseService.addComment(comment, commentID, widget.id); /// Note: Add suggestion case
-                    FirebaseFirestore.instance.collection("reports")
+                    await firebaseService.addComment(comment, commentID, widget.id, widget.featureType); /// Note: Add suggestion case
+                    FirebaseFirestore.instance.collection(widget.featureType)
                         .doc(widget.id).update({'totalCom': commentID + 1}); /// Note: Add suggestion case
                     closeDrawer();
 
