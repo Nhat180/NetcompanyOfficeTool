@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:intl/intl.dart';
 
 class MenuDialog extends StatelessWidget {
   final String weekdayAbbrev;
@@ -24,6 +26,8 @@ class MenuDialog extends StatelessWidget {
           List<String> sideDish = List<String>.from(data['side']);
           List<String> soup = List<String>.from(data['soup']);
           List<String> dessert = List<String>.from(data['dessert']);
+          Timestamp timestamp = data['timestamp'];
+          DateTime dateTime = timestamp.toDate();
           return Sizer(builder: (context, orientation, deviceType) {
             return Dialog(
               shape: RoundedRectangleBorder(
@@ -50,6 +54,13 @@ class MenuDialog extends StatelessWidget {
                                 decorationStyle: TextDecorationStyle.double),
                           ),
                         ),
+                      ),
+
+                      SizedBox(height: 3.h),
+                      Container(
+                        alignment: Alignment.center,
+                        child: Text(DateFormat('MMMM dd, yyyy').format(dateTime),
+                          style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15.sp),),
                       ),
 
                       Container(
