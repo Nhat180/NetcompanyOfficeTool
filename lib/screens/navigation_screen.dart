@@ -44,7 +44,6 @@ class InitState extends  State<NavigationScreen>{
   final StorageService storageService = StorageService();
   final HttpHandlerService handlerService = HttpHandlerService();
   final FirebaseService firebaseService = FirebaseService();
-  DateTime currentTime = DateTime.now();
   bool isCrawlAuthenticate = true;
   bool loadingCrawl = false;
   int _currentIndex = 0;
@@ -76,6 +75,7 @@ class InitState extends  State<NavigationScreen>{
 
   void requestCrawlService() async {
     loadingCrawl = true;
+    DateTime currentTime = DateTime.now();
     DateTime updateTime = await firebaseService.getCrawlTimeStamp();
     if(currentTime.isAfter(updateTime) || currentTime.isAtSameMomentAs(updateTime)) {
       String? name = await storageService.readSecureData('name');
