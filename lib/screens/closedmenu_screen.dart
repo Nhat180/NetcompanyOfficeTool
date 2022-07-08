@@ -38,15 +38,28 @@ class _ClosedMenuState extends State<ClosedMenu> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: () {
+                    ElevatedButton(
+                      child: Text("You can check",
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () {
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) => const WeeklyLunchScreen()));
                       },
-                      child: Text("You can Check ", textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 15.sp,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline)),
+                      style: ButtonStyle(
+                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(10)),
+                          backgroundColor: MaterialStateProperty.all<Color>(Color(0xff0f2147)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  side: const BorderSide(color: Colors.black)
+                              )
+                          )
+                      ),
                     ),
                     SizedBox(height: 1.h),
                     Text("the next week's lunch menu here", textAlign: TextAlign.center, style: TextStyle(fontSize: 15.sp))
