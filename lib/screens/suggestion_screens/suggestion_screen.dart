@@ -1,38 +1,35 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:netcompany_office_tool/model/report_draft.dart';
-import 'package:netcompany_office_tool/screens/report_screens/report_detail_screen.dart';
-import 'package:netcompany_office_tool/screens/report_screens/report_draft_form.dart';
-import 'package:netcompany_office_tool/screens/report_screens/report_form.dart';
+import 'package:netcompany_office_tool/model/suggestion.dart';
+import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_detail_screen.dart';
+import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_form.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:netcompany_office_tool/services/storage_service.dart';
-import '../../model/report.dart';
 
 
-enum WidgetMarker { report, draft}
-class ReportScreen extends StatefulWidget {
-  const ReportScreen({Key? key}) : super(key: key);
+enum WidgetMarker { suggestion, draft}
+class SuggestionScreen extends StatefulWidget {
+  const SuggestionScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ReportScreenState();
+  State<StatefulWidget> createState() => _SuggestionState();
 }
 
-class _ReportScreenState extends  State<ReportScreen> {
-
+class _SuggestionState extends State<SuggestionScreen> {
   @override
   Widget build(BuildContext context) {
     return initWidget();
   }
 
-  Widget initWidget(){
+  Widget initWidget() {
     return SafeArea(
       child: Scaffold(
           floatingActionButton: FloatingActionButton(
             backgroundColor: const Color(0xff0f2147),
             onPressed: (){
               Navigator.pushReplacement(context, MaterialPageRoute(
-                  builder: (context) => const ReportForm()
+                  builder: (context) => const SuggestionForm()
               ));
             },
             child: const Icon(Icons.border_color ),
@@ -55,20 +52,20 @@ class ListWidget extends StatefulWidget{
 }
 
 class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMixin<ListWidget>{
-  WidgetMarker selectedWidgetMarker = WidgetMarker.report;
+  WidgetMarker selectedWidgetMarker = WidgetMarker.suggestion;
   // late AnimationController controller;
   // late Animation animation;
   final FirebaseService firebaseService = FirebaseService();
   final StorageService storageService = StorageService();
-  Future<List<Report>>? reportList;
-  List<Report>? retrievedReportList;
+  Future<List<Suggestion>>? suggestionList;
+  List<Suggestion>? retrievedSuggestionList;
   var ownDraft = allDrafts.where((report) => report.creator == 'Nhat nguyen').toList();
 
   void initRetrieval() async {
     String? name = await storageService.readSecureData('name');
-    retrievedReportList = await firebaseService.retrieveReports(name!);
+    retrievedSuggestionList = await firebaseService.retrieveSuggestions(name!);
     setState(() {
-      reportList = firebaseService.retrieveReports(name);
+      suggestionList = firebaseService.retrieveSuggestions(name);
     });
 
   }
@@ -96,13 +93,12 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 SizedBox(
-                  width: 100, // <-- Your width
+                  width: 120, // <-- Your width
                   height: 60,
                   child: ElevatedButton(
-                    //https://www.youtube.com/watch?v=nDmGGi_RlDM
                       style: ButtonStyle(
                           padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),
-                          backgroundColor: (selectedWidgetMarker == WidgetMarker.report) ? MaterialStateProperty.all<Color>(Color(0xff0f2147)) : MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor: (selectedWidgetMarker == WidgetMarker.suggestion) ? MaterialStateProperty.all<Color>(Color(0xff0f2147)) : MaterialStateProperty.all<Color>(Colors.white),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
@@ -112,12 +108,12 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                       ),
                       onPressed: () {
                         setState(() {
-                          selectedWidgetMarker = WidgetMarker.report;
+                          selectedWidgetMarker = WidgetMarker.suggestion;
                         });
                       },
                       child: Text(
-                          "Report",
-                          style: (selectedWidgetMarker == WidgetMarker.report) ?
+                          "Suggest",
+                          style: (selectedWidgetMarker == WidgetMarker.suggestion) ?
                           const TextStyle(
                               fontSize:  22,
                               fontWeight: FontWeight.bold,
@@ -133,7 +129,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                 ),
 
                 SizedBox(
-                  width: 100, // <-- Your width
+                  width: 120, // <-- Your width
                   height: 60,
                   child: ElevatedButton(
                       style: ButtonStyle(
@@ -181,7 +177,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
 
   Widget getCustomContainer() {
     switch (selectedWidgetMarker) {
-      case WidgetMarker.report:
+      case WidgetMarker.suggestion:
         return getReportsContainer();
       case WidgetMarker.draft:
         return getDraftsContainer();
@@ -242,9 +238,9 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                 subtitle: Text(draft.description.isEmpty? "No preview is available" : draft.description, overflow: TextOverflow.ellipsis, softWrap: false),
 
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => ReportDraftForm(draft: draft,)
-                  ));
+                  // Navigator.push(context, MaterialPageRoute(
+                  //     builder: (context) => ReportDraftForm(draft: draft,)
+                  // ));
                 },
               ),
             ),
@@ -257,72 +253,70 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
   Widget getReportsContainer() {
     return Expanded(
       child: FutureBuilder(
-        future: reportList,
-        builder: (BuildContext context, AsyncSnapshot<List<Report>> snapshot) {
-          if(snapshot.hasError) return const Text("Error");
+          future: suggestionList,
+          builder: (BuildContext context, AsyncSnapshot<List<Suggestion>> snapshot) {
+            if(snapshot.hasError) return const Text("Error");
 
-          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ListView.builder(padding: const EdgeInsets.only(top: 10),
-              itemCount: retrievedReportList!.length,
-              itemBuilder: (context, index) {
-                final report = retrievedReportList![index];
-                return Card(
-                  elevation: 10,
-                  margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(10.0),
-                    leading: report.status == "done"? Container(
-                        decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-                        child: const Icon(Icons.done, size: 45, color: Colors.white,)) :
-                    report.status == "pending"? Image.asset("images/pending.png", fit: BoxFit.cover, width: 45, height: 45,) :
-                    Image.asset("images/progress.png", fit: BoxFit.cover, width: 45, height: 45,),
+            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              return ListView.builder(padding: const EdgeInsets.only(top: 10),
+                itemCount: retrievedSuggestionList!.length,
+                itemBuilder: (context, index) {
+                  final suggestion = retrievedSuggestionList![index];
+                  return Card(
+                    elevation: 10,
+                    margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(10.0),
+                      leading: suggestion.status == "done"? Container(
+                          decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                          child: const Icon(Icons.done, size: 45, color: Colors.white,)) :
+                      suggestion.status == "pending"? Image.asset("images/pending.png", fit: BoxFit.cover, width: 45, height: 45,) :
+                      Image.asset("images/progress.png", fit: BoxFit.cover, width: 45, height: 45,),
 
-                    title: Text(report.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Created on " + report.dateCreate),
+                      title: Text(suggestion.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Created on " + suggestion.dateCreate),
 
-                        Text(report.description, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
-                      ],
+                          Text(suggestion.description, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
+                        ],
+                      ),
+                      trailing: Text("  " + suggestion.status, style: suggestion.status == "pending"
+                          ? const TextStyle(color:Colors.red) : suggestion.status == "process"
+                          ? const TextStyle(color:Color(0xFFFBC02D)) :  const TextStyle(color:Colors.green)),
+                      onTap: () {
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                            builder: (context) => SuggestionDetailScreen(suggestion)
+                        ));
+                      },
                     ),
-                    trailing: Text("  " + report.status, style: report.status == "pending"
-                        ? const TextStyle(color:Colors.red) : report.status == "process"
-                        ? const TextStyle(color:Color(0xFFFBC02D)) :  const TextStyle(color:Colors.green)),
-                    onTap: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(
-                          builder: (context) => ReportDetailScreen(report)
-                      ));
-                    },
-                  ),
-                );
-              },
-            );
+                  );
+                },
+              );
+            }
+            if(snapshot.connectionState == ConnectionState.done && retrievedSuggestionList!.isEmpty) {
+              return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.search_off,
+                        size: 100,
+                        color: Colors.blue,
+                      ),
+                      Text(('No Suggestions Found'),
+                          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
+                    ],
+                  ));
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
           }
-          if(snapshot.connectionState == ConnectionState.done && retrievedReportList!.isEmpty) {
-            return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.search_off,
-                      size: 100,
-                      color: Colors.blue,
-                    ),
-                    Text(('No Reports Found'),
-                        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
-                  ],
-                ));
-          } else {
-            return const Center(child:  CircularProgressIndicator());
-          }
-          // return const Center(child: CircularProgressIndicator());
-        }
       ),
     );
   }
-
   void doNothing(BuildContext context) {
   }
 }
