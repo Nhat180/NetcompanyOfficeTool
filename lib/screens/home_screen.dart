@@ -174,22 +174,38 @@ class _State extends State<HomeScreen> {
                           ),
 
                           Container(
-                              margin: const EdgeInsets.only(top: 50, bottom: 15),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushReplacement(context,
-                                          MaterialPageRoute(builder: (context) => const WeeklyLunchScreen()));
-                                    },
-                                    child: Text("Check ", style: TextStyle(fontSize: 15.sp,
-                                        fontWeight: FontWeight.bold,
-                                        decoration: TextDecoration.underline)),
+                            margin: const EdgeInsets.only(top: 30, bottom: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  child: Text("Check",
+                                      style: TextStyle(
+                                          fontSize: 15.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                      ),
                                   ),
-                                  Text("this week's lunch menu", style: TextStyle(fontSize: 15.sp))
-                                ],
-                              )
+                                  onPressed: () {
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(builder: (context) => const WeeklyLunchScreen()));
+                                  },
+                                  style: ButtonStyle(
+                                      padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(10)),
+                                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xff0f2147)),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              side: const BorderSide(color: Colors.black)
+                                          )
+                                      )
+                                  ),
+
+                                ),
+
+                                Text(" this week's lunch menu", style: TextStyle(fontSize: 15.sp))
+                              ],
+                            ),
                           )
                         ],
                       )
