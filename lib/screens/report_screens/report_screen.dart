@@ -7,7 +7,6 @@ import 'package:netcompany_office_tool/screens/report_screens/report_draft_form.
 import 'package:netcompany_office_tool/screens/report_screens/report_form.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:netcompany_office_tool/services/storage_service.dart';
-
 import '../../model/report.dart';
 
 
@@ -272,7 +271,12 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                   margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(10.0),
-                    leading: Image.asset("images/paper.png", fit: BoxFit.cover, width: 50, height: 50,),
+                    leading: report.status == "done"? Container(
+                        decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                        child: const Icon(Icons.done, size: 45, color: Colors.white,)) :
+                    report.status == "pending"? Image.asset("images/pending.png", fit: BoxFit.cover, width: 45, height: 45,) :
+                    Image.asset("images/progress.png", fit: BoxFit.cover, width: 45, height: 45,),
+
                     title: Text(report.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,7 +301,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
             );
           }
           if(snapshot.connectionState == ConnectionState.done && retrievedReportList!.isEmpty) {
-            Center(
+            return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
@@ -311,9 +315,9 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                   ],
                 ));
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child:  CircularProgressIndicator());
           }
-          return const Center(child: CircularProgressIndicator());
+          // return const Center(child: CircularProgressIndicator());
         }
       ),
     );
