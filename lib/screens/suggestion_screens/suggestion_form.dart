@@ -177,7 +177,7 @@ class InitState extends  State<SuggestionForm>{
                           children: <Widget>[
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                              child: Icon(Icons.report, color: Color(0xff0f2147),),
+                              child: Icon(Icons.lightbulb_sharp, color: Color(0xff0f2147),),
                             ),
 
                             Padding(
