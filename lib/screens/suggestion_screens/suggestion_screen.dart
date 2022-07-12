@@ -178,7 +178,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
   Widget getCustomContainer() {
     switch (selectedWidgetMarker) {
       case WidgetMarker.suggestion:
-        return getReportsContainer();
+        return getSuggestionsContainer();
       case WidgetMarker.draft:
         return getDraftsContainer();
     }
@@ -250,7 +250,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
     );
   }
 
-  Widget getReportsContainer() {
+  Widget getSuggestionsContainer() {
     return Expanded(
       child: FutureBuilder(
           future: suggestionList,
