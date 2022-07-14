@@ -186,7 +186,7 @@ class InitState extends  State<NavigationScreen>{
           ),
 
           BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
+              icon: Icon(Icons.how_to_vote),
               label: 'Suggest',
               backgroundColor: Color(0xff0f2147)
           ),
