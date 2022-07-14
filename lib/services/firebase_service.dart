@@ -9,6 +9,7 @@ import 'package:netcompany_office_tool/model/comment.dart';
 import 'package:netcompany_office_tool/model/question.dart';
 import 'package:netcompany_office_tool/model/report.dart';
 import 'package:netcompany_office_tool/model/suggestion.dart';
+import 'package:netcompany_office_tool/model/survey.dart';
 import 'package:path/path.dart' as Path;
 
 class FirebaseService {
@@ -101,6 +102,18 @@ class FirebaseService {
     return suggestions;
   }
 
+  Future<List<Survey>> retrieveSurveys() async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    List<Survey> surveys = [];
+    DateTime currentDateTime = DateTime.now();
+    Timestamp currentTimeStamp = Timestamp.fromDate(currentDateTime);
+    QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("surveys")
+        // .where("dateExpired", isLessThanOrEqualTo: currentTimeStamp)
+    .get();
+    surveys = snapshot.docs.map((docSnapshot) => Survey.fromDocumentSnapshot(docSnapshot)).toList();
+    return surveys;
+  }
+
   Future<List<Question>> retrieveQuestions(String surveyID) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
     QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("surveys").doc(surveyID).collection("questions").get();
@@ -117,13 +130,19 @@ class FirebaseService {
     await db.collection("suggestions").add(suggestion.toMap());
   }
 
-  /// Note: Add suggestion case
-  Future<void> addComment (Comment comment, int commentID, String reportID, String featureType) async {
+
+  Future<void> addComment (Comment comment, int commentID, String docID, String featureType) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
-    await db.collection(featureType).doc(reportID).collection("comments").doc(commentID.toString()).set(comment.toMap());
+    await db.collection(featureType).doc(docID).collection("comments").doc(commentID.toString()).set(comment.toMap());
   }
 
-  /// Note: Add suggestion case
+  Future<void> addTextAnswer(String surveyID, String questionID, String textAnswer) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection("surveys").doc(surveyID)
+        .collection("questions").doc(questionID)
+        .collection("answers").add({'description': textAnswer});
+  }
+
   Future<int> getTotalComment(String id, String featureType) async {
     var collection = FirebaseFirestore.instance.collection(featureType);
     var doc = await collection.doc(id).get();
@@ -135,7 +154,7 @@ class FirebaseService {
     return total;
   }
 
-  /// Note: Add suggestion case
+
   Future<List<String>> uploadFiles(List<File>? images, String featureType) async {
     List<String> url = [];
     firebase_storage.Reference ref;
