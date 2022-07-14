@@ -74,11 +74,15 @@ class BodyWidgetState extends State<BodyWidget> with SingleTickerProviderStateMi
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: Column(
         children: <Widget>[
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 10.0),
             child: Text('Lunch Menu History ', // default text style'
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30), textAlign: TextAlign.center,
-            ),
+              style: GoogleFonts.ubuntu(textStyle: const TextStyle(
+                fontSize: 30,
+                color: Color(0xff0f2147),
+                fontWeight: FontWeight.w900,
+              )),
+              textAlign: TextAlign.center,),
           ),
 
           Padding(
