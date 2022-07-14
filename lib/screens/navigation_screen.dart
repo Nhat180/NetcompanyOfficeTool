@@ -35,7 +35,7 @@ class Choice {
 const List<Choice> choices = <Choice>[
   Choice(title: 'Home', icon: Icons.home),
   Choice(title: 'Report', icon: Icons.campaign),
-  Choice(title: 'Suggest', icon: Icons.chat),
+  Choice(title: 'Suggest', icon: Icons.how_to_vote),
   Choice(title: 'Survey', icon: Icons.content_paste_rounded),
   Choice(title: 'Logout', icon: Icons.logout),
 ];
