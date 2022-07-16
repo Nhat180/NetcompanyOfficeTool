@@ -1,10 +1,12 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:netcompany_office_tool/dialog/survey_retake_dialog.dart';
 import 'package:netcompany_office_tool/screens/survey_screens/survey_detail_screen.dart';
 import 'package:netcompany_office_tool/screens/survey_screens/survey_welcome_screen.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:intl/intl.dart';
+import 'package:netcompany_office_tool/services/storage_service.dart';
 
 import '../../model/survey.dart';
 
@@ -16,11 +18,14 @@ class SurveyListScreen extends StatefulWidget {
 }
 
 class _State extends State<SurveyListScreen> {
+  final StorageService storageService = StorageService();
   final FirebaseService firebaseService = FirebaseService();
   Future<List<Survey>>? surveyList;
   List<Survey>? retrievedSurveyList;
+  String? name;
 
   void initRetrieval() async {
+    name = await storageService.readSecureData('name');
     retrievedSurveyList = await firebaseService.retrieveSurveys();
     setState(() {
       surveyList = firebaseService.retrieveSurveys();
@@ -111,12 +116,19 @@ class _State extends State<SurveyListScreen> {
                             ),
 
                             SizedBox(
-                              width: 90,
+                              width: (survey.usersHaveTaken!.contains(name!)) ? 100 : 90,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pushReplacement(context, MaterialPageRoute(
-                                      builder: (context) => WelcomeSurvey(survey: survey)
-                                  ));
+                                  if (survey.usersHaveTaken!.contains(name!)) {
+                                    showDialog(context: context,
+                                        builder: (BuildContext context) {
+                                          return SurveyRetakeDialog(surveyID: survey.id!,);
+                                        });
+                                  } else {
+                                    Navigator.pushReplacement(context, MaterialPageRoute(
+                                        builder: (context) => WelcomeSurvey(survey: survey)
+                                    ));
+                                  }
                                 },
                                 style: ButtonStyle(
                                     backgroundColor:
@@ -125,9 +137,10 @@ class _State extends State<SurveyListScreen> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Row(
-                                    children: const [
-                                      Icon(Icons.touch_app),
-                                      Text('Take')
+                                    children: [
+                                      const Icon(Icons.touch_app),
+                                      (survey.usersHaveTaken!.contains(name!)) ?
+                                      const Text('Retake') : const Text('Take')
                                     ],
                                   ),
                                 ),
