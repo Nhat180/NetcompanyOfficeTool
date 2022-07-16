@@ -9,6 +9,7 @@ import 'package:netcompany_office_tool/model/answer.dart';
 import 'package:netcompany_office_tool/model/question.dart';
 import 'package:netcompany_office_tool/screens/survey_screens/survey_finish_screen.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
+import 'package:netcompany_office_tool/services/storage_service.dart';
 
 import '../navigation_screen.dart';
 
@@ -24,6 +25,7 @@ class SurveyDetail extends StatefulWidget {
 class _SurveyDetailState extends State<SurveyDetail> {
   final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final FirebaseService firebaseService = FirebaseService();
+  final StorageService storageService = StorageService();
 
   final TextEditingController textController = TextEditingController();
   int questionIndex = 0;
@@ -35,6 +37,11 @@ class _SurveyDetailState extends State<SurveyDetail> {
     setState(() {
 
     });
+  }
+
+  void recordUser() async {
+    String? name = await storageService.readSecureData('name');
+    await FirebaseFirestore.instance.collection("surveys").doc(widget.surveyID).update({"usersHaveTaken": FieldValue.arrayUnion([name])});
   }
 
   @override
@@ -56,13 +63,6 @@ class _SurveyDetailState extends State<SurveyDetail> {
         appBar: AppBar(
           title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
           backgroundColor: const Color(0xff0f2147),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => NavigationScreen(index: surveyScreen,)));
-            },
-          ),
         ),
         body: Center(
           child: (retrievedQuestionList.isEmpty) ? const Text("Loading...") :
@@ -147,38 +147,28 @@ class _SurveyDetailState extends State<SurveyDetail> {
                     setState(() {
                       loading = true;
                     });
-                    if((questionIndex + 1) == retrievedQuestionList.length) {
-                      for (MapEntry e in values.entries) {
-                        if (e.value == true) {
-                          // ignore: avoid_print
-                          print(choiceCountValues[e.key]);
-                          FirebaseFirestore.instance.collection("surveys")
-                              .doc(widget.surveyID).collection("questions")
-                              .doc(retrievedQuestionList[questionIndex].id)
-                              .collection("answers").doc(e.key)
-                              .update({'choiceCount': choiceCountValues[e.key] + 1});
-                        }
+                    for (MapEntry e in values.entries) {
+                      if (e.value == true) {
+                        // ignore: avoid_print
+                        print(choiceCountValues[e.key]);
+                        FirebaseFirestore.instance.collection("surveys")
+                            .doc(widget.surveyID).collection("questions")
+                            .doc(retrievedQuestionList[questionIndex].id)
+                            .collection("answers").doc(e.key)
+                            .update({'choiceCount': choiceCountValues[e.key] + 1});
                       }
+                    }
+                    if((questionIndex + 1) == retrievedQuestionList.length) {
                       setState(() {
                         loading = false;
                       });
 
                       if (!loading) {
+                        recordUser();
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) => const FinishSurvey()));
                       }
                     } else {
-                      for (MapEntry e in values.entries) {
-                        if (e.value == true) {
-                          // ignore: avoid_print
-                          print(choiceCountValues[e.key]);
-                          FirebaseFirestore.instance.collection("surveys")
-                              .doc(widget.surveyID).collection("questions")
-                              .doc(retrievedQuestionList[questionIndex].id)
-                              .collection("answers").doc(e.key)
-                              .update({'choiceCount': choiceCountValues[e.key] + 1});
-                        }
-                      }
                       setState(() {
                         loading = false;
                       });
@@ -239,33 +229,24 @@ class _SurveyDetailState extends State<SurveyDetail> {
                 loading = true;
               });
               String textAnswer = textController.text;
+              await firebaseService.addTextAnswer(
+                  widget.surveyID,
+                  retrievedQuestionList[questionIndex].id!,
+                  textAnswer);
+              textController.clear();
+
               if((questionIndex + 1) == retrievedQuestionList.length) {
-
-                await firebaseService.addTextAnswer(
-                    widget.surveyID,
-                    retrievedQuestionList[questionIndex].id!,
-                    textAnswer);
-
-                textController.clear();
-
                 setState(() {
                   loading = false;
                 });
 
                 if (!loading) {
+                  recordUser();
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => const FinishSurvey()));
                 }
 
               } else {
-
-                await firebaseService.addTextAnswer(
-                    widget.surveyID,
-                    retrievedQuestionList[questionIndex].id!,
-                    textAnswer);
-
-                textController.clear();
-
                 setState(() {
                   loading = false;
                 });
@@ -359,38 +340,28 @@ class _SurveyDetailState extends State<SurveyDetail> {
                     setState(() {
                       loading = true;
                     });
-                    if((questionIndex + 1) == retrievedQuestionList.length) {
-                      for (MapEntry e in values.entries) {
-                        if (e.value == true) {
-                          // ignore: avoid_print
-                          print(choiceCountValues[e.key]);
-                          FirebaseFirestore.instance.collection("surveys")
-                              .doc(widget.surveyID).collection("questions")
-                              .doc(retrievedQuestionList[questionIndex].id)
-                              .collection("answers").doc(e.key)
-                              .update({'choiceCount': choiceCountValues[e.key] + 1});
-                        }
+                    for (MapEntry e in values.entries) {
+                      if (e.value == true) {
+                        // ignore: avoid_print
+                        print(e.key);
+                        FirebaseFirestore.instance.collection("surveys")
+                            .doc(widget.surveyID).collection("questions")
+                            .doc(retrievedQuestionList[questionIndex].id)
+                            .collection("answers").doc(e.key)
+                            .update({'choiceCount': choiceCountValues[e.key] + 1});
                       }
+                    }
+                    if((questionIndex + 1) == retrievedQuestionList.length) {
                       setState(() {
                         loading = false;
                       });
 
                       if (!loading) {
+                        recordUser();
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) => const FinishSurvey()));
                       }
                     } else {
-                      for (MapEntry e in values.entries) {
-                        if (e.value == true) {
-                          // ignore: avoid_print
-                          print(e.key);
-                          FirebaseFirestore.instance.collection("surveys")
-                              .doc(widget.surveyID).collection("questions")
-                              .doc(retrievedQuestionList[questionIndex].id)
-                              .collection("answers").doc(e.key)
-                              .update({'choiceCount': choiceCountValues[e.key] + 1});
-                        }
-                      }
                       setState(() {
                         loading = false;
                       });
