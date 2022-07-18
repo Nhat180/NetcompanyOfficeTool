@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:netcompany_office_tool/model/comment.dart';
 import 'package:netcompany_office_tool/model/question.dart';
 import 'package:netcompany_office_tool/model/report.dart';
+import 'package:netcompany_office_tool/model/draft.dart';
 import 'package:netcompany_office_tool/model/suggestion.dart';
 import 'package:netcompany_office_tool/model/survey.dart';
 import 'package:path/path.dart' as Path;
@@ -102,6 +103,14 @@ class FirebaseService {
     return suggestions;
   }
 
+  Future<List<Draft>> retrieveDrafts(String name, String draftType) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    List<Draft> drafts = [];
+    QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection(draftType).where("creator", isEqualTo: name).get();
+    drafts = snapshot.docs.map((docSnapshot) => Draft.fromDocumentSnapshot(docSnapshot)).toList();
+    return drafts.reversed.toList();
+  }
+
   Future<List<Survey>> retrieveSurveys() async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
     List<Survey> surveys = [];
@@ -122,14 +131,30 @@ class FirebaseService {
 
   Future<void> addReport (Report report) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
-    await db.collection("reports").add(report.toMap());
+    DateTime currentDateTime = DateTime.now();
+    String formatTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(currentDateTime);
+    await db.collection("reports")
+        .doc(formatTime + '_' + report.creator! + '_' + report.title)
+        .set(report.toMap());
   }
 
   Future<void> addSuggestion (Suggestion suggestion) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
-    await db.collection("suggestions").add(suggestion.toMap());
+    DateTime currentDateTime = DateTime.now();
+    String formatTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(currentDateTime);
+    await db.collection("suggestions")
+        .doc(formatTime + '_' + suggestion.creator! + '_' + suggestion.title)
+        .set(suggestion.toMap());
   }
 
+  Future<void> addDraft (Draft draft, String draftType) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    DateTime currentDateTime = DateTime.now();
+    String formatTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(currentDateTime);
+    await db.collection(draftType)
+        .doc(formatTime + '_' + draft.creator!)
+        .set(draft.toMap());
+  }
 
   Future<void> addComment (Comment comment, int commentID, String docID, String featureType) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
@@ -152,6 +177,11 @@ class FirebaseService {
       total = data!["totalCom"];
     }
     return total;
+  }
+
+  Future<void> deleteDraft(String draftType, String draftID) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection(draftType).doc(draftID).delete();
   }
 
 
