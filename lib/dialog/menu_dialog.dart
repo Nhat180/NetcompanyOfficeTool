@@ -48,10 +48,7 @@ class MenuDialog extends StatelessWidget {
                           child: Text("MENU",
                             style: TextStyle(
                                 fontSize: 45,
-                                fontWeight: FontWeight.w900,
-                                decoration: TextDecoration.underline,
-                                decorationThickness: 2,
-                                decorationStyle: TextDecorationStyle.double),
+                                fontWeight: FontWeight.w900,),
                           ),
                         ),
                       ),
