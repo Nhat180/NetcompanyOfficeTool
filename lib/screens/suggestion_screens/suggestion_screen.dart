@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:netcompany_office_tool/model/report_draft.dart';
+import 'package:netcompany_office_tool/model/draft.dart';
 import 'package:netcompany_office_tool/model/suggestion.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_detail_screen.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_form.dart';

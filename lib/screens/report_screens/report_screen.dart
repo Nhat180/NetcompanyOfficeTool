@@ -98,7 +98,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
             leading: Icon(Icons.info),
             backgroundColor: Colors.white,
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height*0.62, child: getReportsContainer())
+              getReportsContainer()
               // Container(child: getReportsContainer())
             ],
           ),
@@ -109,7 +109,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
             leading: Icon(Icons.info),
             backgroundColor: Colors.white,
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height*0.62, child: getDraftsContainer())
+              getDraftsContainer()
             ],
           ),
         ],
@@ -118,7 +118,8 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
   }
 
   Widget getDraftsContainer() {
-    return Expanded(
+    return SizedBox(
+        height: MediaQuery.of(context).size.height*0.62,
         child: FutureBuilder(
           future: draftList,
           builder: (BuildContext context, AsyncSnapshot<List<Draft>> snapshot) {
@@ -200,7 +201,8 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
   }
 
   Widget getReportsContainer() {
-    return Expanded(
+    return SizedBox(
+      height: MediaQuery.of(context).size.height*0.62,
       child: FutureBuilder(
           future: reportList,
           builder: (BuildContext context, AsyncSnapshot<List<Report>> snapshot) {

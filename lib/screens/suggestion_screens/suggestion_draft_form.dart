@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:netcompany_office_tool/model/report_draft.dart';
+import 'package:netcompany_office_tool/model/draft.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_screen.dart';
@@ -26,12 +26,18 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
 
 // https://pub.dev/packages/image_picker
   final ImagePicker imagePicker = ImagePicker();
-  List<XFile>? imageFileList=[];
+  List<File>? imageFileList=[];
 
   void selectImage() async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-    if(selectedImages!.isNotEmpty){
-      imageFileList!.addAll(selectedImages);
+    if(selectedImages!.isNotEmpty && selectedImages.length <= 8){
+      for(int i = 0; i < selectedImages.length; i++) {
+        imageFileList!.add(File(selectedImages[i].path));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+          const SnackBar(content: Text("You can only select maximum of 8 images")));
     }
     setState(() {
 
@@ -201,7 +207,14 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton.icon(   // <-- ElevatedButton
-                      onPressed: () {selectImage();},
+                      onPressed: () {
+                        if (imageFileList!.isEmpty || imageFileList!.length < 8) {
+                          selectImage();
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
+                              const SnackBar(content: Text("You can only select maximum of 8 images")));
+                        }},
                       icon: const Icon(
                         Icons.link,
                         size: 24.0,

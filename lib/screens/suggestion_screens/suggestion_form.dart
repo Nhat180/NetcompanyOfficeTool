@@ -38,10 +38,14 @@ class InitState extends  State<SuggestionForm>{
   List<File>? imageFileList=[];
   void selectImage() async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-    if(selectedImages!.isNotEmpty){
+    if(selectedImages!.isNotEmpty && selectedImages.length <= 8){
       for(int i = 0; i < selectedImages.length; i++) {
         imageFileList!.add(File(selectedImages[i].path));
       }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+          const SnackBar(content: Text("You can only select maximum of 8 images")));
     }
     setState(() {
 
@@ -245,7 +249,14 @@ class InitState extends  State<SuggestionForm>{
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: ElevatedButton.icon(   // <-- ElevatedButton
-                    onPressed: () {selectImage();},
+                    onPressed: () {
+                      if (imageFileList!.isEmpty || imageFileList!.length < 8) {
+                        selectImage();
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                            const SnackBar(content: Text("You can only select maximum of 8 images")));
+                      }},
                     icon: const Icon(
                       Icons.link,
                       size: 24.0,
