@@ -32,7 +32,10 @@ class _DraftDialogState extends State<DraftDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return (loading) ? const Center(child: CircularProgressIndicator(),) : AlertDialog(
+    return (loading) ? WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: const Center(child: CircularProgressIndicator(),),) :
+    AlertDialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8)
       ),
