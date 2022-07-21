@@ -5,9 +5,9 @@ import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/model/storage_item.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:netcompany_office_tool/services/httphandler_service.dart';
-import '../services/storage_service.dart';
-import 'landscape_mode.dart';
-import 'navigation_screen.dart';
+import '../../services/storage_service.dart';
+import '../landscape_mode.dart';
+import '../navigation_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

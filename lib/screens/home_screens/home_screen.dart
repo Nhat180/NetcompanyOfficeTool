@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/loading/crawl_spinner.dart';
-import 'package:netcompany_office_tool/screens/closedmenu_screen.dart';
-import 'package:netcompany_office_tool/screens/weeklylunch_screen.dart';
+import 'package:netcompany_office_tool/screens/menu_screens/closed_menu_screen.dart';
+import 'package:netcompany_office_tool/screens/menu_screens/weekly_menu_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:netcompany_office_tool/services/httphandler_service.dart';
 import 'package:netcompany_office_tool/services/storage_service.dart';
 import 'package:sizer/sizer.dart';
 
-import 'login_screen.dart';
+import '../authentication_screens/login_screen.dart';
 
 class HomeScreen  extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

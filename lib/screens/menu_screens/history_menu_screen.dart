@@ -5,7 +5,7 @@ import 'package:netcompany_office_tool/dialog/menu_dialog.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:netcompany_office_tool/screens/weeklylunch_screen.dart';
+import 'package:netcompany_office_tool/screens/menu_screens/weekly_menu_screen.dart';
 import 'package:sizer/sizer.dart';
 
 enum WidgetMarker { one_week, two_week, three_week }
