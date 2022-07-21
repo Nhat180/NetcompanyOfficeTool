@@ -1,9 +1,18 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:netcompany_office_tool/model/report_draft.dart';
+import 'package:intl/intl.dart';
+import 'package:netcompany_office_tool/model/draft.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
+import 'package:netcompany_office_tool/services/firebase_service.dart';
+import 'package:netcompany_office_tool/services/storage_service.dart';
+
+import '../../constants.dart';
+import '../../model/report.dart';
 
 
 class ReportDraftForm extends StatefulWidget {
@@ -16,21 +25,33 @@ class ReportDraftForm extends StatefulWidget {
 }
 
 class _ReportDraftFormState extends State<ReportDraftForm> {
+  final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
+  final FirebaseService firebaseService = FirebaseService();
+  final StorageService storageService = StorageService();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   String? _dropDownValue;
-  final val = ['Device', 'Electric', 'Meal', 'Elevator', 'Food'];
-  TextEditingController _title = TextEditingController();
-  TextEditingController _type = TextEditingController();
-  TextEditingController _description = TextEditingController();
+  DateTime currentTime = DateTime.now();
+  bool draftUpdateLoading = false;
+  bool loading = false;
+  bool isDone = true;
+
 
 
 // https://pub.dev/packages/image_picker
   final ImagePicker imagePicker = ImagePicker();
-  List<XFile>? imageFileList=[];
-
-  void selectImage() async {
+  List<File>? imageFileList=[];
+  void selectImage(int maxSelected) async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-    if(selectedImages!.isNotEmpty){
-      imageFileList!.addAll(selectedImages);
+    if(selectedImages!.isNotEmpty && selectedImages.length <= maxSelected){
+      for(int i = 0; i < selectedImages.length; i++) {
+        imageFileList!.add(File(selectedImages[i].path));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+          const SnackBar(content: Text("You can only select maximum of 9 images")));
     }
     setState(() {
 
@@ -38,31 +59,85 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    titleController.text = widget.draft.title;
+    descriptionController.text = widget.draft.description;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    return initWidget();
+  }
+
+  Widget initWidget() {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
+        appBar: AppBar(
+          title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
+          backgroundColor: const Color(0xff0f2147),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () async {
+              if (titleController.text == widget.draft.title &&
+                  descriptionController.text == widget.draft.description 
+              && _dropDownValue == null) {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) =>
+                        NavigationScreen(index: reportScreen,)));
+              } else {
+                setState(() {
+                  draftUpdateLoading = true;
+                });
+                if (titleController.text != widget.draft.title) {
+                  await FirebaseFirestore.instance.collection("draftReports")
+                      .doc(widget.draft.id).update({'title': titleController.text});
+                }
+                if (descriptionController.text != widget.draft.description) {
+                  await FirebaseFirestore.instance.collection("draftReports")
+                      .doc(widget.draft.id)
+                      .update({'description': descriptionController.text});
+                }
+                if (_dropDownValue != null) {
+                  await FirebaseFirestore.instance.collection("draftReports")
+                      .doc(widget.draft.id)
+                      .update({'type': _dropDownValue!});
+                }
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) =>
+                        NavigationScreen(index: reportScreen,)));
+              }
+            },
+          ),
+        ),
+        body: (draftUpdateLoading) ? const Center(child: CircularProgressIndicator(),) :
+        SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () { Navigator.pushReplacement(context, MaterialPageRoute(
-                          builder: (context) => const NavigationScreen(index: 1)
-                      )); },),
-                    const Text.rich(
-                      TextSpan(
-                        text: 'Tell us your ', // default text style'
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                        children: <TextSpan>[
-                          TextSpan(text: 'ISSUES', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 50)),
-                        ],
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                    height: 100,
+                    child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            SizedBox(
+                              child: Text.rich(
+                                TextSpan(
+                                  text: 'Tell us your ',
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                                  children: <TextSpan>[
+                                    TextSpan(text: 'ISSUES', style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 50)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                    )
                 ),
 
                 Container(
@@ -87,7 +162,7 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                         child: TextField(
-                          controller: _title  = TextEditingController(text: widget.draft.title.toString()),
+                          controller: titleController,
                           decoration: const InputDecoration(
                             icon: Icon(
                               Icons.short_text,
@@ -122,41 +197,58 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                       ),
                     ],
                   ),
-
-                  child: Row(
-                    children: [
-
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                        child: Icon(Icons.report, color: Color(0xff0f2147),),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                        child: DropdownButton(
-                          underline:Container(),
-                          hint: widget.draft.type.toString().isEmpty ?
-                          const Text('Select Report Type') : Text(
-                            widget.draft.type.toString() + ' problem',
-                          ),
-                          items: val.map(
-                                (value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text('$value problem'),
-                              );
-                            },
-                          ).toList(),
-                          onChanged: (String? value) {
-                            setState(
-                                  () {
-                                _dropDownValue = value;
-                              },
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance.collection("typeReports").snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          const Text("Loading.....");
+                        } else {
+                          List<DropdownMenuItem<String>> items = [];
+                          for(int i = 0; i < snapshot.data!.docs.length; i++) {
+                            DocumentSnapshot snap = snapshot.data!.docs[i];
+                            items.add(
+                              DropdownMenuItem(
+                                child: Text(
+                                  snap.id,
+                                  style: const TextStyle(color: Color(0xff0f2147)),
+                                ),
+                                value: snap.id,
+                              ),
                             );
-                          },
-                        ),
-                      ),
-                    ],
+                          }
+                          return Row(
+                            children: <Widget>[
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                                child: Icon(Icons.report, color: Color(0xff0f2147),),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                                child: DropdownButton<String>(
+                                  underline: Container(),
+                                  items: items,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _dropDownValue = value;
+                                    });
+                                  },
+                                  value: _dropDownValue,
+                                  hint: (widget.draft.type.toString()).isEmpty ?
+                                  const Text(
+                                    "Select Report Type",
+                                    style: TextStyle(color: Color(0xff0f2147)),
+                                  ) : Text(
+                                    widget.draft.type,
+                                    style: const TextStyle(color: Color(0xff0f2147)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return const Text("Loading.....");
+                      }
                   ),
                 ),
 
@@ -179,7 +271,7 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
                     child: TextField(
-                      controller: _description = TextEditingController(text: widget.draft.description.toString()),
+                      controller: descriptionController,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       decoration: const InputDecoration(
@@ -200,7 +292,14 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton.icon(   // <-- ElevatedButton
-                      onPressed: () {selectImage();},
+                      onPressed: () {
+                        if (imageFileList!.isEmpty || imageFileList!.length < maxNumOfImg) {
+                          selectImage(maxNumOfImg - imageFileList!.length);
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
+                              const SnackBar(content: Text("You can only select maximum of 9 images")));
+                        }},
                       icon: const Icon(
                         Icons.link,
                         size: 24.0,
@@ -224,7 +323,7 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                             mainAxisSpacing: 10
                         ),
                         itemBuilder: (BuildContext context, int index) {
-                          return   Padding(
+                          return Padding(
                             padding: const EdgeInsets.all(1),
                             child: Stack(
                               fit: StackFit.expand,
@@ -247,7 +346,6 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                                       icon: const Icon(Icons.delete)
                                       ,color: Colors.red[500],
                                     ),
-
                                   ),
                                 )
                               ],
@@ -258,12 +356,6 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                   ),
                 ) //Image.file(File(imageFileList![index].path), fit: BoxFit.cover
                     :
-                ///https://towardsdev.com/flutter-tutorial-multiple-image-picker-from-camera-gallery-509a092eff90
-                ///https://www.youtube.com/watch?v=HbMjpQ6I1gY conitinue
-                ///https://stackoverflow.com/questions/53612200/flutter-how-to-give-height-to-the-childrens-of-gridview-builder
-                ///https://stackoverflow.com/questions/57864219/how-can-i-make-multiple-image-picker-which-upload-and-set-image-inside-container
-                ///extra: https://medium.flutterdevs.com/multiimage-picker-in-flutter-69bd9f6cedfb
-                ///extra: https://fluttercorner.com/how-to-select-multiple-images-with-flutter/#For_iOS
                 const Center(
                   child: Padding(
                     padding: EdgeInsets.only(top: 20, bottom: 20),
@@ -279,7 +371,8 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                 //attach image
 
 
-                Container(
+                (loading || !isDone) ?
+                smallButton(isDone) : Container(
                   alignment: Alignment.center,
                   margin: const EdgeInsets.only(left: 120, right: 120, top: 10, bottom: 10),
                   padding: const EdgeInsets.only(left: 10, right: 10),
@@ -295,17 +388,85 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                     ),
                     icon: const Icon(Icons.send, size: 25),
                     label: const Text('Send', style: TextStyle(fontSize: 20)),
-                    onPressed: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(
-                          builder: (context) => ReportScreen()
-                      )
-                      );
+                    onPressed: () async {
+                      if (titleController.text == '' || titleController.text.isEmpty
+                          || descriptionController.text == '' || descriptionController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Title and description must be filled to send the form")
+                            )
+                        );
+                      } else {
+                        setState(() {
+                          loading = true;
+                          isDone = false;
+                        });
+
+                        String? name = await storageService.readSecureData('name');
+                        final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList, "reports");
+                        final String title = titleController.text;
+                        final String description = descriptionController.text;
+                        String formattedDate = DateFormat('yyyy-MM-dd').format(currentTime);
+                        String type = '';
+                        if (_dropDownValue == null) {
+                          if (widget.draft.type == "" || widget.draft.type.isEmpty) {
+                            type = "Other";
+                          } else {
+                            type = widget.draft.type;
+                          }
+                        } else {
+                          type = _dropDownValue!;
+                        }
+                        Report report  = Report(
+                            creator: name,
+                            title: title,
+                            dateCreate: formattedDate,
+                            status: "pending",
+                            type: type,
+                            description: description,
+                            imgUrls: imgUrls,
+                            totalCom: 0);
+
+                        await firebaseService.addReport(report);
+                        await firebaseService.deleteDraft("draftReports", widget.draft.id!);
+
+                        setState(() {
+                          isDone = true;
+                        });
+
+                        await Future.delayed(const Duration(seconds: 2));
+
+                        setState(() {
+                          loading = false;
+                          titleController.clear();
+                          descriptionController.clear();
+                          _dropDownValue = null;
+                          imageFileList?.clear();
+                        });
+
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                            builder: (context) => NavigationScreen(index: reportScreen,)));
+                      }
                     },
                   ),
                 ),
               ],
             )
         ),
+      ),
+    );
+  }
+
+  Widget smallButton(bool isDone) {
+    final color = isDone ? Colors.green : const Color(0xff0f2147);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      height: 55,
+      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+      child: Center(
+          child: isDone
+              ? const Icon(Icons.done, size: 55, color: Colors.white,)
+              : const CircularProgressIndicator(color: Colors.white,)
       ),
     );
   }
