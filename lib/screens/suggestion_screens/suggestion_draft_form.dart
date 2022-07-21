@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/model/draft.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
@@ -28,16 +29,16 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
   final ImagePicker imagePicker = ImagePicker();
   List<File>? imageFileList=[];
 
-  void selectImage() async {
+  void selectImage(int maxSelected) async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-    if(selectedImages!.isNotEmpty && selectedImages.length <= 8){
+    if(selectedImages!.isNotEmpty && selectedImages.length <= maxSelected){
       for(int i = 0; i < selectedImages.length; i++) {
         imageFileList!.add(File(selectedImages[i].path));
       }
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(
-          const SnackBar(content: Text("You can only select maximum of 8 images")));
+          const SnackBar(content: Text("You can only select maximum of 9 images")));
     }
     setState(() {
 
@@ -208,12 +209,12 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton.icon(   // <-- ElevatedButton
                       onPressed: () {
-                        if (imageFileList!.isEmpty || imageFileList!.length < 8) {
-                          selectImage();
+                        if (imageFileList!.isEmpty || imageFileList!.length < maxNumOfImg) {
+                          selectImage(maxNumOfImg - imageFileList!.length);
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(
-                              const SnackBar(content: Text("You can only select maximum of 8 images")));
+                              const SnackBar(content: Text("You can only select maximum of 9 images")));
                         }},
                       icon: const Icon(
                         Icons.link,

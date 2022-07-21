@@ -36,16 +36,16 @@ class InitState extends  State<SuggestionForm>{
   final ImagePicker imagePicker = ImagePicker();
   // List<XFile>? imageFileList=[];
   List<File>? imageFileList=[];
-  void selectImage() async {
+  void selectImage(int maxSelected) async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-    if(selectedImages!.isNotEmpty && selectedImages.length <= 8){
+    if(selectedImages!.isNotEmpty && selectedImages.length <= maxSelected){
       for(int i = 0; i < selectedImages.length; i++) {
         imageFileList!.add(File(selectedImages[i].path));
       }
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(
-          const SnackBar(content: Text("You can only select maximum of 8 images")));
+          const SnackBar(content: Text("You can only select maximum of 9 images")));
     }
     setState(() {
 
@@ -250,12 +250,12 @@ class InitState extends  State<SuggestionForm>{
                   padding: const EdgeInsets.all(10.0),
                   child: ElevatedButton.icon(   // <-- ElevatedButton
                     onPressed: () {
-                      if (imageFileList!.isEmpty || imageFileList!.length < 8) {
-                        selectImage();
+                      if (imageFileList!.isEmpty || imageFileList!.length < maxNumOfImg) {
+                        selectImage(maxNumOfImg - imageFileList!.length);
                       } else {
                         ScaffoldMessenger.of(context)
                             .showSnackBar(
-                            const SnackBar(content: Text("You can only select maximum of 8 images")));
+                            const SnackBar(content: Text("You can only select maximum of 9 images")));
                       }},
                     icon: const Icon(
                       Icons.link,
