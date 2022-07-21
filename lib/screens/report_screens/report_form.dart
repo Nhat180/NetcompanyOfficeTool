@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/dialog/draft_dialog.dart';
 import 'package:netcompany_office_tool/model/report.dart';
-import 'package:netcompany_office_tool/screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:netcompany_office_tool/screens/weeklylunch_screen.dart';
+import 'package:netcompany_office_tool/screens/menu_screens/weekly_menu_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class ClosedMenu extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/model/weekdays_info.dart';
 import 'package:netcompany_office_tool/dialog/menu_dialog.dart';
-import 'package:netcompany_office_tool/screens/history_menu_screen.dart';
+import 'package:netcompany_office_tool/screens/menu_screens/history_menu_screen.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
