@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:netcompany_office_tool/constants.dart';
+import 'package:netcompany_office_tool/dialog/draft_dialog.dart';
 import 'package:netcompany_office_tool/model/report.dart';
 import 'package:netcompany_office_tool/screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
@@ -37,12 +38,16 @@ class InitState extends  State<ReportForm>{
   final ImagePicker imagePicker = ImagePicker();
   // List<XFile>? imageFileList=[];
   List<File>? imageFileList=[];
-  void selectImage() async {
+  void selectImage(int maxSelected) async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-    if(selectedImages!.isNotEmpty){
+    if(selectedImages!.isNotEmpty && selectedImages.length <= maxSelected){
       for(int i = 0; i < selectedImages.length; i++) {
         imageFileList!.add(File(selectedImages[i].path));
       }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+          const SnackBar(content: Text("You can only select maximum of 9 images")));
     }
     setState(() {
 
@@ -67,8 +72,22 @@ class InitState extends  State<ReportForm>{
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => NavigationScreen(index: reportScreen,)));
+            if (titleController.text == '' && titleController.text.isEmpty
+                && descriptionController.text == '' && descriptionController.text.isEmpty
+                && _dropDownValue == null) {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => NavigationScreen(index: reportScreen,)));
+            } else {
+              _dropDownValue ??= "";
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DraftDialog(formType: reportScreen,
+                        title: titleController.text,
+                        description: descriptionController.text,
+                        type: _dropDownValue!);
+                  });
+            }
           },
         ),
       ),
@@ -84,14 +103,17 @@ class InitState extends  State<ReportForm>{
                             children: const [
                               SizedBox(
                                 child: Text.rich(
-                                TextSpan(
-                                text: 'Tell us your ', // default text style'
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                                children: <TextSpan>[
-                                  TextSpan(text: 'ISSUES', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 50)),
-                                ],
-                              ),
-                            ),
+                                  TextSpan(
+                                    text: 'Tell us your ',
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                                    children: <TextSpan>[
+                                      TextSpan(text: 'ISSUES', style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 50)),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
                           )
@@ -246,7 +268,14 @@ class InitState extends  State<ReportForm>{
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ElevatedButton.icon(   // <-- ElevatedButton
-                        onPressed: () {selectImage();},
+                        onPressed: () {
+                          if (imageFileList!.isEmpty || imageFileList!.length < maxNumOfImg) {
+                            selectImage(maxNumOfImg - imageFileList!.length);
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
+                                const SnackBar(content: Text("You can only select maximum of 9 images")));
+                          }},
                         icon: const Icon(
                           Icons.link,
                           size: 24.0,
