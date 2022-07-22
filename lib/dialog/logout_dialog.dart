@@ -8,9 +8,8 @@ import '../screens/navigation_screen.dart';
 
 
 class LogoutDialog extends StatefulWidget {
-  final int index;
 
-  const LogoutDialog ({Key? key, required this.index}) : super(key: key);
+  const LogoutDialog ({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _State();
@@ -30,8 +29,7 @@ class _State extends State<LogoutDialog> {
       actions: [
         TextButton(
             onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                NavigationScreen(index: widget.index)), (Route<dynamic> route) => false);
+              Navigator.of(context).pop();
             },
             child: const Text("Cancel")
         ),
