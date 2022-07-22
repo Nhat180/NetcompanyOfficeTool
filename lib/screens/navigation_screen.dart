@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform;
-import 'package:netcompany_office_tool/dialog/logout_dialog.dart';
 import 'package:netcompany_office_tool/loading/crawl_spinner.dart';
 import 'package:netcompany_office_tool/screens/home_screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
+import 'package:netcompany_office_tool/screens/profile_screens/profile_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_screen.dart';
 import 'package:netcompany_office_tool/screens/home_screens/error_access_screen.dart';
@@ -37,7 +37,7 @@ const List<Choice> choices = <Choice>[
   Choice(title: 'Report', icon: Icons.campaign),
   Choice(title: 'Suggest', icon: Icons.how_to_vote),
   Choice(title: 'Survey', icon: Icons.content_paste_rounded),
-  Choice(title: 'Logout', icon: Icons.logout),
+  Choice(title: 'Profile', icon: Icons.person),
 ];
 
 class InitState extends  State<NavigationScreen>{
@@ -56,7 +56,8 @@ class InitState extends  State<NavigationScreen>{
     HomeScreen(),
     ReportScreen(),
     SuggestionScreen(),
-    SurveyListScreen()
+    SurveyListScreen(),
+    ProfileScreen()
   ];
 
 
@@ -135,21 +136,13 @@ class InitState extends  State<NavigationScreen>{
               }).toList(),
               onTap: (index) {
                 setState(() {
-                  if (index == 4) {
-                    showDialog(context: context,
-                        builder: (BuildContext context) {
-                          return LogoutDialog(index: _currentIndex,);
-                        });
+                  _currentIndex = index;
+                  if (_currentIndex == 0) {
+                    requestCrawlService();
                   }
-                  else {
-                    _currentIndex = index;
-                    if (_currentIndex == 0) {
-                      requestCrawlService();
-                    }
-                    setState(() {
-                      isCrawlAuthenticate = true;
-                    });
-                  }
+                  setState(() {
+                    isCrawlAuthenticate = true;
+                  });
                 });
               },
             ),
@@ -198,27 +191,20 @@ class InitState extends  State<NavigationScreen>{
           ),
 
           BottomNavigationBarItem(
-              icon: Icon(Icons.logout),
-              label: 'Logout',
+              icon: Icon(Icons.person),
+              label: 'Profile',
               backgroundColor: Color(0xff0f2147)
           ),
         ],
         onTap: (index) {
           setState(() {
-            if (index == 4) {
-              showDialog(context: context,
-                  builder: (BuildContext context) {
-                    return LogoutDialog(index: _currentIndex,);
-                  });
-            } else {
-              _currentIndex = index;
-              if (_currentIndex == 0) {
-                requestCrawlService();
-              }
-              setState(() {
-                isCrawlAuthenticate = true;
-              });
+            _currentIndex = index;
+            if (_currentIndex == 0) {
+              requestCrawlService();
             }
+            setState(() {
+              isCrawlAuthenticate = true;
+            });
           });
         },
       ),
