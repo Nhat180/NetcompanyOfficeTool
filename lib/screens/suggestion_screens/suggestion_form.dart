@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:netcompany_office_tool/constants.dart';
+import 'package:netcompany_office_tool/dialog/draft_dialog.dart';
 import 'package:netcompany_office_tool/model/suggestion.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:intl/intl.dart';
@@ -70,8 +70,22 @@ class InitState extends  State<SuggestionForm>{
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => NavigationScreen(index: suggestionScreen,)));
+            if (titleController.text == '' && titleController.text.isEmpty
+                && descriptionController.text == '' && descriptionController.text.isEmpty
+                && _dropDownValue == null) {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => NavigationScreen(index: suggestionScreen,)));
+            } else {
+              _dropDownValue ??= "";
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DraftDialog(formType: suggestionScreen,
+                        title: titleController.text,
+                        description: descriptionController.text,
+                        type: _dropDownValue!);
+                  });
+            }
           },
         ),
       ),
@@ -91,7 +105,12 @@ class InitState extends  State<SuggestionForm>{
                                 text: 'Tell us your ', // default text style'
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                                 children: <TextSpan>[
-                                  TextSpan(text: 'Ideas', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 50)),
+                                  TextSpan(text: 'Ideas',
+                                      style:
+                                      TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 50)),
                                 ],
                               ),
                             ),

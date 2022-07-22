@@ -10,7 +10,7 @@ import 'package:netcompany_office_tool/services/storage_service.dart';
 import '../../model/report.dart';
 
 
-enum WidgetMarker { report, draft}
+
 class ReportScreen extends StatefulWidget {
   const ReportScreen({Key? key}) : super(key: key);
 
@@ -55,7 +55,6 @@ class ListWidget extends StatefulWidget{
 }
 
 class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMixin<ListWidget>{
-  WidgetMarker selectedWidgetMarker = WidgetMarker.report;
   final FirebaseService firebaseService = FirebaseService();
   final StorageService storageService = StorageService();
   Future<List<Report>>? reportList;
@@ -91,7 +90,6 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
     return SingleChildScrollView(
       child: Column(
         children: [
-
           ExpansionTile(
             initiallyExpanded: true,
             title: Text("Report"),
