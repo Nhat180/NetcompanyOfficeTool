@@ -3,12 +3,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:netcompany_office_tool/model/draft.dart';
 import 'package:netcompany_office_tool/model/suggestion.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_detail_screen.dart';
+import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_draft_form.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_form.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:netcompany_office_tool/services/storage_service.dart';
 
 
-enum WidgetMarker { suggestion, draft}
+
 class SuggestionScreen extends StatefulWidget {
   const SuggestionScreen({Key? key}) : super(key: key);
 
@@ -52,20 +53,20 @@ class ListWidget extends StatefulWidget{
 }
 
 class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMixin<ListWidget>{
-  WidgetMarker selectedWidgetMarker = WidgetMarker.suggestion;
-  // late AnimationController controller;
-  // late Animation animation;
   final FirebaseService firebaseService = FirebaseService();
   final StorageService storageService = StorageService();
   Future<List<Suggestion>>? suggestionList;
   List<Suggestion>? retrievedSuggestionList;
-  var ownDraft = allDrafts.where((report) => report.creator == 'Nhat nguyen').toList();
+  Future<List<Draft>>? draftList;
+  List<Draft>? retrievedDraftList;
 
   void initRetrieval() async {
     String? name = await storageService.readSecureData('name');
     retrievedSuggestionList = await firebaseService.retrieveSuggestions(name!);
+    retrievedDraftList = await firebaseService.retrieveDrafts(name, "draftSuggestions");
     setState(() {
       suggestionList = firebaseService.retrieveSuggestions(name);
+      draftList = firebaseService.retrieveDrafts(name, "draftSuggestions");
     });
 
   }
@@ -84,174 +85,121 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                SizedBox(
-                  width: 120, // <-- Your width
-                  height: 60,
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),
-                          backgroundColor: (selectedWidgetMarker == WidgetMarker.suggestion) ? MaterialStateProperty.all<Color>(Color(0xff0f2147)) : MaterialStateProperty.all<Color>(Colors.white),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  side: const BorderSide(color: Colors.black)
-                              )
-                          )
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          selectedWidgetMarker = WidgetMarker.suggestion;
-                        });
-                      },
-                      child: Text(
-                          "Suggest",
-                          style: (selectedWidgetMarker == WidgetMarker.suggestion) ?
-                          const TextStyle(
-                              fontSize:  22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)
-                              :
-                          const TextStyle(
-                              fontSize:  15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black
-                          )
-                      )
-                  ),
-                ),
-
-                SizedBox(
-                  width: 120, // <-- Your width
-                  height: 60,
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),
-                          backgroundColor: (selectedWidgetMarker == WidgetMarker.draft) ? MaterialStateProperty.all<Color>(Color(0xff0f2147)) : MaterialStateProperty.all<Color>(Colors.white),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  side: const BorderSide(color: Colors.black)
-                              )
-                          )
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          selectedWidgetMarker = WidgetMarker.draft;
-                        });
-                      },
-                      child: Text(
-                          "Draft",
-                          style: (selectedWidgetMarker == WidgetMarker.draft) ?
-                          const TextStyle(
-                              fontSize:  22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)
-                              :
-                          const TextStyle(
-                              fontSize:  15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black
-                          ))
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        FutureBuilder(
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            return getCustomContainer();
-          },
-        )
-      ],
-    );
-  }
-
-  Widget getCustomContainer() {
-    switch (selectedWidgetMarker) {
-      case WidgetMarker.suggestion:
-        return getSuggestionsContainer();
-      case WidgetMarker.draft:
-        return getDraftsContainer();
-    }
-  }
-
-  Widget getDraftsContainer() {
-    return Expanded(
-      child: ownDraft.isEmpty?
-      Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Icon(
-                Icons.search_off,
-                size: 100,
-                color: Colors.blue,
-              ),
-              Text(('There is no draft'),
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          ExpansionTile(
+            initiallyExpanded: true,
+            title: Text("Suggestion"),
+            leading: Icon(Icons.info),
+            backgroundColor: Colors.white,
+            children: [
+              getSuggestionsContainer()
+              // Container(child: getReportsContainer())
             ],
-          ))
-          :
-      ListView.builder(
-        padding: const EdgeInsets.only(top: 10),
-        itemCount: ownDraft.length,
-        itemBuilder: (context, index) {
-          final draft = ownDraft[index];
-          return Card(
-            elevation: 10,
-            margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
-            child: Slidable(
-              key: const ValueKey(0),
+          ),
 
-              endActionPane: ActionPane(
-                extentRatio: 0.25,
-                // A motion is a widget used to control how the pane animates.
-                motion: const ScrollMotion(),
-                // A pane can dismiss the Slidable.
-                // dismissible: DismissiblePane(onDismissed: () {print('remove me from list');}),
-
-                // All actions are defined in the children parameter.
-                children: [
-                  // A SlidableAction can have an icon and/or a label.
-                  SlidableAction(
-                    onPressed: doNothing,
-                    backgroundColor: const Color(0xFFFE4A49),
-                    foregroundColor: Colors.white,
-                    icon: Icons.delete,
-                    label: 'Delete',
-                  ),
-                ],
-              ),
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(10.0),
-                leading: Text('[' + draft.status + ']', style: const TextStyle(color:Colors.blue),),
-                title: Text(draft.title.isEmpty? "No Title" : draft.title ,  overflow: TextOverflow.ellipsis, softWrap: false),
-                subtitle: Text(draft.description.isEmpty? "No preview is available" : draft.description, overflow: TextOverflow.ellipsis, softWrap: false),
-
-                onTap: () {
-                  // Navigator.push(context, MaterialPageRoute(
-                  //     builder: (context) => ReportDraftForm(draft: draft,)
-                  // ));
-                },
-              ),
-            ),
-          );
-        },
+          ExpansionTile(
+            initiallyExpanded: false,
+            title: Text("Draft"),
+            leading: Icon(Icons.info),
+            backgroundColor: Colors.white,
+            children: [
+              getDraftsContainer()
+            ],
+          ),
+        ],
       ),
     );
   }
+  Widget getDraftsContainer() {
+    return SizedBox(
+        height: MediaQuery.of(context).size.height*0.62,
+        child: FutureBuilder(
+          future: draftList,
+          builder: (BuildContext context, AsyncSnapshot<List<Draft>> snapshot) {
+            if(snapshot.hasError) return const Text("Error");
+
+            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              return ListView.builder(
+                padding: const EdgeInsets.only(top: 10),
+                itemCount: retrievedDraftList!.length,
+                itemBuilder: (context, index) {
+                  final draft = retrievedDraftList![index];
+                  return Card(
+                    elevation: 10,
+                    margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
+                    child: Slidable(
+                      key: const ValueKey(0),
+
+                      endActionPane: ActionPane(
+                        extentRatio: 0.25,
+                        // A motion is a widget used to control how the pane animates.
+                        motion: const ScrollMotion(),
+                        // A pane can dismiss the Slidable.
+                        dismissible: DismissiblePane(
+                            onDismissed: () async {
+                              retrievedDraftList!.removeAt(index);
+                              await firebaseService.deleteDraft("draftSuggestions", draft.id!);
+                            }),
+
+                        // All actions are defined in the children parameter.
+                        children: [
+                          // A SlidableAction can have an icon and/or a label.
+                          SlidableAction(
+                            onPressed: doNothing,
+                            backgroundColor: const Color(0xFFFE4A49),
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: 'Delete',
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(10.0),
+                        leading: Text('[' + draft.status + ']', style: const TextStyle(color:Colors.blue),),
+                        title: Text(draft.title.isEmpty? "No Title" : draft.title ,  overflow: TextOverflow.ellipsis, softWrap: false),
+                        subtitle: Text(draft.description.isEmpty? "No preview is available" : draft.description, overflow: TextOverflow.ellipsis, softWrap: false),
+
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => SuggestionDraftForm(draft: draft,)
+                          ));
+                        },
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.done && retrievedDraftList!.isEmpty) {
+              return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.search_off,
+                        size: 100,
+                        color: Colors.blue,
+                      ),
+                      Text(('There is no draft'),
+                          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
+                    ],
+                  )
+              );
+            } else {
+              return const Center(child:  CircularProgressIndicator());
+            }
+          },
+        )
+    );
+  }
+
+
 
   Widget getSuggestionsContainer() {
-    return Expanded(
+    return SizedBox(
+      height: MediaQuery.of(context).size.height*0.62,
       child: FutureBuilder(
           future: suggestionList,
           builder: (BuildContext context, AsyncSnapshot<List<Suggestion>> snapshot) {
