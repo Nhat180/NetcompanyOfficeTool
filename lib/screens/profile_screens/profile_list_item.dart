@@ -26,16 +26,16 @@ class ProfileListItemState extends State<ProfileListItem> {
       },
       child: Container(
         height: 55,
-        margin: EdgeInsets.symmetric(
+        margin: const EdgeInsets.symmetric(
           horizontal: 10,
         ).copyWith(
           bottom: 20,
         ),
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 20,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(8),
           color: Colors.grey.shade300,
         ),
         child: Row(
@@ -44,17 +44,18 @@ class ProfileListItemState extends State<ProfileListItem> {
               widget.icon,
               size: 25,
             ),
-            SizedBox(width: 15),
+            const SizedBox(width: 15),
             Text(
               widget.text,
-              style: TextStyle(
+              style: const TextStyle(
+                  fontSize: 15,
                   fontWeight: FontWeight.w500,
                   fontFamily: "Poppins"
               ),
             ),
-            Spacer(),
+            const Spacer(),
             if (widget.hasNavigation)
-              Icon(
+              const Icon(
                 Icons.arrow_right,
                 size: 25,
               ),

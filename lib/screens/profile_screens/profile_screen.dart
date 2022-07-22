@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:netcompany_office_tool/screens/profile_screens/privacy_dialog.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:netcompany_office_tool/dialog/privacy_dialog.dart';
+import 'package:netcompany_office_tool/services/storage_service.dart';
+import '../../dialog/logout_dialog.dart';
 import 'profile_list_item.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -11,52 +14,49 @@ class ProfileScreen extends StatefulWidget {
 }
 
 
-
 class ProfileScreenState extends State<ProfileScreen> {
+  final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
+  final StorageService storageService = StorageService();
+  String? name;
+
+  void getUserName() async {
+    name = await storageService.readSecureData('name');
+    setState(() {
+
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserName();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("netcompany"),
-        backgroundColor: const Color(0xff0f2147),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            // Navigator.pushReplacement(context,
-            //     MaterialPageRoute(builder: (context) => GridSearchScreen()));
-          },
-        ),
-      ),
-      body: Stack(
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          // Padding(
-          //   padding: EdgeInsets.all(25),
-          //   child:
-            Column(
-              children: <Widget>[
-                AvatarImage(),
+          const AvatarImage(),
+          const SizedBox(height: 15),
+          Text(
+            (name == null) ? 'Loading...' : name!,
+            style: const TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w700,
+                fontFamily: "Poppins"),
+          ),
 
-                SizedBox(height: 15),
-                Text(
-                  'pct',
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: "Poppins"),
-                ),
-
-                SizedBox(height: 15),
-                Text(
-                  'Netcompany Staff',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontFamily: "Poppins"),
-                ),
-                SizedBox(height: 30,),
-                ProfileListItems(),
-              ],
-            ),
+          // const SizedBox(height: 15),
+          // const Text(
+          //   'netcompany staff',
+          //   textAlign: TextAlign.center,
+          //   style: TextStyle(fontSize: 20, fontFamily: "Poppins"),
+          // ),
+          const SizedBox(height: 30,),
+          const ProfileListItems(),
         ],
       ),
     );
@@ -64,34 +64,38 @@ class ProfileScreenState extends State<ProfileScreen> {
 }
 
 class AvatarImage extends StatelessWidget {
+  const AvatarImage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(10.0),
             bottomRight: Radius.circular(10.0)),
-      gradient: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [
-        Colors.white,
-        Color(0xff0f2147),
-        // Colors.blue,
-      ],
-      ),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.white,
+            Color(0xff0f2147),
+          ],
+        ),
+        color: Colors.white
       ),
       height: 200,
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       // decoration: avatarDecoration,
       child: Container(
         // decoration: avatarDecoration,
-        padding: EdgeInsets.all(3),
+        padding: const EdgeInsets.all(3),
         child: Container(
           decoration: BoxDecoration(
+            color: Colors.white,
             shape: BoxShape.circle,
-            image: DecorationImage(
-              image: AssetImage('images/admin.png'),
+            border: Border.all(color: Colors.blueGrey, width: 5),
+            image: const DecorationImage(
+              image: AssetImage('images/officer.png'),
             ),
           ),
         ),
@@ -101,6 +105,8 @@ class AvatarImage extends StatelessWidget {
 }
 
 class ProfileListItems extends StatelessWidget {
+  const ProfileListItems({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -114,7 +120,7 @@ class ProfileListItems extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return PrivacyDialog();
+                  return const PrivacyDialog();
                 },
               );
             }
@@ -122,9 +128,13 @@ class ProfileListItems extends StatelessWidget {
 
           ProfileListItem(
             icon: Icons.logout,
-            text: 'Logout',
+            text: 'Sign out',
             hasNavigation: false,
-              onClickedListener: () => print("Logout")
+              onClickedListener: () =>
+                  showDialog(context: context,
+                      builder: (BuildContext context) {
+                        return const LogoutDialog();
+                      })
           ),
         ],
       ),
