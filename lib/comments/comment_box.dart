@@ -11,7 +11,7 @@ class CommentBox extends StatefulWidget{
   final String id;
   final String featureType;
 
-  const CommentBox({Key? key, required this.id, required this.featureType}) : super(key: key); /// Note: Add report/suggestion case
+  const CommentBox({Key? key, required this.id, required this.featureType}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CommentBoxState();
@@ -52,7 +52,7 @@ class CommentBoxState extends State<CommentBox>{
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,
-                    builder: (_) => CommentImage(id: widget.id, featureType: widget.featureType,), /// Note: Add suggestion case
+                    builder: (_) => CommentImage(id: widget.id, featureType: widget.featureType,),
                   );
                 }
             ),
@@ -78,9 +78,9 @@ class CommentBoxState extends State<CommentBox>{
                         imgUrl: "");
 
 
-                    await firebaseService.addComment(comment, commentID, widget.id, widget.featureType); /// Note: Add suggestion case
+                    await firebaseService.addComment(comment, commentID, widget.id, widget.featureType);
                     FirebaseFirestore.instance.collection(widget.featureType)
-                        .doc(widget.id).update({'totalCom': commentID + 1}); /// Note: Add suggestion case
+                        .doc(widget.id).update({'totalCom': commentID + 1});
                     textController.clear();
 
                     setState(() {
