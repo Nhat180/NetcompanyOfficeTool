@@ -27,7 +27,7 @@ class CommentImageState extends State<CommentImage> {
 //https://www.youtube.com/watch?v=IePaAGXzmtU&t=704s
   Future pickImage(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
+      final image = await ImagePicker().pickImage(source: source, imageQuality: 50);
       if(image == null) return;
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);

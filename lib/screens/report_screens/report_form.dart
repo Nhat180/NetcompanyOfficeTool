@@ -38,7 +38,7 @@ class InitState extends  State<ReportForm>{
   // List<XFile>? imageFileList=[];
   List<File>? imageFileList=[];
   void selectImage(int maxSelected) async {
-    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+    final List<XFile>? selectedImages = await imagePicker.pickMultiImage(imageQuality: 50);
     if(selectedImages!.isNotEmpty && selectedImages.length <= maxSelected){
       for(int i = 0; i < selectedImages.length; i++) {
         imageFileList!.add(File(selectedImages[i].path));
