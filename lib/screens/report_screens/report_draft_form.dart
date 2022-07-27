@@ -11,6 +11,7 @@ import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:netcompany_office_tool/services/storage_service.dart';
 import '../../constants.dart';
+import '../../dialog/form_alert_dialog.dart';
 import '../../model/report.dart';
 
 
@@ -390,11 +391,11 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                     onPressed: () async {
                       if (titleController.text == '' || titleController.text.isEmpty
                           || descriptionController.text == '' || descriptionController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Title and description must be filled to send the form")
-                            )
-                        );
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const FormAlert();
+                            });
                       } else {
                         setState(() {
                           loading = true;

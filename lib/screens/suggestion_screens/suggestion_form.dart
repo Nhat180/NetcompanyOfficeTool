@@ -11,6 +11,8 @@ import 'package:intl/intl.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:netcompany_office_tool/services/storage_service.dart';
 
+import '../../dialog/form_alert_dialog.dart';
+
 class SuggestionForm extends StatefulWidget {
   const SuggestionForm({Key? key}) : super(key: key);
 
@@ -353,11 +355,11 @@ class InitState extends  State<SuggestionForm>{
                 onTap: () async {
                   if (titleController.text == '' || titleController.text.isEmpty
                       || descriptionController.text == '' || descriptionController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("Title and description must be filled to submit the form")
-                        )
-                    );
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const FormAlert();
+                        });
                   } else {
                     setState(() {
                       loading = true;
