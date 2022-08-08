@@ -82,12 +82,7 @@ class FirebaseService {
     List<Report> reports = [];
     QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("reports").where("creator", isEqualTo: name).get();
     reports = snapshot.docs.map((docSnapshot) => Report.fromDocumentSnapshot(docSnapshot)).toList();
-    reports.sort((a,b) { // Sort the list, bring the latest reports to top
-      var aDate = a.dateCreate;
-      var bDate = b.dateCreate;
-      return bDate.compareTo(aDate);
-    });
-    return reports;
+    return reports.reversed.toList();
   }
 
   Future<List<Suggestion>> retrieveSuggestions(String name) async {
@@ -95,12 +90,7 @@ class FirebaseService {
     List<Suggestion> suggestions = [];
     QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("suggestions").where("creator", isEqualTo: name).get();
     suggestions = snapshot.docs.map((docSnapshot) => Suggestion.fromDocumentSnapshot(docSnapshot)).toList();
-    suggestions.sort((a,b) { // Sort the list, bring the latest reports to top
-      var aDate = a.dateCreate;
-      var bDate = b.dateCreate;
-      return bDate.compareTo(aDate);
-    });
-    return suggestions;
+    return suggestions.reversed.toList();
   }
 
   Future<List<Draft>> retrieveDrafts(String name, String draftType) async {
@@ -117,7 +107,7 @@ class FirebaseService {
     DateTime currentDateTime = DateTime.now();
     Timestamp currentTimeStamp = Timestamp.fromDate(currentDateTime);
     QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("surveys")
-        // .where("dateExpired", isLessThanOrEqualTo: currentTimeStamp)
+        .where("close", isGreaterThanOrEqualTo: currentTimeStamp)
     .get();
     surveys = snapshot.docs.map((docSnapshot) => Survey.fromDocumentSnapshot(docSnapshot)).toList();
     return surveys;
@@ -166,6 +156,20 @@ class FirebaseService {
     await db.collection("surveys").doc(surveyID)
         .collection("questions").doc(questionID)
         .collection("answers").add({'description': textAnswer});
+  }
+  
+  Future<void> addDatePick(String surveyID, String questionID, String datePick) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection("surveys").doc(surveyID)
+        .collection("questions").doc(questionID)
+        .collection("answers").add({'date': datePick});
+  }
+
+  Future<void> addScaleAnswer (String surveyID, String questionID, int scaleValue) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection("surveys").doc(surveyID)
+        .collection("questions").doc(questionID)
+        .collection("answers").doc(scaleValue.toString()).update({'choiceCount': FieldValue.increment(1)});
   }
 
   Future<int> getTotalComment(String id, String featureType) async {

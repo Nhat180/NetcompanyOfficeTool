@@ -10,6 +10,8 @@ import 'package:netcompany_office_tool/model/question.dart';
 import 'package:netcompany_office_tool/screens/survey_screens/survey_finish_screen.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
 import 'package:netcompany_office_tool/services/storage_service.dart';
+import 'package:intl/intl.dart';
+import 'package:reviews_slider/reviews_slider.dart';
 
 import '../navigation_screen.dart';
 
@@ -28,6 +30,8 @@ class _SurveyDetailState extends State<SurveyDetail> {
   final StorageService storageService = StorageService();
 
   final TextEditingController textController = TextEditingController();
+  final TextEditingController dateFromInput = TextEditingController();
+  int? scaleValue;
   int questionIndex = 0;
   bool loading = false;
   List<Question> retrievedQuestionList = [];
@@ -88,7 +92,11 @@ class _SurveyDetailState extends State<SurveyDetail> {
               (retrievedQuestionList[questionIndex].type == 'MULTIPLECHOICE') ?
                   multipleChoiceWidget() :
               retrievedQuestionList[questionIndex].type == 'SINGLECHOICE' ?
-              singleChoiceWidget() : shortAnswerWidget(),
+              singleChoiceWidget() :
+              retrievedQuestionList[questionIndex].type == 'SHORTANSWER' ?
+              shortAnswerWidget() :
+              retrievedQuestionList[questionIndex].type == 'DATEPICK' ?
+              datePickerWidget() : likertScaleWidget()
             ],
           ),
         ),
@@ -386,6 +394,154 @@ class _SurveyDetailState extends State<SurveyDetail> {
             return const Center(child: CircularProgressIndicator(),);
           }
         }
+    );
+  }
+
+  Widget datePickerWidget() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget> [
+          Padding(
+            padding: const EdgeInsets.only(top: 5, left: 20, right: 20),
+            child: TextField(
+              controller: dateFromInput,
+              decoration: const InputDecoration(
+                  icon: Icon(Icons.calendar_month),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))
+                  ),
+                  labelText: "Enter date"
+              ),
+              readOnly: true,
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                    context: context, initialDate: DateTime.now(),
+                    firstDate: DateTime.now() //- not to allow to choose before today.
+                    lastDate: DateTime(2100)
+                );
+                if (pickedDate != null) {
+                  // ignore: avoid_print
+                  print(pickedDate);
+                  String formatDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+                  setState(() {
+                    dateFromInput.text = formatDate; //set output date to TextField value.
+                  });
+                }
+              },
+            ),
+          ),
+          const SizedBox(height: 30,),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(double.infinity, 50),
+            ),
+            onPressed: () async {
+              setState(() {
+                loading = true;
+              });
+
+              // ignore: avoid_print
+              print(dateFromInput.text);
+              await firebaseService.addDatePick(
+                  widget.surveyID,
+                  retrievedQuestionList[questionIndex].id!,
+                  dateFromInput.text);
+              dateFromInput.clear();
+
+              if((questionIndex + 1) == retrievedQuestionList.length) {
+                setState(() {
+                  loading = false;
+                });
+
+                if (!loading) {
+                  recordUser();
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => const FinishSurvey()));
+                }
+              } else {
+                setState(() {
+                  loading = false;
+                });
+
+                if (!loading) {
+                  setState(() {
+                    questionIndex++;
+                  });
+                }
+              }
+            },
+            child: (loading) ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 1.5,)) : const Text("Next"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget likertScaleWidget() {
+    return Center(
+      child: Column(
+        children: <Widget> [
+          ReviewSlider(
+              initialValue: 2,
+              options: const ['Terrible', 'Bad', 'Neutral', 'Good', 'Satisfied'],
+              onChange: (int value) {
+                scaleValue = value;
+          }),
+          const SizedBox(height: 30,),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(double.infinity, 50),
+            ),
+            onPressed: () async {
+              setState(() {
+                loading = true;
+              });
+
+              // ignore: avoid_print
+              print(scaleValue);
+              await firebaseService.addScaleAnswer(
+                  widget.surveyID,
+                  retrievedQuestionList[questionIndex].id!,
+                  scaleValue!);
+
+              if((questionIndex + 1) == retrievedQuestionList.length) {
+                setState(() {
+                  loading = false;
+                });
+
+                if (!loading) {
+                  recordUser();
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => const FinishSurvey()));
+                }
+              } else {
+                setState(() {
+                  loading = false;
+                });
+
+                if (!loading) {
+                  setState(() {
+                    questionIndex++;
+                  });
+                }
+              }
+            },
+            child: (loading) ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 1.5,)) : const Text("Next"),
+          ),
+        ],
+      ),
     );
   }
 }
