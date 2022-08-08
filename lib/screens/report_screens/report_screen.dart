@@ -140,17 +140,44 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                         // A motion is a widget used to control how the pane animates.
                         motion: const ScrollMotion(),
                         // A pane can dismiss the Slidable.
-                        dismissible: DismissiblePane(
-                            onDismissed: () async {
-                              retrievedDraftList!.removeAt(index);
-                              await firebaseService.deleteDraft("draftReports", draft.id!);
-                            }),
+                        // dismissible: DismissiblePane(onDismissed: () {}),
 
                         // All actions are defined in the children parameter.
                         children: [
                           // A SlidableAction can have an icon and/or a label.
                           SlidableAction(
-                            onPressed: doNothing,
+                            onPressed: (BuildContext context) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8)
+                                      ),
+                                      title: const Text("Delete draft"),
+                                      content: const Text("Do you want to delete this draft"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Cancel")
+                                        ),
+
+                                        TextButton(
+                                            onPressed: () async {
+                                              setState(() {
+                                                retrievedDraftList!.removeAt(index);
+                                              });
+                                              await firebaseService.deleteDraft("draftReports", draft.id!);
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Ok")
+                                        )
+                                      ],
+                                    );
+                                  });
+                            },
                             backgroundColor: const Color(0xFFFE4A49),
                             foregroundColor: Colors.white,
                             icon: Icons.delete,
