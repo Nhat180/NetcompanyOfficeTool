@@ -116,7 +116,7 @@ class _State extends State<SurveyListScreen> {
                             ),
 
                             SizedBox(
-                              width: (survey.usersHaveTaken!.contains(name!)) ? 100 : 90,
+                              width: (survey.usersHaveTaken!.contains(name!)) ? 110 : 90,
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (survey.usersHaveTaken!.contains(name!)) {

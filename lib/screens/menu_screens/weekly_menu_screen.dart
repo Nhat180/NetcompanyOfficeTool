@@ -48,7 +48,7 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget> [
                   Padding(
-                    padding: const EdgeInsets.only(top: 32, right: 32, left: 32, bottom: 15),
+                    padding: const EdgeInsets.only(top: 20, left: 32, bottom: 5),
                     child: Text("Daily Lunch Menu", style: GoogleFonts.ubuntu(textStyle: const TextStyle(
                       fontSize: 35,
                       color: Color(0xff0f2147),
