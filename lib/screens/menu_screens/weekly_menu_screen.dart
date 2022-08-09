@@ -115,8 +115,8 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                                             });
                                           },
                                           title: Text(weekdays[index].name,
-                                            style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                                              fontSize: 30,
+                                            style: GoogleFonts.ubuntu(textStyle: TextStyle(
+                                              fontSize: 25.sp,
                                               color: Colors.white,
                                               fontWeight: FontWeight.w900,
                                             )),
