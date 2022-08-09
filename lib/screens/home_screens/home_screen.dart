@@ -76,6 +76,7 @@ class _State extends State<HomeScreen> {
             return Sizer(builder: (context, orientation, deviceType){
               return Container(
                   margin: const EdgeInsets.all(15),
+                  alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
