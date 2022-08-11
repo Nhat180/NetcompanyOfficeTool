@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>221750454980-sldckdautdik2is74il8ugeme2o2dkoc.apps.googleusercontent.com</string>
+	<string>221750454980-aos1ko9il6u5pq1bf2rb7isic131kuus.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.221750454980-sldckdautdik2is74il8ugeme2o2dkoc</string>
+	<string>com.googleusercontent.apps.221750454980-aos1ko9il6u5pq1bf2rb7isic131kuus</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCE4ARyOcSXi5AEWH_zCYGQaLQQ_m9v60k</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.netcompanyOfficeTool</string>
+	<string>com.netcompany.netcompanyOfficeTool</string>
 	<key>PROJECT_ID</key>
 	<string>netcompany-office-tool-db</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:221750454980:ios:5d7a565f7ce3e3c15d7791</string>
+	<string>1:221750454980:ios:b497caff2ea3f72b5d7791</string>
 </dict>
 </plist>
