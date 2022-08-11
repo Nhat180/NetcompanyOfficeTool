@@ -29,6 +29,49 @@
             {
               "client_id": "221750454980-kctu2v9t0ppp94fghifctm3e3pjjmlkk.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "221750454980-sldckdautdik2is74il8ugeme2o2dkoc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.netcompanyOfficeTool"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221750454980:android:42efde5c635701bd5d7791",
+        "android_client_info": {
+          "package_name": "com.netcompany.netcompany_office_tool"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "221750454980-kctu2v9t0ppp94fghifctm3e3pjjmlkk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMLSriDowBvBnhzuV4zSWhTr8IkVQBSbk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "221750454980-kctu2v9t0ppp94fghifctm3e3pjjmlkk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "221750454980-sldckdautdik2is74il8ugeme2o2dkoc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.netcompanyOfficeTool"
+              }
             }
           ]
         }
