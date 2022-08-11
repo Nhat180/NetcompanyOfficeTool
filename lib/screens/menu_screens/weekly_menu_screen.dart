@@ -89,60 +89,63 @@ class _WeeklyLunchScreenState extends State<WeeklyLunchScreen> {
                             ],
                           )
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Column(
+                  Expanded(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
+                        child: SingleChildScrollView(
+                          child: Column(
                             children: [
-                              ListView.builder(
-                                  itemCount: weekdays.length,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Card(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8)
-                                        ),
-                                        color: const Color(0xff0f2147),
-                                        elevation: 8,
-                                        child: ListTile(
-                                          contentPadding: const EdgeInsets.all(12),
-                                          onTap: () {
-                                            showDialog(context: context, builder: (BuildContext context) {
-                                              return MenuDialog(weekdayAbbrev: weekdays[index].abbrev);
-                                            });
-                                          },
-                                          title: Text(weekdays[index].name,
-                                            style: GoogleFonts.ubuntu(textStyle: TextStyle(
-                                              fontSize: 25.sp,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w900,
-                                            )),
-                                            textAlign: TextAlign.left,
-                                          ),
-                                          subtitle: Text("Lunch Menu",
-                                            style: GoogleFonts.ubuntu(textStyle: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w900,
-                                          )),
-                                            textAlign: TextAlign.left,
-                                          ),
-                                          trailing: Image.asset(weekdays[index].iconImage,
-                                              height: 60, width: 60, fit: BoxFit.cover,
-                                          ),
-                                        )
-                                    );
-                                  }
-                              )
+                              Column(
+                                children: [
+                                  ListView.builder(
+                                      itemCount: weekdays.length,
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8)
+                                            ),
+                                            color: const Color(0xff0f2147),
+                                            elevation: 8,
+                                            child: ListTile(
+                                              contentPadding: const EdgeInsets.all(12),
+                                              onTap: () {
+                                                showDialog(context: context, builder: (BuildContext context) {
+                                                  return MenuDialog(weekdayAbbrev: weekdays[index].abbrev);
+                                                });
+                                              },
+                                              title: Text(weekdays[index].name,
+                                                style: GoogleFonts.ubuntu(textStyle: TextStyle(
+                                                  fontSize: 25.sp,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w900,
+                                                )),
+                                                textAlign: TextAlign.left,
+                                              ),
+                                              subtitle: Text("Lunch Menu",
+                                                style: GoogleFonts.ubuntu(textStyle: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w900,
+                                                )),
+                                                textAlign: TextAlign.left,
+                                              ),
+                                              trailing: Image.asset(weekdays[index].iconImage,
+                                                height: 60, width: 60, fit: BoxFit.cover,
+                                              ),
+                                            )
+                                        );
+                                      }
+                                  )
+                                ],
+                              ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  )
+                        ),
+                      )
+                  ),
                 ],
               ),
             ),
