@@ -67,88 +67,91 @@ class _State extends State<SurveyListScreen> {
                   itemCount: retrievedSurveyList!.length,
                   itemBuilder: (context, index) {
                     final survey = retrievedSurveyList![index];
-                    return Padding(
-                      // padding: (index % 2) == 0 ? EdgeInsets.only(bottom: 15) : EdgeInsets.only(top: 15),
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Card(
+                    return Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
                         elevation: 10,
                         shadowColor: const Color(0xff0f2147),
                         color: Colors.white,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15.0),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.green[500],
-                                radius: 40,
-                                child: const CircleAvatar(
-                                  backgroundImage: AssetImage(
-                                      "images/survey.png"), //NetworkImage
-                                  radius: 100,
-                                ), //CircleAvatar
-                              ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Text(
-                                  survey.title, textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis, softWrap: false
-                              ),
-                            ), //Text
-                            //SizedBox
-
-                            Text(
-                              'Expired on ' + DateFormat('dd/MM/yyyy').format(survey.dateExpired.toDate()),
-                              style: const TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-
-                            SizedBox(
-                              width: (survey.usersHaveTaken!.contains(name!)) ? 110 : 90,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  if (survey.usersHaveTaken!.contains(name!)) {
-                                    showDialog(context: context,
-                                        builder: (BuildContext context) {
-                                          return SurveyRetakeDialog(surveyID: survey.id!,);
-                                        });
-                                  } else {
-                                    Navigator.pushReplacement(context, MaterialPageRoute(
-                                        builder: (context) => WelcomeSurvey(survey: survey)
-                                    ));
-                                  }
-                                },
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                    MaterialStateProperty.all(const Color(0xff0f2147))),
-
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.touch_app),
-                                      (survey.usersHaveTaken!.contains(name!)) ?
-                                      const Text('Retake') : const Text('Take')
-                                    ],
+                        child: Center(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.green[500],
+                                    radius: 40,
+                                    child: const CircleAvatar(
+                                      backgroundImage: AssetImage(
+                                          "images/survey.png"), //NetworkImage
+                                      radius: 100,
+                                    ), //CircleAvatar
                                   ),
                                 ),
-                              ),
-                            ) ,
-                          ],
-                        ),
-                      ),
+
+                                Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                      survey.title, textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis, softWrap: false
+                                  ),
+                                ), //Text
+                                //SizedBox
+
+                                Text(
+                                    'Expired on ' + DateFormat('dd/MM/yyyy').format(survey.dateExpired.toDate()),
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                    ),
+                                    textAlign: TextAlign.center
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+
+                                SizedBox(
+                                  width: (survey.usersHaveTaken!.contains(name!)) ? 110 : 90,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      if (survey.usersHaveTaken!.contains(name!)) {
+                                        showDialog(context: context,
+                                            builder: (BuildContext context) {
+                                              return SurveyRetakeDialog(surveyID: survey.id!,);
+                                            });
+                                      } else {
+                                        Navigator.pushReplacement(context, MaterialPageRoute(
+                                            builder: (context) => WelcomeSurvey(survey: survey)
+                                        ));
+                                      }
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                        MaterialStateProperty.all(const Color(0xff0f2147))),
+
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.touch_app),
+                                          (survey.usersHaveTaken!.contains(name!)) ?
+                                          const Text('Retake') : const Text('Take')
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ) ,
+                              ],
+                            ),
+                          )
+                        )
                     );
                   },
                 );
