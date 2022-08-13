@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -189,7 +190,7 @@ class FirebaseService {
   }
 
 
-  Future<List<String>> uploadFiles(List<File>? images, String featureType) async {
+  Future<List<String>> uploadFiles(List<File>? images, bool isDraft, String featureType) async {
     List<String> url = [];
     firebase_storage.Reference ref;
     if(images!.isEmpty) {
@@ -199,7 +200,8 @@ class FirebaseService {
         for(var image in images) {
           ref = firebase_storage.FirebaseStorage.instance
               .ref()
-              .child('reports_img/${Path.basename(image.path)}');
+              .child((isDraft) ? 'draftReports_img/${Path.basename(image.path)}'
+              : 'reports_img/${Path.basename(image.path)}');
           await ref.putFile(image).whenComplete(() async {
             await ref.getDownloadURL().then((value) {
               url.add(value);
@@ -210,7 +212,8 @@ class FirebaseService {
         for(var image in images) {
           ref = firebase_storage.FirebaseStorage.instance
               .ref()
-              .child('suggestions_img/${Path.basename(image.path)}');
+              .child((isDraft) ? 'draftSuggestions_img/${Path.basename(image.path)}'
+              : 'suggestions_img/${Path.basename(image.path)}');
           await ref.putFile(image).whenComplete(() async {
             await ref.getDownloadURL().then((value) {
               url.add(value);
