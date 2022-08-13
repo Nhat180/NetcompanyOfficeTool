@@ -400,7 +400,7 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
                         });
 
                         String? name = await storageService.readSecureData('name');
-                        final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList, "suggestions");
+                        final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList, false, "suggestions");
                         final String title = titleController.text;
                         final String description = descriptionController.text;
                         String formattedDate = DateFormat('yyyy-MM-dd').format(currentTime);

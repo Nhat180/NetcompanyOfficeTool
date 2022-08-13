@@ -74,7 +74,7 @@ class InitState extends  State<SuggestionForm>{
           onPressed: () {
             if (titleController.text == '' && titleController.text.isEmpty
                 && descriptionController.text == '' && descriptionController.text.isEmpty
-                && _dropDownValue == null) {
+                && _dropDownValue == null && imageFileList!.isEmpty) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => NavigationScreen(index: suggestionScreen,)));
             } else {
@@ -82,10 +82,12 @@ class InitState extends  State<SuggestionForm>{
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return DraftDialog(formType: suggestionScreen,
+                    return DraftDialog(
+                        formType: suggestionFormType,
                         title: titleController.text,
                         description: descriptionController.text,
-                        type: _dropDownValue!);
+                        type: _dropDownValue!,
+                        imgUrls: imageFileList!,);
                   });
             }
           },
@@ -367,7 +369,7 @@ class InitState extends  State<SuggestionForm>{
                     });
 
                     String? name = await storageService.readSecureData('name');
-                    final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList, "suggestions"); /// Note: Add suggestion case
+                    final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList, false, "suggestions");
                     final String title = titleController.text;
                     final String description = descriptionController.text;
                     String formattedDate = DateFormat('yyyy-MM-dd').format(currentTime);
