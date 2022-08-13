@@ -75,7 +75,7 @@ class InitState extends  State<ReportForm>{
           onPressed: () {
             if (titleController.text == '' && titleController.text.isEmpty
                 && descriptionController.text == '' && descriptionController.text.isEmpty
-                && _dropDownValue == null) {
+                && _dropDownValue == null && imageFileList!.isEmpty) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => NavigationScreen(index: reportScreen,)));
             } else {
@@ -83,10 +83,12 @@ class InitState extends  State<ReportForm>{
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return DraftDialog(formType: reportScreen,
+                    return DraftDialog(
+                        formType: reportFormType,
                         title: titleController.text,
                         description: descriptionController.text,
-                        type: _dropDownValue!);
+                        type: _dropDownValue!,
+                        imgUrls: imageFileList!,);
                   });
             }
           },
@@ -372,7 +374,7 @@ class InitState extends  State<ReportForm>{
                         });
 
                         String? name = await storageService.readSecureData('name');
-                        final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList, "reports"); /// Note: Add suggestion case
+                        final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList, false, "reports");
                         final String title = titleController.text;
                         final String description = descriptionController.text;
                         String formattedDate = DateFormat('yyyy-MM-dd').format(currentTime);
