@@ -190,7 +190,7 @@ class FirebaseService {
   }
 
 
-  Future<List<String>> uploadFiles(List<File>? images, bool isDraft, String featureType) async {
+  Future<List<String>> uploadFiles(String username, List<File>? images, bool isDraft, String featureType) async {
     List<String> url = [];
     firebase_storage.Reference ref;
     if(images!.isEmpty) {
@@ -198,10 +198,12 @@ class FirebaseService {
     } else {
       if (featureType == "reports") {
         for(var image in images) {
+          DateTime currentDateTime = DateTime.now();
+          String formatTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(currentDateTime);
           ref = firebase_storage.FirebaseStorage.instance
               .ref()
               .child((isDraft) ? 'draftReports_img/${Path.basename(image.path)}'
-              : 'reports_img/${Path.basename(image.path)}');
+              : 'reports_img/${Path.basename(image.path)} ' + formatTime + '_' + username);
           await ref.putFile(image).whenComplete(() async {
             await ref.getDownloadURL().then((value) {
               url.add(value);
@@ -210,10 +212,12 @@ class FirebaseService {
         }
       } else {
         for(var image in images) {
+          DateTime currentDateTime = DateTime.now();
+          String formatTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(currentDateTime);
           ref = firebase_storage.FirebaseStorage.instance
               .ref()
               .child((isDraft) ? 'draftSuggestions_img/${Path.basename(image.path)}'
-              : 'suggestions_img/${Path.basename(image.path)}');
+              : 'suggestions_img/${Path.basename(image.path)} ' + formatTime + '_' + username);
           await ref.putFile(image).whenComplete(() async {
             await ref.getDownloadURL().then((value) {
               url.add(value);

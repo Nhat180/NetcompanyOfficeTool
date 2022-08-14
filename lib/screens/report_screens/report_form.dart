@@ -53,6 +53,7 @@ class InitState extends  State<ReportForm>{
     setState(() {
 
     });
+    print(imageFileList![0].toString());
   }
 
   @override
@@ -374,7 +375,7 @@ class InitState extends  State<ReportForm>{
                         });
 
                         String? name = await storageService.readSecureData('name');
-                        final List<String> imgUrls = await firebaseService.uploadFiles(imageFileList, false, "reports");
+                        final List<String> imgUrls = await firebaseService.uploadFiles(name!, imageFileList, false, "reports");
                         final String title = titleController.text;
                         final String description = descriptionController.text;
                         String formattedDate = DateFormat('yyyy-MM-dd').format(currentTime);
