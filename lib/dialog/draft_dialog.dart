@@ -60,7 +60,7 @@ class _DraftDialogState extends State<DraftDialog> {
                 loading = true;
               });
               String? name = await storageService.readSecureData('name');
-              final List<String> imgUrls = await firebaseService.uploadFiles(
+              final List<String> imgUrls = await firebaseService.uploadFiles(name!,
                 widget.imgUrls, true,
                   (widget.formType == reportFormType)
                       ? "reports" : "suggestions");
