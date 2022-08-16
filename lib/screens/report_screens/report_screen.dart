@@ -96,7 +96,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
             leading: Icon(Icons.info),
             backgroundColor: Colors.white,
             children: [
-              getReportsContainer()
+              ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.80), child: getReportsContainer())
               // Container(child: getReportsContainer())
             ],
           ),
@@ -107,7 +107,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
             leading: Icon(Icons.info),
             backgroundColor: Colors.white,
             children: [
-              getDraftsContainer()
+              ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.70), child: getDraftsContainer())
             ],
           ),
         ],

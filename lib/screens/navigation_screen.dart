@@ -7,6 +7,7 @@ import 'package:netcompany_office_tool/screens/home_screens/home_screen.dart';
 import 'package:netcompany_office_tool/screens/landscape_mode.dart';
 import 'package:netcompany_office_tool/screens/profile_screens/profile_screen.dart';
 import 'package:netcompany_office_tool/screens/report_screens/report_screen.dart';
+import 'package:netcompany_office_tool/screens/room_screens/roomlist_screen.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_screen.dart';
 import 'package:netcompany_office_tool/screens/home_screens/error_access_screen.dart';
 import 'package:netcompany_office_tool/screens/survey_screens/surveylist_screen.dart';
@@ -37,6 +38,7 @@ const List<Choice> choices = <Choice>[
   Choice(title: 'Report', icon: Icons.campaign),
   Choice(title: 'Suggest', icon: Icons.how_to_vote),
   Choice(title: 'Survey', icon: Icons.content_paste_rounded),
+  Choice(title: 'Map', icon: Icons.map),
   Choice(title: 'Profile', icon: Icons.person),
 ];
 
@@ -57,6 +59,7 @@ class InitState extends  State<NavigationScreen>{
     ReportScreen(),
     SuggestionScreen(),
     SurveyListScreen(),
+    RoomListScreen(),
     ProfileScreen()
   ];
 
@@ -187,6 +190,12 @@ class InitState extends  State<NavigationScreen>{
           BottomNavigationBarItem(
               icon: Icon(Icons.content_paste_rounded),
               label: 'Survey',
+              backgroundColor: Color(0xff0f2147)
+          ),
+
+          BottomNavigationBarItem(
+              icon: Icon(Icons.map),
+              label: 'Map',
               backgroundColor: Color(0xff0f2147)
           ),
 
