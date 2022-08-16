@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/model/meeting_room.dart';
 import 'package:netcompany_office_tool/screens/room_screens/map_screen.dart';
-// import 'package:grouped_list/grouped_list.dart';
+
 
 class RoomListScreen extends StatefulWidget {
   const RoomListScreen({Key? key}) : super(key: key);
