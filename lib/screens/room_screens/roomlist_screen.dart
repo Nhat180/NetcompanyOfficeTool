@@ -72,7 +72,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
           // FloorHeader(isExpand: isExpand1, floorNumber: "Floor 24: VietNam", imageFlag: "images/vietnam.png", getFloorData: getRoomFromFloor24(), onExpandChange: (value) {changingExpand(isExpand1, value);}),
 
           Padding(
-            padding: (isExpand1==true)?const EdgeInsets.all(8.0):const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration:BoxDecoration(
                   color: (isExpand1!=true) ? Color(0xff0f2147): Colors.white,
@@ -111,7 +111,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
           ),
 
           Padding(
-            padding: (isExpand2==true)?const EdgeInsets.all(8.0):const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration:BoxDecoration(
                   color: (isExpand2!=true) ? Color(0xff0f2147): Colors.white,
@@ -149,7 +149,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
           ),
 
           Padding(
-            padding: (isExpand3==true)?const EdgeInsets.all(8.0):const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration:BoxDecoration(
                   color: (isExpand3!=true) ? Color(0xff0f2147): Colors.white,
@@ -187,7 +187,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
           ),
 
           Padding(
-            padding: (isExpand4==true)?const EdgeInsets.all(8.0):const EdgeInsets.all(8.0),
+            padding:const EdgeInsets.all(8.0),
             child: Container(
               decoration:BoxDecoration(
                   color: (isExpand4!=true) ? Color(0xff0f2147): Colors.white,
@@ -225,7 +225,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
           ),
 
           Padding(
-            padding: (isExpand5==true)?const EdgeInsets.all(8.0):const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration:BoxDecoration(
                   color: (isExpand5!=true) ? Color(0xff0f2147): Colors.white,

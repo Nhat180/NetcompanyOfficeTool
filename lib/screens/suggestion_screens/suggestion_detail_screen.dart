@@ -62,8 +62,8 @@ class SuggestionDetailScreen extends StatelessWidget{
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 10.0),
-                            child: Image.asset("images/report.png",
-                              height: 60, width: 60,),
+                            child: Image.asset("images/idea.png",
+                              height: 60, width: 65,),
                           ),
 
                           Expanded(

@@ -59,6 +59,8 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
   List<Suggestion>? retrievedSuggestionList;
   Future<List<Draft>>? draftList;
   List<Draft>? retrievedDraftList;
+  bool isExpand1=true;
+  bool isExpand2=false;
 
   void initRetrieval() async {
     String? name = await storageService.readSecureData('name');
@@ -75,6 +77,8 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
+    isExpand1=true;
+    isExpand2=false;
     initRetrieval();
   }
 
@@ -88,40 +92,77 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          ExpansionTile(
-            initiallyExpanded: true,
-            title: Text("Suggestion"),
-            leading: Icon(Icons.info),
-            backgroundColor: Colors.white,
-            children: [
-              ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.70), child: getSuggestionsContainer())
-              // Container(child: getReportsContainer())
-            ],
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0, bottom: 5.0),
+            child: Container(
+              decoration:BoxDecoration(
+                  color: (isExpand1==true) ? Color(0xff0f2147): Colors.white,
+                  borderRadius: (isExpand1==true)?BorderRadius.all(Radius.circular(8)):BorderRadius.all(Radius.circular(2)),
+                  border: Border.all(color: Color(0xff0f2147))
+              ),
+              child: ExpansionTile(
+                initiallyExpanded: true,
+                title: Text("Suggestion", style: isExpand1==true ?TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold)
+                    :
+                TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize:20)
+                ),
+                leading: Icon(Icons.lightbulb_sharp, color: (isExpand1!=true)? Color(0xff0f2147): Colors.white),
+                trailing: (isExpand1!=true)?Icon(Icons.arrow_drop_down,size: 32,color: Color(0xff0f2147),):Icon(Icons.arrow_drop_up,size: 32,color: Colors.white),
+
+                onExpansionChanged: (value){
+                  setState(() {
+                    isExpand1=value;
+                  });
+                },
+                children: [
+                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.60), child: getSuggestionsContainer())
+                  // Container(child: getReportsContainer())
+                ],
+              ),
+            ),
           ),
 
-          ExpansionTile(
-            initiallyExpanded: false,
-            title: Text("Draft"),
-            leading: Icon(Icons.info),
-            backgroundColor: Colors.white,
-            children: [
-              ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.70), child: getDraftsContainer())
-            ],
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0, left: 8.0, right: 8.0, bottom: 5.0),
+            child: Container(
+              decoration:BoxDecoration(
+                  color: (isExpand2==true) ? Color(0xff0f2147): Colors.white,
+                  borderRadius: (isExpand2==true)?BorderRadius.all(Radius.circular(8)):BorderRadius.all(Radius.circular(2)),
+                  border: Border.all(color: Color(0xff0f2147))
+              ),
+              child: ExpansionTile(
+                initiallyExpanded: false,
+                title: Text("Draft", style: isExpand2==true ?TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold)
+                    :
+                TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize:20)
+                ),
+                leading: Icon(Icons.drafts, color: (isExpand2!=true)? Color(0xff0f2147): Colors.white),
+                trailing: (isExpand2!=true)?Icon(Icons.arrow_drop_down,size: 32,color: Color(0xff0f2147),):Icon(Icons.arrow_drop_up,size: 32,color: Colors.white),
+
+                onExpansionChanged: (value){
+                  setState(() {
+                    isExpand2=value;
+                  });
+                },
+                children: [
+                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.6), child: getDraftsContainer())
+                ],
+              ),
+            ),
           ),
         ],
       ),
     );
   }
   Widget getDraftsContainer() {
-    return SizedBox(
-        height: MediaQuery.of(context).size.height*0.62,
-        child: FutureBuilder(
+    return FutureBuilder(
           future: draftList,
           builder: (BuildContext context, AsyncSnapshot<List<Draft>> snapshot) {
             if(snapshot.hasError) return const Text("Error");
 
             if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               return ListView.builder(
+                shrinkWrap: true,
                 padding: const EdgeInsets.only(top: 10),
                 itemCount: retrievedDraftList!.length,
                 itemBuilder: (context, index) {
@@ -219,22 +260,20 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
               return const Center(child:  CircularProgressIndicator());
             }
           },
-        )
     );
   }
 
 
 
   Widget getSuggestionsContainer() {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height*0.62,
-      child: FutureBuilder(
+    return FutureBuilder(
           future: suggestionList,
           builder: (BuildContext context, AsyncSnapshot<List<Suggestion>> snapshot) {
             if(snapshot.hasError) return const Text("Error");
 
             if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               return ListView.builder(padding: const EdgeInsets.only(top: 10),
+                shrinkWrap: true,
                 itemCount: retrievedSuggestionList!.length,
                 itemBuilder: (context, index) {
                   final suggestion = retrievedSuggestionList![index];
@@ -290,7 +329,6 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
               return const Center(child: CircularProgressIndicator());
             }
           }
-      ),
     );
   }
   void doNothing(BuildContext context) {
