@@ -52,13 +52,11 @@ class _MapScreenState extends State<MapScreen> {
         body: Stack(
           children: <Widget>[
             _getWebMap(
-                widget.room.floor == "Floor 24" ? "https://user-images.githubusercontent.com/68225942/184541064-26d56c92-cfbb-49f0-b0bf-dde519d9bfdc.jpg" :
-                widget.room.floor == "Floor 25" ?"https://user-images.githubusercontent.com/68225942/184541030-0075bdaa-2263-4a3e-9c89-3226ebb5ceca.jpg" :
-                widget.room.floor == "Floor 26" ?"https://user-images.githubusercontent.com/68225942/184541650-19ca6103-350e-4680-a583-1db2870bbe7e.jpg" :
-                widget.room.floor == "Floor 27" ?"https://user-images.githubusercontent.com/68225942/184540916-efcdc2c3-29d8-4652-ba0f-6ec08d9144aa.jpg" :
+                widget.room.floor == "24" ? "https://user-images.githubusercontent.com/68225942/184541064-26d56c92-cfbb-49f0-b0bf-dde519d9bfdc.jpg" :
+                widget.room.floor == "25" ?"https://user-images.githubusercontent.com/68225942/184541030-0075bdaa-2263-4a3e-9c89-3226ebb5ceca.jpg" :
+                widget.room.floor == "26" ?"https://user-images.githubusercontent.com/68225942/184541650-19ca6103-350e-4680-a583-1db2870bbe7e.jpg" :
+                widget.room.floor == "27" ?"https://user-images.githubusercontent.com/68225942/184540916-efcdc2c3-29d8-4652-ba0f-6ec08d9144aa.jpg" :
                 "https://user-images.githubusercontent.com/68225942/184540891-1f9b94b6-1a53-48b9-b6dc-59b3cac1f08a.jpg"
-                // "https://user-images.githubusercontent.com/68225942/180610598-a46d1414-6b91-43c2-baa9-14e582dbb1fb.jpg"
-              // "https://leafletjs.com/examples/quick-start/example.html"
             ),
           ],
         ));
@@ -144,119 +142,95 @@ class _MapScreenState extends State<MapScreen> {
 
   _onMarkerClicked(MarkerModel markerModel) {
     return showModalBottomSheet<void>(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          context: context,
-          builder: (BuildContext context)
-          {
-            return Stack(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        backgroundColor: Colors.white,
+        context: context,
+        builder: (BuildContext context)
+        {
+          return SizedBox(
+            height: 280,
+            child: Row(
               children: <Widget>[
-                Container(
-                  height: 250,
-                  padding: EdgeInsets.only(left: 20,top: 45
-                      + 20, right: 20,bottom: 20
-                  ),
-                  margin: EdgeInsets.only(top: 45),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(color: Colors.black,offset: Offset(0,10),
-                            blurRadius: 10
-                        ),
-                      ]
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text((markerModel.data as MeetingRoom).name,style: TextStyle(fontSize: 22,fontWeight: FontWeight.w600),),
-                      SizedBox(height: 15,),
-                      Text("Capacity: " + (markerModel.data as MeetingRoom).capacity.toString(),style: TextStyle(fontSize: 14),textAlign: TextAlign.center,),
-                      SizedBox(height: 22,),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: FlatButton(
-                            onPressed: (){
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("Book",style: TextStyle(fontSize: 18),)),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  left: 20,
-                  right: 20,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    radius: 45,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(45)),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) =>
-                                Stack(
-                                  alignment: Alignment.topCenter,
+                InkWell(
+                  child: Image.network(
+                    (markerModel.data as MeetingRoom).imgUrl,
+                    fit: BoxFit.cover,height: 280, width: 150,),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) =>
+                          Stack(
+                            alignment: Alignment.topCenter,
+                            children: [
+                              PhotoView(
+                                imageProvider: NetworkImage((markerModel.data as MeetingRoom).imgUrl),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  // crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween,
                                   children: [
-                                    PhotoView(
-                                      imageProvider: NetworkImage(
-                                          'https://images.unsplash.com/photo-1526512340740-9217d0159da9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dmVydGljYWx8ZW58MHx8MHx8&w=1000&q=80'),
-
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.all(16),
-                                      child: Row(
-                                        // crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          ClipOval(
-                                            child: Material(
-                                              color: Colors.white,
-                                              // Button color
-                                              child: InkWell(
-                                                splashColor: Colors.red,
-                                                // Splash color
-                                                onTap: closeDrawer,
-                                                child: const SizedBox(
-                                                    width: 30,
-                                                    height: 30,
-                                                    child: Icon(
-                                                        Icons.close)),
-                                              ),
-                                            ),
-                                          ),
-
-                                          const Text(''),
-                                          const Text(''),
-                                        ],
+                                    ClipOval(
+                                      child: Material(
+                                        color: Colors.white,
+                                        // Button color
+                                        child: InkWell(
+                                          splashColor: Colors.red,
+                                          // Splash color
+                                          onTap: closeDrawer,
+                                          child: const SizedBox(
+                                              width: 30,
+                                              height: 30,
+                                              child: Icon(
+                                                  Icons.close)),
+                                        ),
                                       ),
-                                    )
+                                    ),
+
+                                    const Text(''),
+                                    const Text(''),
                                   ],
                                 ),
-                          ));
-                        },
-
-                        child: Container(
-                          height: 180,
-                          width: 150,
-                          // child: Image.asset("images/paper.png", fit: BoxFit.fill),
-                          child: Image.network(
-                              'https://images.unsplash.com/photo-1526512340740-9217d0159da9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dmVydGljYWx8ZW58MHx8MHx8&w=1000&q=80', fit: BoxFit.cover),
+                              )
+                            ],
+                          ),
+                    ));
+                  },
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0, right: 10),
+                    child: Column(
+                      children: [
+                        Align(alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text((markerModel.data as MeetingRoom).name, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                            )),
+                        const Divider(
+                          color: Colors.grey,
+                          height: 2,
+                          thickness: 2,
                         ),
-                      ),
+
+                        RoomInfo("* Floor: ", (markerModel.data as MeetingRoom).floor.toString()),
+                        RoomInfo("* Capacity: ", (markerModel.data as MeetingRoom).capacity.toString()),
+                        RoomInfo("* Facility: ", (markerModel.data as MeetingRoom).equipment.join(', ')),
+
+
+                      ],
                     ),
                   ),
                 ),
+
               ],
-            );
-          }
-      );
+            ),
+          );
+        }
+    );
   }
 
   _onTab() {
@@ -268,5 +242,27 @@ class _MapScreenState extends State<MapScreen> {
   void closeDrawer() {
     Navigator.of(context).pop();
   }
+
+  Widget RoomInfo(String title, String data) {
+    return
+      Align(alignment: Alignment.centerLeft,
+        child: Padding(
+            padding: const EdgeInsets.only(top: 10.0, bottom: 4.0, left: 4.0, right: 4.0),
+            child: Text.rich(
+              TextSpan(
+                  text: title,
+                  style: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                  children: <InlineSpan>[
+                    TextSpan(
+                      text: data,
+                      style: const TextStyle(fontSize: 16,fontWeight: FontWeight.normal),
+                    )
+                  ]
+              ),
+            )),
+      );
+  }
 }
+
+
 
