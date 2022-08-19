@@ -69,7 +69,7 @@ class CommentListState extends State<CommentList> {
                   Text(
                     "Total Comment (" + totalComment!.toString() + ")",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black, fontSize: 20),
+                    style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 30),
