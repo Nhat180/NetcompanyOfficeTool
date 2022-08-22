@@ -104,13 +104,19 @@ class FirebaseService {
 
   Future<List<Survey>> retrieveSurveys() async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
+    List<Survey> mockSurveys = [];
     List<Survey> surveys = [];
     DateTime currentDateTime = DateTime.now();
     Timestamp currentTimeStamp = Timestamp.fromDate(currentDateTime);
     QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection("surveys")
         .where("close", isGreaterThanOrEqualTo: currentTimeStamp)
     .get();
-    surveys = snapshot.docs.map((docSnapshot) => Survey.fromDocumentSnapshot(docSnapshot)).toList();
+    mockSurveys = snapshot.docs.map((docSnapshot) => Survey.fromDocumentSnapshot(docSnapshot)).toList();
+    for (int i = 0; i < mockSurveys.length; i++) {
+      if (mockSurveys[i].status) {
+        surveys.add(mockSurveys[i]);
+      }
+    }
     return surveys;
   }
 
@@ -147,6 +153,13 @@ class FirebaseService {
         .set(draft.toMap());
   }
 
+  Future<void> addUrlFile(String draftType, String draftID, String url) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection(draftType).doc(draftID).update({
+      "imgUrls": FieldValue.arrayUnion([url])
+    });
+  }
+
   Future<void> addComment (Comment comment, int commentID, String docID, String featureType) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
     await db.collection(featureType).doc(docID).collection("comments").doc(commentID.toString()).set(comment.toMap());
@@ -161,9 +174,19 @@ class FirebaseService {
   
   Future<void> addDatePick(String surveyID, String questionID, String datePick) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
-    await db.collection("surveys").doc(surveyID)
+    var doc = await db.collection("surveys").doc(surveyID)
         .collection("questions").doc(questionID)
-        .collection("answers").add({'date': datePick});
+        .collection("answers").doc(datePick).get();
+
+    if (doc.exists) {
+      await db.collection("surveys").doc(surveyID)
+          .collection("questions").doc(questionID)
+          .collection("answers").doc(datePick).update({"choiceCount": FieldValue.increment(1)});
+    } else {
+      await db.collection("surveys").doc(surveyID)
+          .collection("questions").doc(questionID)
+          .collection("answers").doc(datePick).set({"choiceCount": 0});
+    }
   }
 
   Future<void> addScaleAnswer (String surveyID, String questionID, int scaleValue) async {
@@ -184,7 +207,7 @@ class FirebaseService {
     return total;
   }
 
-  Future<void> deleteDraft(String draftType, String draftID) async {
+  Future<void> deleteDraft(String draftID, String draftType) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
     await db.collection(draftType).doc(draftID).delete();
   }
@@ -241,5 +264,21 @@ class FirebaseService {
       });
     });
     return imgUrl;
+  }
+
+  Future<void> deleteUrlFile(String draftID, String draftType, String url) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection(draftType).doc(draftID).update({
+      "imgUrls": FieldValue.arrayRemove([url])
+    });
+  }
+
+  Future<void> deleteFile(String url) async {
+    try {
+      await firebase_storage.FirebaseStorage.instance.refFromURL(url).delete();
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error deleting db from cloud: $e");
+    }
   }
 }
