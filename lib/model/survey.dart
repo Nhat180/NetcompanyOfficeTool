@@ -5,6 +5,7 @@ class Survey {
   final String title;
   final String creator;
   final List<String>? usersHaveTaken;
+  final bool status;
   final Timestamp dateCreated;
   final Timestamp dateExpired;
 
@@ -13,6 +14,7 @@ class Survey {
     required this.title,
     required this.creator,
     required this.usersHaveTaken,
+    required this.status,
     required this.dateCreated,
     required this.dateExpired,
   });
@@ -24,6 +26,7 @@ class Survey {
         usersHaveTaken = doc.data()?["usersHaveTaken"] == null
           ? null
           : doc.data()?["usersHaveTaken"].cast<String>(),
+      status = doc.data()!["status"],
       dateCreated = doc.data()!["created"],
       dateExpired = doc.data()!["close"];
 }

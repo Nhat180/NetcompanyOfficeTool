@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_overlay_map/image_overlay_map.dart';
+import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/model/meeting_room.dart';
+import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:netcompany_office_tool/screens/room_screens/roomlist_screen.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -45,7 +47,7 @@ class _MapScreenState extends State<MapScreen> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const RoomListScreen()));
+                  MaterialPageRoute(builder: (context) => NavigationScreen(index: findRoomScreen)));
             },
           ),
         ),
@@ -135,7 +137,7 @@ class _MapScreenState extends State<MapScreen> {
                 style: TextStyle(color: Colors.black, fontSize: 15.0)
             )),
         // );
-        Icon(Icons.location_on, color: Colors.red),
+        Icon(Icons.location_on, size: 30,color: Colors.red),
       ],
     );
   }
