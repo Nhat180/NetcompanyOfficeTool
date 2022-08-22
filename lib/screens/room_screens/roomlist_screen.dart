@@ -24,6 +24,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
   bool isExpand3=false;
   bool isExpand4=false;
   bool isExpand5=false;
+
   @override
   void initState() {
 // TODO: implement initState
@@ -43,31 +44,28 @@ class _RoomListScreenState extends State<RoomListScreen> {
   Widget initWidget(){
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("Search"),
-          backgroundColor: Color(0xff0f2147),
-          actions: [
-            IconButton(
-                icon: Icon(Icons.search),
-                onPressed:() async {
-                  showSearch(
-                      context: context,
-                      delegate: CustomSearchDelegate(hintText: 'Search by room or floor'));
-                } )
-          ],
+
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color(0xff0f2147),
+          onPressed: () async {
+            showSearch(
+                context: context,
+                delegate: CustomSearchDelegate(hintText: 'Search by room or floor'));
+          },
+          child: const Icon(Icons.search ),
         ),
+        //BUTTON LOCATION
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
         body: SingleChildScrollView(
-          child: RoomWithHeader()
+          child: showFloorHeader()
           ),
-    // const ListWidget()
       )
     );
   }
 
-  Widget RoomWithHeader() {
-    return SingleChildScrollView(
-      child: Column(
+  Widget showFloorHeader() {
+    return Column(
         children: [
           // FloorHeader(isExpand: isExpand1, floorNumber: "Floor 24: VietNam", imageFlag: "images/vietnam.png", getFloorData: getRoomFromFloor24(), onExpandChange: (value) {changingExpand(isExpand1, value);}),
 
@@ -102,7 +100,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   });
                 },
                 children: [
-                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.70), child: getRoomFromFloor(roomListByFloor24)),
+                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.58), child: getRoomFromFloor(roomListByFloor24)),
                   // Container(child: getReportsContainer())
 
                 ],
@@ -140,9 +138,8 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   });
                 },
                 children: [
-                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.70), child: getRoomFromFloor(roomListByFloor25)),
+                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.58), child: getRoomFromFloor(roomListByFloor25)),
                   // Container(child: getReportsContainer())
-
                 ],
               ),
             ),
@@ -178,7 +175,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   });
                 },
                 children: [
-                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.70), child: getRoomFromFloor(roomListByFloor26)),
+                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.58), child: getRoomFromFloor(roomListByFloor26)),
                   // Container(child: getReportsContainer())
 
                 ],
@@ -216,7 +213,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   });
                 },
                 children: [
-                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.70), child: getRoomFromFloor(roomListByFloor27)),
+                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.58), child: getRoomFromFloor(roomListByFloor27)),
                   // Container(child: getReportsContainer())
 
                 ],
@@ -254,7 +251,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   });
                 },
                 children: [
-                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.70), child: getRoomFromFloor(roomListByFloor31)),
+                  ConstrainedBox (constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height*0.58), child: getRoomFromFloor(roomListByFloor31)),
                   // Container(child: getReportsContainer())
 
                 ],
@@ -262,7 +259,6 @@ class _RoomListScreenState extends State<RoomListScreen> {
             ),
           ),
         ],
-      ),
     );
   }
 
@@ -275,41 +271,12 @@ class _RoomListScreenState extends State<RoomListScreen> {
         itemCount: roomList.length,
         itemBuilder: (context, index) {
           final room = roomList[index];
-          return CardRoom(room);
+          return cardRoom(room);
         },
       );
   }
 
-  // Widget getSearchFloor() {
-  //   return
-  //     SizedBox (
-  //         height: MediaQuery.of(context).size.height*0.8,
-  //       child: ListView.builder(
-  //           shrinkWrap: true,
-  //           physics: AlwaysScrollableScrollPhysics(),
-  //           padding: const EdgeInsets.only(top: 10),
-  //           itemCount: me.length,
-  //           itemBuilder: (context, index) {
-  //             final room = _searchResult[index];
-  //             return ListTile(
-  //                 // contentPadding: const EdgeInsets.all(10.0),
-  //                 // leading:
-  //                 // Image.asset("images/meeting-room.png", fit: BoxFit.cover, width: 50, height: 50,),
-  //                 title: Text(room.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
-  //                 subtitle: Text("Capacity " + room.capacity.toString()),
-  //                 trailing: Text(room.floor, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
-  //                 onTap: () {
-  //                   // Navigator.pushReplacement(context, MaterialPageRoute(
-  //                   //     builder: (context) => ReportDetailScreen(report)
-  //                   // ));
-  //                 },
-  //             );
-  //           },
-  //         ),
-  //     );
-  // }
-
-  Widget CardRoom(MeetingRoom room) {
+  Widget cardRoom(MeetingRoom room) {
     return Padding(
       padding: const EdgeInsets.all(3),
       child: ClipRRect(
