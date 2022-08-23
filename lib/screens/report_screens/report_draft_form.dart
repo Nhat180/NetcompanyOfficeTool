@@ -102,6 +102,7 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                 setState(() {
                   imageFileList!.clear();
                 });
+                Navigator.of(context).popUntil((route) => route.isFirst);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) =>
                         NavigationScreen(index: reportScreen,)));
@@ -140,6 +141,7 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                 setState(() {
                   imageFileList!.clear();
                 });
+                Navigator.of(context).popUntil((route) => route.isFirst);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) =>
                         NavigationScreen(index: reportScreen,)));

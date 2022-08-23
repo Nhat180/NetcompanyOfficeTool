@@ -79,6 +79,7 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
               if (titleController.text == widget.draft.title &&
                   descriptionController.text == widget.draft.description
                   && _dropDownValue == null) {
+                Navigator.of(context).popUntil((route) => route.isFirst);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) =>
                         NavigationScreen(index: suggestionScreen,)));
@@ -100,6 +101,7 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
                       .doc(widget.draft.id)
                       .update({'type': _dropDownValue!});
                 }
+                Navigator.of(context).popUntil((route) => route.isFirst);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) =>
                         NavigationScreen(index: suggestionScreen,)));
