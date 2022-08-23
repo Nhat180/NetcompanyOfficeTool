@@ -85,7 +85,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                         "Floor 24: VietNam",
                         style: isExpand1!=true ?TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold)
                             :
-                        TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize:20)
+                        TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize: 18)
                     ),
                     Spacer(),
                     Image.asset("images/vietnam.png", fit: BoxFit.cover, width: 50, height: 50,)
@@ -123,7 +123,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                         "Floor 25: Denmark",
                         style: isExpand2!=true ?TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold)
                             :
-                        TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize:20)
+                        TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize: 18)
                     ),
                     Spacer(),
                     Image.asset("images/denmark.png", fit: BoxFit.cover, width: 50, height: 50,)
@@ -160,7 +160,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                         "Floor 26: Canteen",
                         style: isExpand3!=true ?TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold)
                             :
-                        TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize:20)
+                        TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize: 18)
                     ),
                     Spacer(),
                     Image.asset("images/vietnam.png", fit: BoxFit.cover, width: 50, height: 50,)
@@ -198,7 +198,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                         "Floor 27: Norway",
                         style: isExpand4!=true ?TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold)
                             :
-                        TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize:20)
+                        TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize: 18)
                     ),
                     Spacer(),
                     Image.asset("images/norway.png", fit: BoxFit.cover, width: 50, height: 50,)
@@ -236,7 +236,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                         "Floor 31: The UK",
                         style: isExpand5!=true ?TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold)
                             :
-                        TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize:20)
+                        TextStyle( color: Color(0xff0f2147), fontWeight: FontWeight.bold, fontSize: 18)
                     ),
                     Spacer(),
                     Image.asset("images/united-kingdom.png", fit: BoxFit.cover, width: 50, height: 50,)
