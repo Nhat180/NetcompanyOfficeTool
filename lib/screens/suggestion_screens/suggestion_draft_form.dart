@@ -9,6 +9,7 @@ import 'package:netcompany_office_tool/model/suggestion.dart';
 import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:netcompany_office_tool/screens/suggestion_screens/suggestion_screen.dart';
 import 'package:netcompany_office_tool/services/firebase_service.dart';
+import 'package:netcompany_office_tool/services/httphandler_service.dart';
 import 'package:netcompany_office_tool/services/storage_service.dart';
 import 'package:intl/intl.dart';
 
@@ -28,11 +29,14 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
 
   final FirebaseService firebaseService = FirebaseService();
   final StorageService storageService = StorageService();
+  final HttpHandlerService handlerService = HttpHandlerService();
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  int newDraftImagesCounter = 0;
   String? _dropDownValue;
   DateTime currentTime = DateTime.now();
   bool draftUpdateLoading = false;
+  bool imageLoading = false;
   bool loading = false;
   bool isDone = true;
 
@@ -40,10 +44,11 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
   final ImagePicker imagePicker = ImagePicker();
   List<File>? imageFileList=[];
   void selectImage(int maxSelected) async {
-    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+    final List<XFile>? selectedImages = await imagePicker.pickMultiImage(imageQuality: 50);
     if(selectedImages!.isNotEmpty && selectedImages.length <= maxSelected){
       for(int i = 0; i < selectedImages.length; i++) {
         imageFileList!.add(File(selectedImages[i].path));
+        newDraftImagesCounter++;
       }
     } else {
       ScaffoldMessenger.of(context)
@@ -55,11 +60,23 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
     });
   }
 
+  void convertUrlsToFile() async {
+    imageLoading = true;
+    imageFileList = await handlerService.urlsToFiles(widget.draft.id!, widget.draft.imgUrls!);
+    setState(() {
+
+    });
+    imageLoading = false;
+  }
+
   @override
   void initState() {
     super.initState();
     titleController.text = widget.draft.title;
     descriptionController.text = widget.draft.description;
+    if (widget.draft.imgUrls != null) {
+      convertUrlsToFile();
+    }
   }
 
   @override
@@ -78,7 +95,10 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
             onPressed: () async {
               if (titleController.text == widget.draft.title &&
                   descriptionController.text == widget.draft.description
-                  && _dropDownValue == null) {
+                  && _dropDownValue == null && newDraftImagesCounter == 0) {
+                setState(() {
+                  imageFileList!.clear();
+                });
                 Navigator.of(context).popUntil((route) => route.isFirst);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) =>
@@ -101,6 +121,23 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
                       .doc(widget.draft.id)
                       .update({'type': _dropDownValue!});
                 }
+                if (newDraftImagesCounter > 0) {
+                  String? name = await storageService.readSecureData('name');
+                  List<File> newDraftImages = [];
+                  for (int i = widget.draft.imgUrls!.length; i < imageFileList!.length; i++) {
+                    newDraftImages.add(imageFileList![i]);
+                  }
+                  final List<String> newDraftImageUrls =
+                  await firebaseService.uploadFiles(
+                      name!, newDraftImages, true, "suggestions");
+                  for (int i = 0; i < newDraftImageUrls.length; i++) {
+                    firebaseService.addUrlFile(
+                        "draftSuggestions", widget.draft.id!, newDraftImageUrls[i]);
+                  }
+                }
+                setState(() {
+                  imageFileList!.clear();
+                });
                 Navigator.of(context).popUntil((route) => route.isFirst);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) =>
@@ -291,20 +328,24 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
                   alignment: Alignment.center,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton.icon(   // <-- ElevatedButton
-                      onPressed: () {
-                        if (imageFileList!.isEmpty || imageFileList!.length < maxNumOfImg) {
-                          selectImage(maxNumOfImg - imageFileList!.length);
-                        } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(
-                              const SnackBar(content: Text("You can only select maximum of 9 images")));
-                        }},
-                      icon: const Icon(
-                        Icons.link,
-                        size: 24.0,
+                    child: Visibility(
+                      maintainState: true,
+                      visible: (imageLoading) ? false : true,
+                      child: ElevatedButton.icon(   // <-- ElevatedButton
+                        onPressed: () {
+                          if (imageFileList!.isEmpty || imageFileList!.length < maxNumOfImg) {
+                            selectImage(maxNumOfImg - imageFileList!.length);
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
+                                const SnackBar(content: Text("You can only select maximum of 9 images")));
+                          }},
+                        icon: const Icon(
+                          Icons.link,
+                          size: 24.0,
+                        ),
+                        label: const Text('Attach'),
                       ),
-                      label: const Text('Attach'),
                     ),
                   ),
                 ),
@@ -339,7 +380,18 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
                                     color: const Color.fromRGBO(255, 255, 244, 0.7),
                                     child: IconButton(
                                       onPressed:(){
-                                        imageFileList!.removeAt(index);
+                                        if (index >= widget.draft.imgUrls!.length) {
+                                          imageFileList!.removeAt(index);
+                                          newDraftImagesCounter--;
+                                        } else {
+                                          imageFileList!.removeAt(index);
+                                          firebaseService.deleteFile(widget.draft.imgUrls![index]);
+                                          firebaseService.deleteUrlFile(
+                                              widget.draft.id!,
+                                              "draftSuggestions",
+                                              widget.draft.imgUrls![index]);
+                                          widget.draft.imgUrls!.removeAt(index);
+                                        }
                                         setState(() {
                                         });
                                       },
@@ -356,6 +408,9 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
                   ),
                 ) //Image.file(File(imageFileList![index].path), fit: BoxFit.cover
                     :
+                (imageLoading) ? const Center(child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: CircularProgressIndicator(),)) :
                 const Center(
                   child: Padding(
                     padding: EdgeInsets.only(top: 20, bottom: 20),
@@ -427,7 +482,11 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
                             totalCom: 0);
 
                         await firebaseService.addSuggestion(suggestion);
-                        await firebaseService.deleteDraft("draftSuggestions", widget.draft.id!);
+                        await firebaseService.deleteDraft(widget.draft.id!, "draftSuggestions");
+
+                        for (int i = 0; i < widget.draft.imgUrls!.length; i++) {
+                          firebaseService.deleteFile(widget.draft.imgUrls![i]);
+                        }
 
                         setState(() {
                           isDone = true;
