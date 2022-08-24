@@ -425,20 +425,17 @@ class CustomSearchDelegate extends SearchDelegate{
     )
         :
     Center(
-        child: Text("Not Found")
-    );
-
-    //   matchQuery.isNotEmpty ? ListView.builder(
-    //     itemCount: matchQuery.length,
-    //     itemBuilder: (context, index){
-    //       var result = matchQuery[index];
-    //       return ListTile(
-    //         title: Text(result.name),
-    //       );
-    //     }
-    // )
-    //     :
-    // Text("Not Found");
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(
+              Icons.search_off,
+              size: 100,
+              color: Colors.blue,
+            ),
+            Text(('No Room Found'),
+                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
+          ],
+        ));
   }
-
 }
