@@ -185,7 +185,7 @@ class FirebaseService {
     } else {
       await db.collection("surveys").doc(surveyID)
           .collection("questions").doc(questionID)
-          .collection("answers").doc(datePick).set({"choiceCount": 0});
+          .collection("answers").doc(datePick).set({"choiceCount": 1});
     }
   }
 
@@ -225,7 +225,8 @@ class FirebaseService {
           String formatTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(currentDateTime);
           ref = firebase_storage.FirebaseStorage.instance
               .ref()
-              .child((isDraft) ? 'draftReports_img/${Path.basename(image.path)}'
+              .child((isDraft) ? 'draftReports_img/${Path.basename(image.path)} '
+              + formatTime + '_' + username + '_draft'
               : 'reports_img/${Path.basename(image.path)} ' + formatTime + '_' + username);
           await ref.putFile(image).whenComplete(() async {
             await ref.getDownloadURL().then((value) {
@@ -239,7 +240,8 @@ class FirebaseService {
           String formatTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(currentDateTime);
           ref = firebase_storage.FirebaseStorage.instance
               .ref()
-              .child((isDraft) ? 'draftSuggestions_img/${Path.basename(image.path)}'
+              .child((isDraft) ? 'draftSuggestions_img/${Path.basename(image.path)} '
+              + formatTime + '_' + username + '_draft'
               : 'suggestions_img/${Path.basename(image.path)} ' + formatTime + '_' + username);
           await ref.putFile(image).whenComplete(() async {
             await ref.getDownloadURL().then((value) {
