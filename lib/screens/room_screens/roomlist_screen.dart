@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/model/meeting_room.dart';
 import 'package:netcompany_office_tool/screens/room_screens/map_screen.dart';
+import 'package:netcompany_office_tool/screens/room_screens/search_room.dart';
 
 
 class RoomListScreen extends StatefulWidget {
@@ -47,10 +48,13 @@ class _RoomListScreenState extends State<RoomListScreen> {
 
         floatingActionButton: FloatingActionButton(
           backgroundColor: const Color(0xff0f2147),
-          onPressed: () async {
-            showSearch(
-                context: context,
-                delegate: CustomSearchDelegate(hintText: 'Search by room or floor'));
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (context) => SearchRoom()
+            ));
+            // showSearch(
+            //     context: context,
+            //     delegate: CustomSearchDelegate(hintText: 'Search by room or floor'));
           },
           child: const Icon(Icons.search ),
         ),
@@ -326,116 +330,116 @@ class _RoomListScreenState extends State<RoomListScreen> {
 }
 //https://stackoverflow.com/questions/50567295/listview-filter-search-in-flutter
 // https://www.youtube.com/watch?v=KF1KMfQOpjM
-class CustomSearchDelegate extends SearchDelegate{
-  var meetingRoom = allMeetingRooms.toList();
-  final String? hintText;
-  // final TextStyle? textStyle ;
-  CustomSearchDelegate({this.hintText});
-
-  // @override
-  // TextStyle? get searchFieldStyle => textStyle;
-  @override
-  String? get searchFieldLabel => hintText;
-
-  @override
-  ThemeData appBarTheme(BuildContext context) {
-    assert(context != null);
-    final ThemeData theme = Theme.of(context);
-    assert(theme != null);
-    return theme;
-  }
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(icon: Icon(Icons.clear),
-        onPressed: (){
-          query = '';
-        },)
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return
-      IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: (){
-          Navigator.pop(context);
-          // Navigator.pushReplacement(context,
-          //     MaterialPageRoute(builder: (context) => NavigationScreen(index: reportScreen)));
-        },);
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    List<MeetingRoom> matchQuery = [];
-    for (var room in meetingRoom){
-      if (room.name.toLowerCase().contains(query.toLowerCase()) || room.floor.toLowerCase().contains(query) ){
-        matchQuery.add(room);
-      }
-    }
-    return ListView.builder(
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(top: 10),
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        final result = matchQuery[index];
-        return ListTile(
-          title: Text(result.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
-          subtitle: Text("Capacity " + result.capacity.toString()),
-          trailing: Text("Floor " + result.floor, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
-          onTap: () {
-            // close(context, null);
-            Navigator.pushReplacement(context, MaterialPageRoute(
-                builder: (context) => MapScreen(room: result)
-            ));
-          },
-        );
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<MeetingRoom> matchQuery = [];
-    for (var room in meetingRoom){
-      if (room.name.toLowerCase().contains(query.toLowerCase()) || room.floor.contains(query) ){
-        matchQuery.add(room);
-      }
-    }
-    return matchQuery.isNotEmpty ? ListView.builder(
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(top: 10),
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        final result = matchQuery[index];
-        return ListTile(
-          title: Text(result.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
-          subtitle: Text("Capacity " + result.capacity.toString()),
-          trailing: Text("Floor "+ result.floor, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
-          onTap: () {
-            close(context, result);
-            Navigator.pushReplacement(context, MaterialPageRoute(
-                builder: (context) => MapScreen(room: result)
-            ));
-
-          },
-        );
-      },
-    )
-        :
-    Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
-              Icons.search_off,
-              size: 100,
-              color: Colors.blue,
-            ),
-            Text(('No Room Found'),
-                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
-          ],
-        ));
-  }
-}
+// class CustomSearchDelegate extends SearchDelegate{
+//   var meetingRoom = allMeetingRooms.toList();
+//   final String? hintText;
+//   // final TextStyle? textStyle ;
+//   CustomSearchDelegate({this.hintText});
+//
+//   // @override
+//   // TextStyle? get searchFieldStyle => textStyle;
+//   @override
+//   String? get searchFieldLabel => hintText;
+//
+//   @override
+//   ThemeData appBarTheme(BuildContext context) {
+//     assert(context != null);
+//     final ThemeData theme = Theme.of(context);
+//     assert(theme != null);
+//     return theme;
+//   }
+//   @override
+//   List<Widget>? buildActions(BuildContext context) {
+//     return [
+//       IconButton(icon: Icon(Icons.clear),
+//         onPressed: (){
+//           query = '';
+//         },)
+//     ];
+//   }
+//
+//   @override
+//   Widget? buildLeading(BuildContext context) {
+//     return
+//       IconButton(
+//         icon: Icon(Icons.arrow_back),
+//         onPressed: (){
+//           Navigator.pop(context);
+//           // Navigator.pushReplacement(context,
+//           //     MaterialPageRoute(builder: (context) => NavigationScreen(index: reportScreen)));
+//         },);
+//   }
+//
+//   @override
+//   Widget buildResults(BuildContext context) {
+//     List<MeetingRoom> matchQuery = [];
+//     for (var room in meetingRoom){
+//       if (room.name.toLowerCase().contains(query.toLowerCase()) || room.floor.toLowerCase().contains(query) ){
+//         matchQuery.add(room);
+//       }
+//     }
+//     return ListView.builder(
+//       shrinkWrap: true,
+//       padding: const EdgeInsets.only(top: 10),
+//       itemCount: matchQuery.length,
+//       itemBuilder: (context, index) {
+//         final result = matchQuery[index];
+//         return ListTile(
+//           title: Text(result.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
+//           subtitle: Text("Capacity " + result.capacity.toString()),
+//           trailing: Text("Floor " + result.floor, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
+//           onTap: () {
+//             // close(context, null);
+//             Navigator.pushReplacement(context, MaterialPageRoute(
+//                 builder: (context) => MapScreen(room: result)
+//             ));
+//           },
+//         );
+//       },
+//     );
+//   }
+//
+//   @override
+//   Widget buildSuggestions(BuildContext context) {
+//     List<MeetingRoom> matchQuery = [];
+//     for (var room in meetingRoom){
+//       if (room.name.toLowerCase().contains(query.toLowerCase()) || room.floor.contains(query) ){
+//         matchQuery.add(room);
+//       }
+//     }
+//     return matchQuery.isNotEmpty ? ListView.builder(
+//       shrinkWrap: true,
+//       padding: const EdgeInsets.only(top: 10),
+//       itemCount: matchQuery.length,
+//       itemBuilder: (context, index) {
+//         final result = matchQuery[index];
+//         return ListTile(
+//           title: Text(result.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
+//           subtitle: Text("Capacity " + result.capacity.toString()),
+//           trailing: Text("Floor "+ result.floor, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
+//           onTap: () {
+//             close(context, result);
+//             Navigator.pushReplacement(context, MaterialPageRoute(
+//                 builder: (context) => MapScreen(room: result)
+//             ));
+//
+//           },
+//         );
+//       },
+//     )
+//         :
+//     Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: const [
+//             Icon(
+//               Icons.search_off,
+//               size: 100,
+//               color: Colors.blue,
+//             ),
+//             Text(('No Room Found'),
+//                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
+//           ],
+//         ));
+//   }
+// }
