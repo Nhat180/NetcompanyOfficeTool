@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/model/meeting_room.dart';
 import 'package:netcompany_office_tool/screens/room_screens/map_screen.dart';
+
+import '../../constants.dart';
+import '../navigation_screen.dart';
 
 
 class SearchRoom extends StatefulWidget {
@@ -14,8 +18,11 @@ class SearchRoom extends StatefulWidget {
 }
 
 class SearchRoomState extends State<SearchRoom> {
+  final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
   var meetingRoom = allMeetingRooms;
   List<MeetingRoom> _searchResult = [];
+  bool disableSearch = false;
   TextEditingController controller = new TextEditingController();
 
 
@@ -39,9 +46,15 @@ class SearchRoomState extends State<SearchRoom> {
             trailing: Text("Floor " + room.floor, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
             onTap: () {
               // close(context, null);
-              Navigator.pushReplacement(context, MaterialPageRoute(
-                  builder: (context) => MapScreen(room: room)
-              ));
+              setState(() {
+                disableSearch = true;
+              });
+              FocusManager.instance.primaryFocus?.unfocus();
+              Future.delayed(const Duration(milliseconds: 500), () {
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                    builder: (context) => MapScreen(room: room)
+                ));
+              });
             },
             // title: new Text(
             //     _searchResult[i].name),
@@ -59,15 +72,21 @@ class SearchRoomState extends State<SearchRoom> {
         final result = _searchResult[i];
         return Card(
           child: ListTile(
-            // ListTile(
-          title: Text(result.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
-          subtitle: Text("Capacity " + result.capacity.toString()),
-          trailing: Text("Floor " + result.floor, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
-          onTap: () {
+            title: Text(result.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
+            subtitle: Text("Capacity " + result.capacity.toString()),
+            trailing: Text("Floor " + result.floor, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
+            onTap: () async {
             // close(context, null);
-            Navigator.pushReplacement(context, MaterialPageRoute(
-                builder: (context) => MapScreen(room: result)
-            ));
+              setState(() {
+                disableSearch = true;
+              });
+              FocusManager.instance.primaryFocus?.unfocus();
+              Future.delayed(const Duration(milliseconds: 500), () {
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                    builder: (context) => MapScreen(room: result)
+                ));
+              });
+
           },
             // title: new Text(
             //     _searchResult[i].name),
@@ -92,26 +111,29 @@ class SearchRoomState extends State<SearchRoom> {
   }
 
   Widget _buildSearchBox() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        child: ListTile(
-          leading: const Icon(Icons.search),
-          title: TextField(
-            controller: controller,
-            decoration: new InputDecoration(
-                hintText: 'Search', border: InputBorder.none),
-            onChanged: onSearchTextChanged,
-          ),
-          trailing: IconButton(
-            icon: const Icon(Icons.cancel),
-            onPressed: () {
-              controller.clear();
-              onSearchTextChanged('');
-            },
+    return AbsorbPointer(
+      absorbing: disableSearch,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          child: ListTile(
+            leading: const Icon(Icons.search),
+            title: TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                  hintText: 'Search', border: InputBorder.none),
+              onChanged: onSearchTextChanged,
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.cancel),
+              onPressed: () {
+                controller.clear();
+                onSearchTextChanged('');
+              },
+            ),
           ),
         ),
-      ),
+      )
     );
   }
 
@@ -119,9 +141,9 @@ class SearchRoomState extends State<SearchRoom> {
     return Column(
       children: <Widget>[
         Container(
-            color: Color(0xff0f2147), child: _buildSearchBox()),
+            color: const Color(0xff0f2147), child: _buildSearchBox()),
         Expanded(
-            child: _searchResult.length != 0 || controller.text.isNotEmpty
+            child: _searchResult.isNotEmpty || controller.text.isNotEmpty
                 ? _buildSearchResults()
                 : _buildRoomsList()),
       ],
@@ -130,12 +152,20 @@ class SearchRoomState extends State<SearchRoom> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        elevation: 0.0,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
+        backgroundColor: const Color(0xff0f2147),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => NavigationScreen(index: findRoomScreen,)));
+          },
+        ),
       ),
       body: _buildBody(),
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
     );
   }
 
@@ -147,8 +177,9 @@ class SearchRoomState extends State<SearchRoom> {
     }
 
     for (var room in meetingRoom) {
-      if (room.name.toLowerCase().contains(text.toLowerCase()) || room.floor.contains(text))
+      if (room.name.toLowerCase().contains(text.toLowerCase()) || room.floor.contains(text)) {
         _searchResult.add(room);
+      }
     }
     setState(() {});
   }
