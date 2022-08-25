@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/model/meeting_room.dart';
 import 'package:netcompany_office_tool/screens/room_screens/map_screen.dart';
@@ -14,22 +13,54 @@ class SearchRoom extends StatefulWidget {
   const SearchRoom({Key? key}) : super(key: key);
 
   @override
-  SearchRoomState createState() => new SearchRoomState();
+  SearchRoomState createState() => SearchRoomState();
 }
 
 class SearchRoomState extends State<SearchRoom> {
   final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   var meetingRoom = allMeetingRooms;
-  List<MeetingRoom> _searchResult = [];
+  final List<MeetingRoom> _searchResult = [];
   bool disableSearch = false;
-  TextEditingController controller = new TextEditingController();
+  TextEditingController controller = TextEditingController();
 
 
   @override
   void initState() {
     super.initState();
 
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
+        backgroundColor: const Color(0xff0f2147),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => NavigationScreen(index: findRoomScreen,)));
+          },
+        ),
+      ),
+      body: _buildBody(),
+      resizeToAvoidBottomInset: false,
+    );
+  }
+
+  Widget _buildBody() {
+    return Column(
+      children: <Widget>[
+        Container(
+            color: const Color(0xff0f2147), child: _buildSearchBox()),
+        Expanded(
+            child: _searchResult.isNotEmpty || controller.text.isNotEmpty
+                ? _buildSearchResults()
+                : _buildRoomsList()),
+      ],
+    );
   }
 
   Widget _buildRoomsList() {
@@ -137,45 +168,12 @@ class SearchRoomState extends State<SearchRoom> {
     );
   }
 
-  Widget _buildBody() {
-    return Column(
-      children: <Widget>[
-        Container(
-            color: const Color(0xff0f2147), child: _buildSearchBox()),
-        Expanded(
-            child: _searchResult.isNotEmpty || controller.text.isNotEmpty
-                ? _buildSearchResults()
-                : _buildRoomsList()),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)),
-        backgroundColor: const Color(0xff0f2147),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => NavigationScreen(index: findRoomScreen,)));
-          },
-        ),
-      ),
-      body: _buildBody(),
-      resizeToAvoidBottomInset: false,
-    );
-  }
-
   onSearchTextChanged(String text) async {
     _searchResult.clear();
     if (text.isEmpty) {
       setState(() {});
       return;
     }
-
     for (var room in meetingRoom) {
       if (room.name.toLowerCase().contains(text.toLowerCase()) || room.floor.contains(text)) {
         _searchResult.add(room);
