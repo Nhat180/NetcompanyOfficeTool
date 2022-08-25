@@ -3,6 +3,7 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_overlay_map/image_overlay_map.dart';
 import 'package:netcompany_office_tool/constants.dart';
 import 'package:netcompany_office_tool/model/meeting_room.dart';
@@ -13,21 +14,15 @@ import 'package:photo_view/photo_view.dart';
 class MapScreen extends StatefulWidget {
 
   final MeetingRoom room;
-  MapScreen({Key? key, required this.room}) : super(key: key);
-
-  // final List<Facility> _facilityList = [
-  //   // Facility(1, "facility1", 0, 0), // center
-  //   Facility(2, "Da Lat", "Floor 25", 20, 50),
-  //   // Facility(3, "Ha Noi", 20, -200),
-  //   // Facility(4, "facility4", 0, -100),
-  //   // Facility(5, "facility5", 0, 100),
-  // ];
+  const MapScreen({Key? key, required this.room}) : super(key: key);
 
   @override
   _MapScreenState createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
+  final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
   late final String url;
   @override
   Widget build(BuildContext context) {
@@ -41,7 +36,7 @@ class _MapScreenState extends State<MapScreen> {
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: const Text("netcompany"), //style: GoogleFonts.ubuntu(textStyle: style)
+          title: Text("netcompany", style: GoogleFonts.ubuntu(textStyle: style)), //style: GoogleFonts.ubuntu(textStyle: style)
           backgroundColor: const Color(0xff0f2147),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -70,13 +65,13 @@ class _MapScreenState extends State<MapScreen> {
         builder: (BuildContext context, AsyncSnapshot snapShot) {
           if (snapShot.connectionState == ConnectionState.done) {
             if (snapShot.hasError) {
-              return Center(
+              return const Center(
                 child: Text("error happened when download image"),
               );
             }
             return Center(
               child: MapContainer(
-                  new Image(image: CachedNetworkImageProvider(url)),
+                  Image(image: CachedNetworkImageProvider(url)),
                   snapShot.data,
                   markers: _getMarker(widget.room, snapShot.data),
 
@@ -86,7 +81,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
             );
           } else {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -95,8 +90,8 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<Size> _calculateImageDimension(String imageUrl) {
     Completer<Size> completer = Completer();
-    Image image = new Image(image: CachedNetworkImageProvider(imageUrl));
-    image.image.resolve(ImageConfiguration()).addListener(
+    Image image = Image(image: CachedNetworkImageProvider(imageUrl));
+    image.image.resolve(const ImageConfiguration()).addListener(
       ImageStreamListener(
             (ImageInfo image, bool synchronousCall) {
           var myImage = image.image;
@@ -118,10 +113,8 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Widget _getMarkerWidget(double scale, MarkerModel data) {
-
     // Facility facility = data.data;
     MeetingRoom room = data.data;
-
     return Column(
       children: [
         Bubble(
@@ -130,14 +123,13 @@ class _MapScreenState extends State<MapScreen> {
             borderColor: Colors.black,
             borderWidth: 2,
             margin: const BubbleEdges.only(top: 8),
-            child:
-            Text(room.name,
+            child: Text(room.name,
                 maxLines: 1,
                 textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.black, fontSize: 15.0)
+                style: const TextStyle(color: Colors.black, fontSize: 15.0)
             )),
         // );
-        Icon(Icons.location_on, size: 30,color: Colors.red),
+        const Icon(Icons.location_on, size: 30,color: Colors.red),
       ],
     );
   }
@@ -149,8 +141,7 @@ class _MapScreenState extends State<MapScreen> {
         ),
         backgroundColor: Colors.white,
         context: context,
-        builder: (BuildContext context)
-        {
+        builder: (BuildContext context) {
           return SizedBox(
             height: 280,
             child: Row(
@@ -158,7 +149,25 @@ class _MapScreenState extends State<MapScreen> {
                 InkWell(
                   child: Image.network(
                     (markerModel.data as MeetingRoom).imgUrl,
-                    fit: BoxFit.cover,height: 280, width: 150,),
+                    fit: BoxFit.cover,
+                    height: 280, width: 150,
+                    alignment: Alignment.center,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Padding(
+                          padding: const EdgeInsets.all(55),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        )
+                      );
+                    },
+                  ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (_) =>
@@ -210,7 +219,7 @@ class _MapScreenState extends State<MapScreen> {
                         Align(alignment: Alignment.centerLeft,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text((markerModel.data as MeetingRoom).name, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                              child: Text((markerModel.data as MeetingRoom).name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                             )),
                         const Divider(
                           color: Colors.grey,
@@ -218,11 +227,9 @@ class _MapScreenState extends State<MapScreen> {
                           thickness: 2,
                         ),
 
-                        RoomInfo("* Floor: ", (markerModel.data as MeetingRoom).floor.toString()),
-                        RoomInfo("* Capacity: ", (markerModel.data as MeetingRoom).capacity.toString()),
-                        RoomInfo("* Facility: ", (markerModel.data as MeetingRoom).equipment.join(', ')),
-
-
+                        roomInfo("* Floor: ", (markerModel.data as MeetingRoom).floor.toString()),
+                        roomInfo("* Capacity: ", (markerModel.data as MeetingRoom).capacity.toString()),
+                        roomInfo("* Facility: ", (markerModel.data as MeetingRoom).equipment.join(', ')),
                       ],
                     ),
                   ),
@@ -245,7 +252,7 @@ class _MapScreenState extends State<MapScreen> {
     Navigator.of(context).pop();
   }
 
-  Widget RoomInfo(String title, String data) {
+  Widget roomInfo(String title, String data) {
     return
       Align(alignment: Alignment.centerLeft,
         child: Padding(
