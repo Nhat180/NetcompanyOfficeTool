@@ -162,14 +162,18 @@ class FirebaseService {
 
   Future<void> addComment (Comment comment, int commentID, String docID, String featureType) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
-    await db.collection(featureType).doc(docID).collection("comments").doc(commentID.toString()).set(comment.toMap());
+    if (commentID < 10) {
+      await db.collection(featureType).doc(docID).collection("comments").doc("0" + commentID.toString()).set(comment.toMap());
+    } else {
+      await db.collection(featureType).doc(docID).collection("comments").doc(commentID.toString()).set(comment.toMap());
+    }
   }
 
   Future<void> addTextAnswer(String surveyID, String questionID, String textAnswer) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
     await db.collection("surveys").doc(surveyID)
         .collection("questions").doc(questionID)
-        .collection("answers").add({'description': textAnswer});
+        .collection("answers").add({'title': textAnswer});
   }
   
   Future<void> addDatePick(String surveyID, String questionID, String datePick) async {
@@ -185,7 +189,10 @@ class FirebaseService {
     } else {
       await db.collection("surveys").doc(surveyID)
           .collection("questions").doc(questionID)
-          .collection("answers").doc(datePick).set({"choiceCount": 1});
+          .collection("answers").doc(datePick).set({
+              "title": datePick,
+              "choiceCount": 1
+          });
     }
   }
 
