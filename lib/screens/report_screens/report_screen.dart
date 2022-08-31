@@ -251,10 +251,10 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                       Icon(
                         Icons.search_off,
                         size: 100,
-                        color: Colors.blue,
+                        color: Colors.white,
                       ),
                       Text(('There is no draft'),
-                          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
+                          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white))
                     ],
                   )
               );
@@ -320,10 +320,10 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                       Icon(
                         Icons.search_off,
                         size: 100,
-                        color: Colors.blue,
+                        color: Colors.white,
                       ),
                       Text(('No Reports Found'),
-                          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold))
+                          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white))
                     ],
                   ));
             } else {
