@@ -84,7 +84,7 @@ class AvatarImage extends StatelessWidget {
         color: Colors.white
       ),
       height: 200,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(15),
       // decoration: avatarDecoration,
       child: Container(
         // decoration: avatarDecoration,
@@ -95,7 +95,9 @@ class AvatarImage extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(color: Colors.blueGrey, width: 5),
             image: const DecorationImage(
-              image: AssetImage('images/officer.png'),
+              image: AssetImage('images/user.png'),
+              scale: 0.5,
+              fit: BoxFit.fitHeight,
             ),
           ),
         ),

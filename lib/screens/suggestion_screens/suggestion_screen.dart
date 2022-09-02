@@ -282,11 +282,10 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                     margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(10.0),
-                      leading: suggestion.status == "done"? Container(
-                          decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-                          child: const Icon(Icons.done, size: 45, color: Colors.white,)) :
-                      suggestion.status == "pending"? Image.asset("images/pending.png", fit: BoxFit.cover, width: 45, height: 45,) :
-                      Image.asset("images/progress.png", fit: BoxFit.cover, width: 45, height: 45,),
+                      leading: suggestion.status == "done"?
+                      Image.asset("images/images/suggest_done.png", fit: BoxFit.cover, width: 45, height: 45,) :
+                      suggestion.status == "pending"? Image.asset("images/suggest_pending.png", fit: BoxFit.cover, width: 45, height: 45,) :
+                      Image.asset("images/suggest_process.png", fit: BoxFit.cover, width: 45, height: 45,),
 
                       title: Text(suggestion.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
                       subtitle: Column(
