@@ -126,23 +126,26 @@ class _MapScreenState extends State<MapScreen> {
   Widget _getMarkerWidget(double scale, MarkerModel data) {
     // Facility facility = data.data;
     MeetingRoom room = data.data;
-    return Column(
-      children: [
-        Bubble(
-            alignment: Alignment.center,
-            color: const Color.fromARGB(255, 212, 234, 244),
-            borderColor: Colors.black,
-            borderWidth: 2,
-            margin: const BubbleEdges.only(top: 8),
-            child: Text(room.name,
-                maxLines: 1,
-                textAlign: TextAlign.left,
-                style: const TextStyle(color: Colors.black, fontSize: 15.0)
-            )),
-        // );
-        (room.name == widget.room.name) ? const Icon(Icons.location_on, size: 35,color: Colors.red)
-            : const Icon(Icons.location_on, size: 35,color: Colors.blue),
-      ],
+    return SizedBox(
+      width: 100,
+      child: Column(
+        children: [
+          Bubble(
+              alignment: Alignment.center,
+              color: const Color.fromARGB(255, 212, 234, 244),
+              borderColor: Colors.black,
+              borderWidth: 2,
+              margin: const BubbleEdges.only(top: 8),
+              child: Text(room.name,
+                  maxLines: 1,
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(color: Colors.black, fontSize: 15.0)
+              )),
+          // );
+          (room.name == widget.room.name) ? const Icon(Icons.location_on, size: 35,color: Colors.red)
+              : const Icon(Icons.location_on, size: 35,color: Colors.blue),
+        ],
+      ),
     );
   }
 
