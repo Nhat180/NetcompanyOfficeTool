@@ -100,7 +100,7 @@ class CommentImageState extends State<CommentImage> {
                     });
                     String? name = await storageService.readSecureData('name');
                     final int commentID = await firebaseService.getTotalComment(widget.id, widget.featureType);
-                    final String imgUrl = await firebaseService.uploadFile(image!);
+                    final String imgUrl = await firebaseService.uploadFile(name!, image!);
 
                     Comment comment = Comment(
                         creator: name,
@@ -108,9 +108,9 @@ class CommentImageState extends State<CommentImage> {
                         text: "",
                         imgUrl: imgUrl);
 
-                    await firebaseService.addComment(comment, commentID, widget.id, widget.featureType); /// Note: Add suggestion case
+                    await firebaseService.addComment(comment, commentID, widget.id, widget.featureType);
                     FirebaseFirestore.instance.collection(widget.featureType)
-                        .doc(widget.id).update({'totalCom': commentID + 1}); /// Note: Add suggestion case
+                        .doc(widget.id).update({'totalCom': commentID + 1});
                     closeDrawer();
 
                     setState(() {
@@ -119,10 +119,7 @@ class CommentImageState extends State<CommentImage> {
                   }
               ),
             ],
-          )
-                      :
-          Column(
-            children: const [
+          ) : Column(children: const [
               SizedBox(height: 150),
               Text("No image selected"),
             ],
