@@ -22,8 +22,19 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
   late final String url;
+  List<MeetingRoom> roomList = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    roomList = allMeetingRooms.where((room) => room.floor == widget.room.floor).toList();
+    setState(() {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -73,8 +84,7 @@ class _MapScreenState extends State<MapScreen> {
               child: MapContainer(
                   Image(image: CachedNetworkImageProvider(url)),
                   snapShot.data,
-                  markers: _getMarker(widget.room, snapShot.data),
-
+                  markers: _getMarker(roomList, snapShot.data),
                   markerWidgetBuilder: _getMarkerWidget,
                   onTab: _onTab,
                   onMarkerClicked: _onMarkerClicked
@@ -103,12 +113,13 @@ class _MapScreenState extends State<MapScreen> {
     return completer.future;
   }
 
-  List<MarkerModel> _getMarker(MeetingRoom room, Size size) {
+  List<MarkerModel> _getMarker(List<MeetingRoom> rooms, Size size) {
     List<MarkerModel> result = [];
-
-    double dx = size.width / 2 + room.coordinatorX;
-    double dy = size.height / 2 - room.coordinatorY;
-    result.add(MarkerModel(room, Offset(dx, dy)));
+    for (var room in rooms) {
+      double dx = size.width / 2 + room.coordinatorX;
+      double dy = size.height / 2 - room.coordinatorY;
+      result.add(MarkerModel(room, Offset(dx, dy)));
+    }
     return result;
   }
 
@@ -129,7 +140,8 @@ class _MapScreenState extends State<MapScreen> {
                 style: const TextStyle(color: Colors.black, fontSize: 15.0)
             )),
         // );
-        const Icon(Icons.location_on, size: 30,color: Colors.red),
+        (room.name == widget.room.name) ? const Icon(Icons.location_on, size: 35,color: Colors.red)
+            : const Icon(Icons.location_on, size: 35,color: Colors.blue),
       ],
     );
   }
