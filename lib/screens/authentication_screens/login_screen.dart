@@ -226,7 +226,9 @@ class InitState extends State<LoginScreen> {
                   final bool isAuthenticate = await handlerService.login(name, password);
 
                   if(isAuthenticate) {
-                    firebaseService.registerFirebase(name);
+                    final FirebaseAuth auth = FirebaseAuth.instance;
+                    User? user = auth.currentUser;
+                    user = await firebaseService.registerFirebase(name);
                     StorageItem usernameItem = StorageItem("name", name);
                     StorageItem passwordItem = StorageItem("password", password);
                     storageService.writeSecureData(usernameItem);
@@ -235,16 +237,9 @@ class InitState extends State<LoginScreen> {
                       buttonLoading = false;
                     });
                     if (!buttonLoading) {
-                      final FirebaseAuth auth = FirebaseAuth.instance;
-                      final User? user = auth.currentUser;
-                      if (user == null) {
-                        Future.delayed(const Duration(seconds: 2), () {
+                      if (user != null) {
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) => NavigationScreen(index: homeScreen)));
-                        });
-                      } else {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => NavigationScreen(index: homeScreen)));
                       }
                     }
                   } else {
