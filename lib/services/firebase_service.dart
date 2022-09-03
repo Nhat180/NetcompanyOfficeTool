@@ -16,19 +16,20 @@ import 'package:path/path.dart' as Path;
 
 class FirebaseService {
 
-  Future<void> registerFirebase (String name) async {
+  Future<User?> registerFirebase (String name) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
+    final User user;
     try {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: name+"@gmail.com",
           password: "123456"
       );
       setUser(name);
-      user = userCredential.user;
+      user = userCredential.user!;
+      return user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        loginFirebase(name);
+        return await loginFirebase(name);
       }
     } catch (e) {
       // ignore: avoid_print
@@ -44,22 +45,25 @@ class FirebaseService {
     });
   }
 
-  Future<void> loginFirebase (String name) async {
+  Future<User?> loginFirebase (String name) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
+    final User user;
     try {
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: name+"@gmail.com",
           password: "123456"
       );
-      user = userCredential.user;
+      user = userCredential.user!;
+      return user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         // ignore: avoid_print
         print('No user found for that email.');
+        return null;
       } else if (e.code == "wrong-password") {
         // ignore: avoid_print
         print('Wrong password');
+        return null;
       }
     }
   }
@@ -261,12 +265,14 @@ class FirebaseService {
     }
   }
 
-  Future<String> uploadFile(File image) async {
+  Future<String> uploadFile(String username, File image) async {
     String imgUrl = '';
     firebase_storage.Reference reference;
+    DateTime currentDateTime = DateTime.now();
+    String formatTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(currentDateTime);
     reference = firebase_storage.FirebaseStorage.instance
         .ref()
-        .child('comments_img/${Path.basename(image.path)}');
+        .child('comments_img/${Path.basename(image.path)} ' + formatTime + '_' + username);
     await reference.putFile(image).whenComplete(() async {
       await reference.getDownloadURL().then((value) {
         imgUrl = value;
