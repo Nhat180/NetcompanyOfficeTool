@@ -429,89 +429,93 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
 
 
                 (loading || !isDone) ?
-                smallButton(isDone) : Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(left: 120, right: 120, top: 10, bottom: 10),
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: const Color(0xff0f2147),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-
-                  child: TextButton.icon(
-                    style: TextButton.styleFrom(
-                      primary: Colors.white, // text + icon color
+                smallButton(isDone) : Visibility(
+                  maintainState: true,
+                  visible: (imageLoading) ? false : true,
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(left: 120, right: 120, top: 10, bottom: 10),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color(0xff0f2147),
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    icon: const Icon(Icons.send, size: 25),
-                    label: const Text('Send', style: TextStyle(fontSize: 20)),
-                    onPressed: () async {
-                      if (titleController.text == '' || titleController.text.isEmpty
-                          || descriptionController.text == '' || descriptionController.text.isEmpty) {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const FormAlert();
-                            });
-                      } else {
-                        setState(() {
-                          loading = true;
-                          isDone = false;
-                        });
 
-                        String? name = await storageService.readSecureData('name');
-                        final List<String> imgUrls = await
-                        firebaseService.uploadFiles(name!, imageFileList, false, "reports");
-                        final String title = titleController.text;
-                        final String description = descriptionController.text;
-                        String formattedDate = DateFormat('yyyy-MM-dd').format(currentTime);
-                        String type = '';
-                        if (_dropDownValue == null) {
-                          if (widget.draft.type == "" || widget.draft.type.isEmpty) {
-                            type = "Other";
-                          } else {
-                            type = widget.draft.type;
-                          }
+                    child: TextButton.icon(
+                      style: TextButton.styleFrom(
+                        primary: Colors.white, // text + icon color
+                      ),
+                      icon: const Icon(Icons.send, size: 25),
+                      label: const Text('Send', style: TextStyle(fontSize: 20)),
+                      onPressed: () async {
+                        if (titleController.text == '' || titleController.text.isEmpty
+                            || descriptionController.text == '' || descriptionController.text.isEmpty) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const FormAlert();
+                              });
                         } else {
-                          type = _dropDownValue!;
+                          setState(() {
+                            loading = true;
+                            isDone = false;
+                          });
+
+                          String? name = await storageService.readSecureData('name');
+                          final List<String> imgUrls = await
+                          firebaseService.uploadFiles(name!, imageFileList, false, "reports");
+                          final String title = titleController.text;
+                          final String description = descriptionController.text;
+                          String formattedDate = DateFormat('yyyy-MM-dd').format(currentTime);
+                          String type = '';
+                          if (_dropDownValue == null) {
+                            if (widget.draft.type == "" || widget.draft.type.isEmpty) {
+                              type = "Other";
+                            } else {
+                              type = widget.draft.type;
+                            }
+                          } else {
+                            type = _dropDownValue!;
+                          }
+                          Report report  = Report(
+                              creator: name,
+                              title: title,
+                              dateCreate: formattedDate,
+                              status: "pending",
+                              type: type,
+                              description: description,
+                              imgUrls: imgUrls,
+                              totalCom: 0);
+
+                          await firebaseService.addReport(report);
+                          await firebaseService.deleteDraft(widget.draft.id!, "draftReports");
+
+                          for (int i = 0; i < widget.draft.imgUrls!.length; i++) {
+                            firebaseService.deleteFile(widget.draft.imgUrls![i]);
+                          }
+
+                          setState(() {
+                            isDone = true;
+                          });
+
+                          await Future.delayed(const Duration(seconds: 2));
+
+                          setState(() {
+                            loading = false;
+                            titleController.clear();
+                            descriptionController.clear();
+                            _dropDownValue = null;
+                            imageFileList?.clear();
+                          });
+
+                          Navigator.pushReplacement(context, MaterialPageRoute(
+                              builder: (context) => NavigationScreen(index: reportScreen,)));
                         }
-                        Report report  = Report(
-                            creator: name,
-                            title: title,
-                            dateCreate: formattedDate,
-                            status: "pending",
-                            type: type,
-                            description: description,
-                            imgUrls: imgUrls,
-                            totalCom: 0);
-
-                        await firebaseService.addReport(report);
-                        await firebaseService.deleteDraft(widget.draft.id!, "draftReports");
-
-                        for (int i = 0; i < widget.draft.imgUrls!.length; i++) {
-                          firebaseService.deleteFile(widget.draft.imgUrls![i]);
-                        }
-
-                        setState(() {
-                          isDone = true;
-                        });
-
-                        await Future.delayed(const Duration(seconds: 2));
-
-                        setState(() {
-                          loading = false;
-                          titleController.clear();
-                          descriptionController.clear();
-                          _dropDownValue = null;
-                          imageFileList?.clear();
-                        });
-
-                        Navigator.pushReplacement(context, MaterialPageRoute(
-                            builder: (context) => NavigationScreen(index: reportScreen,)));
-                      }
-                    },
+                      },
+                    ),
                   ),
-                ),
+                )
               ],
             )
         ),
