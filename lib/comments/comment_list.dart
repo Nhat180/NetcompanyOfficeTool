@@ -69,7 +69,7 @@ class CommentListState extends State<CommentList> {
                   Text(
                     "Total Comment (" + totalComment!.toString() + ")",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 30),
@@ -113,6 +113,13 @@ class CommentListState extends State<CommentList> {
                             type: snap["type"],
                             text: snap["text"],
                             imgUrl: snap["imgUrl"]));
+                        WidgetsBinding.instance?.addPostFrameCallback((_) {
+                          if (totalComment! == 0) {
+                            setState(() {
+                              totalComment = totalComment! + 1;
+                            });
+                          }
+                        });
                       }
                     } else if (comments.isNotEmpty && comments.length < snapshot.data!.docs.length){
                       DocumentSnapshot snap = snapshot.data!.docs[snapshot.data!.docs.length - 1];
@@ -122,6 +129,11 @@ class CommentListState extends State<CommentList> {
                           type: snap["type"],
                           text: snap["text"],
                           imgUrl: snap["imgUrl"]));
+                      WidgetsBinding.instance?.addPostFrameCallback((_) {
+                        setState(() {
+                          totalComment = totalComment! + 1;
+                        });
+                      });
                     }
                     return Stack(
                       children: [
@@ -131,6 +143,7 @@ class CommentListState extends State<CommentList> {
                           shrinkWrap: true,
                           padding: const EdgeInsets.only(top: 1),
                           itemCount: comments.length,
+                          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                           itemBuilder: (context, index) {
                             final comment = comments[index];
                             return Container(
@@ -223,8 +236,7 @@ class CommentListState extends State<CommentList> {
                                         // Image.asset("images/paper.png", fit: BoxFit.fitHeight),
                                       ],
                                     ) :
-                                    Container(
-                                        child: Text(comment.text))
+                                    Text(comment.text)
                                 ),
                               ),
                             );
