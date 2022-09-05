@@ -8,6 +8,7 @@ class Suggestion {
   final String status;
   final String type;
   final String description;
+  final bool notification;
   final List<String>? imgUrls;
   final int totalCom;
 
@@ -19,6 +20,7 @@ class Suggestion {
     required this.status,
     required this.type,
     required this.description,
+    required this.notification,
     required this.imgUrls,
     required this.totalCom,
   });
@@ -31,6 +33,7 @@ class Suggestion {
       'status': status,
       'type': type,
       'description': description,
+      'noti': notification,
       'imgUrls': imgUrls,
       'totalCom': totalCom
     };
@@ -44,6 +47,7 @@ class Suggestion {
         status = doc.data()!["status"],
         type = doc.data()!["type"],
         description = doc.data()!["description"],
+        notification = doc.data()!["noti"],
         imgUrls = doc.data()?["imgUrls"] == null
             ? null
             : doc.data()?["imgUrls"].cast<String>(),
