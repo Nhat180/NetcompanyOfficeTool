@@ -80,7 +80,10 @@ class CommentBoxState extends State<CommentBox>{
 
                     await firebaseService.addComment(comment, commentID, widget.id, widget.featureType);
                     FirebaseFirestore.instance.collection(widget.featureType)
-                        .doc(widget.id).update({'totalCom': commentID + 1});
+                        .doc(widget.id).update({
+                            'noti': true,
+                            'totalCom': commentID + 1
+                        });
                     textController.clear();
 
                     setState(() {

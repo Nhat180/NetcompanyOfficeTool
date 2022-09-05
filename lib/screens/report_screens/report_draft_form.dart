@@ -485,6 +485,7 @@ class _ReportDraftFormState extends State<ReportDraftForm> {
                               status: "pending",
                               type: type,
                               description: description,
+                              notification: true,
                               imgUrls: imgUrls,
                               totalCom: 0);
 

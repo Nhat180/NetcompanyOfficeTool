@@ -481,6 +481,7 @@ class _SuggestionDraftFormState extends State<SuggestionDraftForm> {
                               status: "pending",
                               type: type,
                               description: description,
+                              notification: true,
                               imgUrls: imgUrls,
                               totalCom: 0);
 
