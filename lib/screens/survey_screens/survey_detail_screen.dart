@@ -27,7 +27,6 @@ class SurveyDetail extends StatefulWidget {
 class _SurveyDetailState extends State<SurveyDetail> {
   final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final FirebaseService firebaseService = FirebaseService();
-  final StorageService storageService = StorageService();
 
   final TextEditingController textController = TextEditingController();
   final TextEditingController dateFromInput = TextEditingController();
@@ -41,11 +40,6 @@ class _SurveyDetailState extends State<SurveyDetail> {
     setState(() {
 
     });
-  }
-
-  void recordUser() async {
-    String? name = await storageService.readSecureData('name');
-    await FirebaseFirestore.instance.collection("surveys").doc(widget.surveyID).update({"usersHaveTaken": FieldValue.arrayUnion([name])});
   }
 
   @override
@@ -172,7 +166,6 @@ class _SurveyDetailState extends State<SurveyDetail> {
                       });
 
                       if (!loading) {
-                        recordUser();
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) => const FinishSurvey()));
                       }
@@ -249,7 +242,6 @@ class _SurveyDetailState extends State<SurveyDetail> {
                 });
 
                 if (!loading) {
-                  recordUser();
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => const FinishSurvey()));
                 }
@@ -365,7 +357,6 @@ class _SurveyDetailState extends State<SurveyDetail> {
                       });
 
                       if (!loading) {
-                        recordUser();
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) => const FinishSurvey()));
                       }
@@ -456,7 +447,6 @@ class _SurveyDetailState extends State<SurveyDetail> {
                 });
 
                 if (!loading) {
-                  recordUser();
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => const FinishSurvey()));
                 }
@@ -517,7 +507,6 @@ class _SurveyDetailState extends State<SurveyDetail> {
                 });
 
                 if (!loading) {
-                  recordUser();
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => const FinishSurvey()));
                 }
