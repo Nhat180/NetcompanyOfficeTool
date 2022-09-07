@@ -282,9 +282,9 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                     margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(10.0),
-                      leading: report.status == "solved"? Image.asset("images/report_done.png", fit: BoxFit.cover, width: 45, height: 45,) :
-                      report.status == "pending"? Image.asset("images/report_pending.png", fit: BoxFit.cover, width: 45, height: 45,) :
-                      Image.asset("images/report_process.png", fit: BoxFit.cover, width: 45, height: 45,),
+                      leading: report.status == "solved"? Image.asset("images/report_done.png", fit: BoxFit.cover, width: 55, height: 55,) :
+                      report.status == "pending"? Image.asset("images/report_pending.png", fit: BoxFit.cover, width: 55, height: 55,) :
+                      Image.asset("images/report_process.png", fit: BoxFit.cover, width: 55, height: 55,),
 
                       title: Text(report.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
                       subtitle: Column(
@@ -296,9 +296,6 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                           Text(report.description, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
                         ],
                       ),
-                      trailing: Text("  " + report.status, style: report.status == "pending"
-                          ? const TextStyle(color:Colors.red) : report.status == "process"
-                          ? const TextStyle(color:Color(0xFFFBC02D)) :  const TextStyle(color:Colors.green)),
                       onTap: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(
                             builder: (context) => ReportDetailScreen(report)
