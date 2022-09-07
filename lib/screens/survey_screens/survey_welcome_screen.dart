@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netcompany_office_tool/constants.dart';
@@ -6,6 +7,8 @@ import 'package:netcompany_office_tool/screens/navigation_screen.dart';
 import 'package:netcompany_office_tool/screens/survey_screens/survey_detail_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:netcompany_office_tool/screens/survey_screens/survey_finish_screen.dart';
+
+import '../../services/storage_service.dart';
 
 class WelcomeSurvey  extends StatefulWidget {
   final Survey survey;
@@ -18,6 +21,12 @@ class WelcomeSurvey  extends StatefulWidget {
 
 class _WelcomeSurveyState extends State<WelcomeSurvey > {
   final style = const TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  final StorageService storageService = StorageService();
+
+  void recordUser() async {
+    String? name = await storageService.readSecureData('name');
+    await FirebaseFirestore.instance.collection("surveys").doc(widget.survey.id!).update({"usersHaveTaken": FieldValue.arrayUnion([name])});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +84,7 @@ class _WelcomeSurveyState extends State<WelcomeSurvey > {
                             borderRadius: BorderRadius.circular(8.0))
                     ),
                     onPressed: () {
+                      recordUser();
                       Navigator.pushReplacement(context, MaterialPageRoute(
                           builder: (context) => SurveyDetail(surveyID: widget.survey.id!)
                       ));

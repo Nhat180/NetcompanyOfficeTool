@@ -283,9 +283,9 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(10.0),
                       leading: suggestion.status == "approved"?
-                      Image.asset("images/suggest_done.png", fit: BoxFit.cover, width: 45, height: 45,) :
-                      suggestion.status == "pending"? Image.asset("images/suggest_pending.png", fit: BoxFit.cover, width: 45, height: 45,) :
-                      Image.asset("images/suggest_process.png", fit: BoxFit.cover, width: 45, height: 45,),
+                      Image.asset("images/suggest_done.png", fit: BoxFit.cover, width: 55, height: 55,) :
+                      suggestion.status == "pending"? Image.asset("images/suggest_pending.png", fit: BoxFit.cover, width: 55, height: 55,) :
+                      Image.asset("images/suggest_process.png", fit: BoxFit.cover, width: 55, height: 55,),
 
                       title: Text(suggestion.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18) ,overflow: TextOverflow.ellipsis, softWrap: false),
                       subtitle: Column(
@@ -297,9 +297,6 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                           Text(suggestion.description, style: const TextStyle(fontSize: 16) ,overflow: TextOverflow.ellipsis, softWrap: false),
                         ],
                       ),
-                      trailing: Text("  " + suggestion.status, style: suggestion.status == "pending"
-                          ? const TextStyle(color:Colors.red) : suggestion.status == "process"
-                          ? const TextStyle(color:Color(0xFFFBC02D)) :  const TextStyle(color:Colors.green)),
                       onTap: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(
                             builder: (context) => SuggestionDetailScreen(suggestion)

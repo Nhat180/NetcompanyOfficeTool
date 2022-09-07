@@ -80,8 +80,8 @@ class _State extends State<SurveyListScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 15.0),
+                                Container(
+                                  // padding: const EdgeInsets.only(top: 15.0),
                                   child: CircleAvatar(
                                     backgroundColor: Colors.green[500],
                                     radius: 40,
@@ -100,7 +100,7 @@ class _State extends State<SurveyListScreen> {
                                       style: const TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),
-                                      maxLines: 2,
+                                      maxLines: 1,
                                       overflow: TextOverflow.ellipsis, softWrap: false
                                   ),
                                 ), //Text
