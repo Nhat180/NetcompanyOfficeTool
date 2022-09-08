@@ -282,7 +282,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                     margin: const EdgeInsets.symmetric( horizontal: 20, vertical: 5),
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(10.0),
-                      leading: suggestion.status == "approved"?
+                      leading: suggestion.status == "closed"?
                       Image.asset("images/suggest_done.png", fit: BoxFit.cover, width: 55, height: 55,) :
                       suggestion.status == "pending"? Image.asset("images/suggest_pending.png", fit: BoxFit.cover, width: 55, height: 55,) :
                       Image.asset("images/suggest_process.png", fit: BoxFit.cover, width: 55, height: 55,),
