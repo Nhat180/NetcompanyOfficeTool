@@ -318,7 +318,7 @@ class ListWidgetState extends State<ListWidget> with SingleTickerProviderStateMi
                         color: Colors.white,
                       ),
                       Text(('No Suggestions Found'),
-                          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white))
+                          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center,)
                     ],
                   ));
             } else {
