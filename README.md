@@ -21,43 +21,43 @@ This project is developed by Netcompany and RMIT University students.
 
 - Splash and Login screens
 <p align="center">
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/Splash%20screen_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6583_iphone13promaxsierrablue_portrait.png" width="300" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/Splash%20screen_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6583_iphone13promaxsierrablue_portrait.png" width="250" > 
 </p>
 
 - Home screen
 <p align="center">
-    <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/Home%20screen_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6587_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6588_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6590_iphone13promaxsierrablue_portrait.png" width="300" >
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6589_iphone13promaxsierrablue_portrait.png" width="300" >
+    <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/Home%20screen_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6587_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6588_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6590_iphone13promaxsierrablue_portrait.png" width="250" >
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6589_iphone13promaxsierrablue_portrait.png" width="250" >
 </p>
 
 - Report and Suggestion screens
 <p align="center">
-    <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/Create_form%20screen_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6584_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/Form_detail%20screen_iphone13promaxsierrablue_portrait.png" width="300" > 
+    <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/Create_form%20screen_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6584_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/Form_detail%20screen_iphone13promaxsierrablue_portrait.png" width="250" > 
 </p>
 
 <p align="center">
-    <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6591_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6585_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6592_iphone13promaxsierrablue_portrait.png" width="300" > 
+    <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6591_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6585_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6592_iphone13promaxsierrablue_portrait.png" width="250" > 
 </p>
 
 - Survey screens
 <p align="center">
-    <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6586_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6594_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6593_iphone13promaxsierrablue_portrait.png" width="300" > 
+    <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6586_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6594_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/IMG_6593_iphone13promaxsierrablue_portrait.png" width="250" > 
 </p>
 
 - Map screens
 <p align="center">
-    <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/List_room%20screen_iphone13promaxsierrablue_portrait.png" width="300" > 
-  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/Map%20screen_iphone13promaxsierrablue_portrait.png" width="300" > 
+    <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/List_room%20screen_iphone13promaxsierrablue_portrait.png" width="250" > 
+  <img src="https://github.com/Nhat180/NetcompanyOfficeTool/blob/f8826556f6673ae45cd8e399ed74ce6c4da1535a/screenshots/Map%20screen_iphone13promaxsierrablue_portrait.png" width="250" > 
 </p>
 
 ## Build Information
